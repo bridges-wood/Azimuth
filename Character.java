@@ -4,6 +4,7 @@ public class Character {// Level banding of enemies and different types as well 
 	private int exp;
 	private int level;
 	private int hp;
+	private int maxHp;
 	private int credits;
 	private Apparel[] armour; //Head, Torso, Left Arm, Right Arm, Left Leg, Right Leg.
 	private int[] resistances;
@@ -153,5 +154,13 @@ public class Character {// Level banding of enemies and different types as well 
 
 	public void setPlayer(boolean isPlayer) {
 		this.isPlayer = isPlayer;
+	}
+
+	public int getMaxHp() {
+		return maxHp;
+	}
+
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
 	}
 }
