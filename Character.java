@@ -1,5 +1,6 @@
+import java.util.List;
+
 public class Character {// Level banding of enemies and different types as well as character creator.
-	private boolean isPlayer;
 	private String name;
 	private int exp;
 	private int level;
@@ -10,16 +11,15 @@ public class Character {// Level banding of enemies and different types as well 
 	private Apparel underClothes;
 	private Weapon equipped;
 	private int inventorySize;
-	private Object[] inventory;
+	private List <Object> inventory;
 	private int[] REPLICAS;
-	private Skill[] skill;
+	private List <Skill> skill;
 	private String affiliation;
 
-	public Character(boolean isPlayer, String name, int exp, int level, int hp, int credits, 
+	public Character( String name, int exp, int level, int hp, int credits, 
 			Apparel[] armour, int[] resistances, Apparel underClothes, Weapon equipped, 
-			int inventorySize, Object[] inventory, int[] REPLICAS, 
-			Skill[] skills, String affiliation ) {
-		this.isPlayer = isPlayer;
+			int inventorySize, List<Object> inventory, int[] REPLICAS, 
+			List<Skill> skills, String affiliation ) {
 		this.name = name;
 		this.exp = exp;
 		this.hp = hp;
@@ -115,11 +115,11 @@ public class Character {// Level banding of enemies and different types as well 
 		this.inventorySize = inventorySize;
 	}
 
-	public Object[] getInventory() {
+	public List<Object> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(Object[] inventory) {
+	public void setInventory(List<Object> inventory) {
 		this.inventory = inventory;
 	}
 
@@ -131,11 +131,11 @@ public class Character {// Level banding of enemies and different types as well 
 		this.REPLICAS = REPLICAS;
 	}
 
-	public Skill[] getSkills() {
+	public List<Skill> getSkills() {
 		return skill;
 	}
 
-	public void setSkills(Skill[] skills) {
+	public void setSkills(List<Skill> skills) {
 		this.skill = skills;
 	}
 
@@ -147,11 +147,4 @@ public class Character {// Level banding of enemies and different types as well 
 		this.affiliation = affiliation;
 	}
 
-	public boolean isPlayer() {
-		return isPlayer;
-	}
-
-	public void setPlayer(boolean isPlayer) {
-		this.isPlayer = isPlayer;
-	}
 }
