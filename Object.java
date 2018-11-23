@@ -1,11 +1,9 @@
 
 public class Object { //TODO Terminals (controls and personal), rest-places, consumables, keys, crafting areas.
 	private boolean inventoriable;
-	private String name;
-	private String description;
+	private String name, description;
 	private Object[] parts;
-	private int weight;
-	private int value;
+	private int weight, value;
 
 	public Object(boolean inventoriable, String name, String description, 
 			Object[] parts, int weight, int value) {

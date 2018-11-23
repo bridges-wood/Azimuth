@@ -1,11 +1,8 @@
 
 public class Terminal extends Object {
-	private String menu;
-	private String password;
-	private String[] logName;
-	private String[] logs;
-	private String difficulty;
-	
+	private String menu,password,difficulty;
+	private String[] logName, logs;
+
 	public Terminal( String name, String description) {
 		super(false, name, description, null, 0, 0);
 	}

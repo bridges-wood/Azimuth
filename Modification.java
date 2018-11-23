@@ -1,15 +1,9 @@
 
 public class Modification extends Object {//TODO: Conversion kits, scopes, receivers, barrels, stocks/grips, magazines, muzzle.
 	private String typeMod;
-	private int damageMod;
-	private int rateOfFireMod;
-	private int conditionMod;
-	private int durabilityMod;
-	private float accuracyMod;
-	private float critChanceMod;
-	private float critDamageMod;
+	private int damageMod, rateOfFireMod, conditionMod, durabilityMod, magazineCapacityMod;
+	private float accuracyMod, critChanceMod, critDamageMod;
 	private Ammunition ammunitionMod;
-	private int magazineCapacityMod;
 	private Skill skilledUse;
 
 	public Modification(String name, String description, int weight, int value,  String typeMod, int damageMod, 

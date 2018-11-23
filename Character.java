@@ -1,20 +1,14 @@
 import java.util.List;
 
 public class Character {// Level banding of enemies and different types as well as character creator.
-	private String name;
-	private int exp;
-	private int level;
-	private int hp;
-	private int credits;
+	private String name, affiliation;
+	private int exp, level, hp, credits, inventorySize;
 	private Apparel[] armour; //Head, Torso, Left Arm, Right Arm, Left Leg, Right Leg.
-	private int[] resistances;
+	private int[] resistances, REPLICAS;
 	private Apparel underClothes;
 	private Weapon equipped;
-	private int inventorySize;
 	private List <Object> inventory;
-	private int[] REPLICAS;
 	private List <Skill> skill;
-	private String affiliation;
 
 	public Character( String name, int exp, int level, int hp, int credits, 
 			Apparel[] armour, int[] resistances, Apparel underClothes, Weapon equipped, 

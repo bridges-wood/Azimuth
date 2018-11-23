@@ -1,10 +1,8 @@
 
 public class Apparel extends Object {
 	private boolean isUnderClothes;
-	private int area;
-	private int[] resistances; //Corrosive, Kinetic, Energy, Thermal, Radiation.
-	private int[] REPLICASmodifiers;
-	private int damageThreshold;
+	private int area, damageThreshold;
+	private int[] REPLICASmodifiers, resistances; //Corrosive, Kinetic, Energy, Thermal, Radiation.
 	
 	public Apparel(String name, String description, Object[] parts, 
 			int weight, int value, boolean isUnderClothes, int area, 

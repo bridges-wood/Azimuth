@@ -2,9 +2,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Player extends Character{
-	private int maxWeaponWeight;
-	private int maxHp;
-	private int maxArmourWeight;
+	private int maxWeaponWeight, maxHp, maxArmourWeight;
 	
 	public Player(String name, int exp, int level, int hp, int credits, Apparel[] armour, int[] resistances,
 			Apparel underClothes, Weapon equipped, int inventorySize, List<Object> inventory, int[] REPLICAS,

@@ -1,16 +1,10 @@
 
 public class Weapon extends Object { //Plasma, Gauss/Railgun, Laser, Melee, Kinetic. 
 	private String type;
-	private int damage;
-	private int rateOfFire;
-	private int condition;
-	private int durability;
-	private float accuracy;
-	private float critChance;
-	private float critDamage;
+	private int damage, rateOfFire, condition, durability, magazineCapacity;
+	private float accuracy, critChance, critDamage;
 	private Modification[] modifications;
 	private Ammunition ammunition;
-	private int magazineCapacity;
 	
 	public Weapon(boolean inventoriable, String name, int weight, int value, 
 			String description, Object[] parts, String type, int damage, 

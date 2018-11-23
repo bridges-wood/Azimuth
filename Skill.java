@@ -1,7 +1,6 @@
 
 public class Skill {
-	private String name;
-	private String description;
+	private String name, description;
 	private int level;
 
 	public Skill(String name, String description, int level) {
