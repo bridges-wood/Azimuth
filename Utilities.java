@@ -40,6 +40,8 @@ public class Utilities {
 	}
 	
 	public static String generatePassword(int difficulty) throws FileNotFoundException {
+		/*Generates random passwords using random words from a dictionary file and adding 
+		  a number of non-alphanumeric visible characters based on the difficulty.*/
 		File file = new File("StatRes/Dictionary.txt");
 		String base = Utilities.randomLine(file);
 		for(int i = 0; i < difficulty / 3; i++) {

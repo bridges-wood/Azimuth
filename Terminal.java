@@ -1,66 +1,95 @@
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+
 
 public class Terminal extends Object {
-	private String[] logNames, logs, usernamesAndPasswords;
-	private boolean locked;
+	private String[] logNames, logs, usernames, passwords;
+	private boolean[] locked;
 	private int difficulty;
 
-	public Terminal(String name, String description, int difficulty, boolean locked, String[] logNames, String[] logs) {
+	public Terminal(String name, String description, int difficulty, boolean[] locked, String[] logNames, String[] logs, String[] usernames, String[] passwords) {
 		super(false, name, description, null, 0, 0);
-		this.usernamesAndPasswords = usernamesAndPasswords; /*TODO need to get this to generate a series of usernames and passwords for a terminal based on the input array.
-		Suggest taking in a string array of usernames and passowords together as one string and streaming them into a map so the usernames can be checked to see if they match
-		passwords.
-		Need to set up methods for adding usernames and passwords and also one to generate random users and passwords for generic terminals.*/
+		this.usernames = usernames; //0 is MASTER.
+		this.passwords = passwords; //0 is appropriate master password.
 		this.difficulty = difficulty;
 		this.locked = locked;
 		this.logs = logs;
 	}
 	
+	/**
+	 * Unlocks the given username that the player gives provided that the password
+	 * given is correct.
+	 * 
+	 * @param userAtt the username the player will try to unlock the terminal.
+	 * @param passAtt the password the player will user to try to unlock the terminal.
+	 */
 	public void unlock(String userAtt, String passAtt) {
-		this.setLocked(userAtt == username && passAtt == password);
+		
+		int pairIndex = Arrays.asList(usernames).indexOf(userAtt);
+		if(pairIndex != -1) {
+			if(userAtt == usernames[pairIndex] && passAtt == passwords[pairIndex]) {
+				this.unLocked(locked, pairIndex);
+			}
+		}
 	}
 	
+	/**
+	 * @param difficulty the level of encryption on the system that affects the difficulty of the hacking process.
+	 */
 	public void hack(int difficulty) {
-		int dim = (int) Math.ceil((double) (1/difficulty * 10));
-		int guesses = (int) (dim*dim * 0.05);
-		String[][] passwords = new String[dim][dim];
-		File dictionary = new File("StatRes/Dictionary.txt");
+		int dim = (int) Math.ceil((double) (1/difficulty * 10)); /*Calculates the dimensions of the array as ten 
+		 														   times the reciprocal of the difficulty. This
+		 														   is then rounded up to avoid 0 length arrays.*/
+		int guesses = (int) (dim*dim * 0.05); /*Guesses are equal 5% of the number of passwords in the grid. 
+											    TODO determine the application of hacking skills to the 
+											    number of guesses*/
+		String[][] passwordsPoss = new String[dim][dim];
 		for(int x = 0; x < dim; x++) {
 			for(int y = 0; y < dim; y++) {
 				try {
-					passwords[x][y] = Utilities.generatePassword(difficulty);
+					passwordsPoss[x][y] = Utilities.generatePassword(difficulty); //Populates the array with random passwords.
 				} catch (FileNotFoundException e) {
 					System.out.println("There has been an error. "
 					+ "This terminal cannot be hacked due to missing resources");
 				}
 			}
 		}
-		passwords[Utilities.rangedRandomInt(0, passwords[0].length - 1)][Utilities.rangedRandomInt(0, passwords.length - 1)] = password;
+		passwordsPoss[Utilities.rangedRandomInt(0, passwordsPoss[0].length - 1)][Utilities.rangedRandomInt(0, passwordsPoss.length - 1)] = passwords[0];
+		for (int x = 0; x < dim; x++) {
+			for (int y = 0; y < dim; y++) {
+				System.out.print(passwordsPoss[x][y] + " ");
+			}
+			System.out.println("");
+		}
 		for(int i = 0; i < guesses; i ++) {
 			int sames = 0;
 			String guess = Utilities.StrInput();
-			if(!guess.equals(password)) {
-				if(guess.length() != password.length()) {
+			if(!guess.equals(passwords[0])) {
+				if(guess.length() != passwords[0].length()) {
 					System.out.println("That password is not the right length.");
 					continue;
 				}
-				for(int j = 0; j < password.length(); j++) {
-					if(guess.charAt(j) ==  password.charAt(j)) {
+				for(int j = 0; j < passwords[0].length(); j++) {
+					if(guess.charAt(j) ==  passwords[0].charAt(j)) {
 						sames++;
 					}
 				}
 				System.out.println("There are " + sames + " characters the same as the password.");
+				continue;
 			}
+			for(int x = 0; x < locked.length; x++) {
+				this.unLocked(locked, x);
+			}
+			break;
 		}
 	}
 
-	public String getPassword() {
-		return password;
+	public String[] getPasswords() {
+		return passwords;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassword(String[] passwords) {
+		this.passwords = passwords;
 	}
 
 	public String[] getLogs() {
@@ -79,24 +108,28 @@ public class Terminal extends Object {
 		this.difficulty = difficulty;
 	}
 
-	public String getUsername() {
-		return username;
+	public String[] getUsernames() {
+		return usernames;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-
-	public boolean isLocked() {
-		return locked;
+	public void setUsernames(String[] usernames) {
+		this.usernames = usernames;
 	}
 	
 
-	public void setLocked(boolean locked) {
+	public boolean isLocked(int index) {
+		return locked[index];
+	}
+	
+
+	public void setLocked(boolean[] locked) {
 		this.locked = locked;
 	}
-
+	
+	public void unLocked(boolean[] locked, int index) {
+		this.locked[index] = false; 
+	}
+	
 	public String[] getLogNames() {
 		return logNames;
 	}
