@@ -1,17 +1,17 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import Utilities.randomLine; //Sort this from the repo.
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Terminal extends Object {
-	private String  username, password;
-	private String[] logNames, logs;
+	private String[] logNames, logs, usernamesAndPasswords;
 	private boolean locked;
 	private int difficulty;
 
-	public Terminal(String name, String description, String username, String password, int difficulty, boolean locked, String[] logNames, String[] logs) {
+	public Terminal(String name, String description, int difficulty, boolean locked, String[] logNames, String[] logs) {
 		super(false, name, description, null, 0, 0);
-		this.username = username;
-		this.password = password;
+		this.usernamesAndPasswords = usernamesAndPasswords; /*TODO need to get this to generate a series of usernames and passwords for a terminal based on the input array.
+		Suggest taking in a string array of usernames and passowords together as one string and streaming them into a map so the usernames can be checked to see if they match
+		passwords.
+		Need to set up methods for adding usernames and passwords and also one to generate random users and passwords for generic terminals.*/
 		this.difficulty = difficulty;
 		this.locked = locked;
 		this.logs = logs;
@@ -23,11 +23,34 @@ public class Terminal extends Object {
 	
 	public void hack(int difficulty) {
 		int dim = (int) Math.ceil((double) (1/difficulty * 10));
+		int guesses = (int) (dim*dim * 0.05);
 		String[][] passwords = new String[dim][dim];
-		BufferedReader reader = new BufferedReader(new FileReader("Dictionary.txt"));
+		File dictionary = new File("StatRes/Dictionary.txt");
 		for(int x = 0; x < dim; x++) {
 			for(int y = 0; y < dim; y++) {
-				passwords[x][y] = 
+				try {
+					passwords[x][y] = Utilities.generatePassword(difficulty);
+				} catch (FileNotFoundException e) {
+					System.out.println("There has been an error. "
+					+ "This terminal cannot be hacked due to missing resources");
+				}
+			}
+		}
+		passwords[Utilities.rangedRandomInt(0, passwords[0].length - 1)][Utilities.rangedRandomInt(0, passwords.length - 1)] = password;
+		for(int i = 0; i < guesses; i ++) {
+			int sames = 0;
+			String guess = Utilities.StrInput();
+			if(!guess.equals(password)) {
+				if(guess.length() != password.length()) {
+					System.out.println("That password is not the right length.");
+					continue;
+				}
+				for(int j = 0; j < password.length(); j++) {
+					if(guess.charAt(j) ==  password.charAt(j)) {
+						sames++;
+					}
+				}
+				System.out.println("There are " + sames + " characters the same as the password.");
 			}
 		}
 	}
