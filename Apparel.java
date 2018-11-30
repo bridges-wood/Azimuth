@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Apparel extends Object {
+public class Apparel extends Object implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8229924260087295982L;
 	private boolean isUnderClothes;
 	private int area, damageThreshold;
 	private int[] REPLICASmodifiers, resistances; //Corrosive, Kinetic, Energy, Thermal, Radiation.

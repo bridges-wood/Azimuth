@@ -1,8 +1,13 @@
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class Terminal extends Object {
+public class Terminal extends Object implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8924818284601108053L;
 	private String[] logNames, logs, usernames, passwords;
 	private boolean[] locked;
 	private int difficulty;

@@ -1,5 +1,11 @@
+import java.io.Serializable;
 
-public class Bullet extends Ammunition{
+public class Bullet extends Ammunition implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4052838366034558075L;
 
 	public Bullet(String name, Object[] parts, int value, int weight, float calibre, String damageType,
 			String description) {

@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Skill {
+public class Skill implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4284520134659894370L;
 	private String name, description;
 	private int level;
 

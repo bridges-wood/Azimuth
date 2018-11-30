@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Modification extends Object {//TODO: Conversion kits, scopes, receivers, barrels, stocks/grips, magazines, muzzle.
+public class Modification extends Object implements Serializable {/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8286114933151004877L;
+//TODO: Conversion kits, scopes, receivers, barrels, stocks/grips, magazines, muzzle.
 	private String typeMod;
 	private int damageMod, rateOfFireMod, conditionMod, durabilityMod, magazineCapacityMod;
 	private float accuracyMod, critChanceMod, critDamageMod;

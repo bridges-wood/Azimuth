@@ -1,6 +1,11 @@
+import java.io.Serializable;
 import java.util.List;
 
-public class Character {// Level banding of enemies and different types as well as character creator.
+public class Character implements Serializable {/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2118679890920812909L;
+// Level banding of enemies and different types as well as character creator.
 	private String name, affiliation;
 	private int exp, level, hp, credits, inventorySize;
 	private Apparel[] armour; //Head, Torso, Left Arm, Right Arm, Left Leg, Right Leg.

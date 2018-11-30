@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Ammunition extends Object {//TODO Kinetic(Bullets), Plasma Cells, Power Cells, Missiles, Ferrous projectiles.
+public class Ammunition extends Object implements Serializable {//TODO Kinetic(Bullets), Plasma Cells, Power Cells, Missiles, Ferrous projectiles.
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3616094952060982278L;
 	private float calibre;
 	private String damageType; //Corrosive, Kinetic, Energy, Thermal, Radiation.
 	

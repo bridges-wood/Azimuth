@@ -1,5 +1,8 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -24,7 +27,7 @@ public class Utilities {
 		Scanner in = new Scanner(System.in);
 		String out = "";
 		out = in.nextLine();
-		in.close();
+		//in.close(); //not closed in order to allow looping in Menu. Max 30/11/18
 		return out;
 	}
 	
@@ -49,5 +52,13 @@ public class Utilities {
 			Utilities.StrReplace(base, index, (char) Utilities.rangedRandomInt(33, 63));
 		}
 		return base;
+	}
+	
+	public static Room[] loadGame(File file) throws ClassNotFoundException, IOException {
+		FileInputStream fileStream = new FileInputStream(file);
+		ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+		Room[] savedState = (Room[]) objectStream.readObject();
+		objectStream.close();
+		return savedState;
 	}
 }

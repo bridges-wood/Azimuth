@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Weapon extends Object { //Plasma, Gauss/Railgun, Laser, Melee, Kinetic. 
+public class Weapon extends Object implements Serializable { //Plasma, Gauss/Railgun, Laser, Melee, Kinetic. 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3254321993836423666L;
 	private String type;
 	private int damage, rateOfFire, condition, durability, magazineCapacity;
 	private float accuracy, critChance, critDamage;

@@ -1,7 +1,12 @@
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class Player extends Character{
+public class Player extends Character implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5084782657694635980L;
 	private int maxWeaponWeight, maxHp, maxArmourWeight;
 	
 	public Player(String name, int exp, int level, int hp, int credits, Apparel[] armour, int[] resistances,
