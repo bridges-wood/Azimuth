@@ -30,7 +30,8 @@ public class Menu {
 			}
 		}
 			switch (choice) {
-			case 1: String in = Utilities.StrInput();
+			case 1: showSaves();
+					String in = Utilities.StrInput();
 					File file = new File(in);
 				try {
 					Utilities.loadGame(file);
@@ -50,9 +51,29 @@ public class Menu {
 			
 	}
 	
-	
+	public void showSaves() {
+		File[] files = new File("SaveGames/").listFiles();
+		int counter = 0;
+		for(File file : files) {
+			if(file.getName().endsWith(".gme")) {
+				counter++;
+				System.out.println(counter + ". " + file.getName());
+			}
+		}
+	}
 	public void newGame() {
-		
+		System.out.println("File name: ");
+		String name = Utilities.StrInput();
+		File file = new File("Savegames/" + name + ".gme");
+		try {
+			if(file.createNewFile()) {
+				System.out.println("Game created.");
+			} else {
+				System.out.println("A save with name: " + name + " already exists.");
+			}
+		} catch (IOException e) {
+			System.out.println("Something went wrong with that file name.");
+		}
 	}
 	
 	public void options() {
