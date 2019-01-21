@@ -8,10 +8,11 @@ public class Player extends Character implements Serializable{
 	 */
 	private static final long serialVersionUID = 5084782657694635980L;
 	private int maxWeaponWeight, maxHp, maxArmourWeight;
+	private Room currentRoom;
 	
 	public Player(String name, int exp, int level, int hp, int credits, Apparel[] armour, int[] resistances,
 			Apparel underClothes, Weapon equipped, int inventorySize, List<Object> inventory, int[] REPLICAS,
-			List<Skill> skills, String affiliation) {
+			List<Skill> skills, String affiliation, Room currentRoom) {
 		super(name, exp, level, hp, credits, armour, resistances, underClothes, equipped, inventorySize, inventory, REPLICAS,
 				skills, affiliation);
 		/*All player skills are scaled from 0 to 200 usually with a fixed base of 50. This could possibly be changed by a players 
@@ -52,5 +53,12 @@ public class Player extends Character implements Serializable{
 		this.maxArmourWeight = maxArmourWeight;
 	}
 	
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
+
+	public void setCurrentRoom(Room currentRoom) {
+		this.currentRoom = currentRoom;
+	}
 
 }
