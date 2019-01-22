@@ -61,14 +61,15 @@ public class Utilities {
 		return base;
 	}
 
-	public static Room[] loadGame(File file) throws ClassNotFoundException, IOException {
+	public static Object[] loadGame(File file) throws ClassNotFoundException, IOException {
 		try {
 			FileInputStream fileStream = new FileInputStream(file);
 			ObjectInputStream objectStream = new ObjectInputStream(fileStream);
 			Room[] savedState = (Room[]) objectStream.readObject();
+			Player player = (Player) objectStream.readObject();
 			objectStream.close();
 			fileStream.close();
-			return savedState;
+			return {savedState, player}; //Fix
 		} catch (IOException i) {
 			i.printStackTrace();
 			return null;

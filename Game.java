@@ -1,10 +1,16 @@
+import java.io.File;
 import java.io.Serializable;
 
 public class Game implements Serializable {
 	private static final long serialVersionUID = 557779407485802525L;
 	
-	public Game() {
-		this.init();
+	public Game(boolean newGame) {
+		System.out.println("Got this far.");
+		if(newGame) {
+			this.init();
+		} else {
+			this.loadGame(Utilities.);
+		}
 	}
 
 	public void init() {
@@ -16,6 +22,10 @@ public class Game implements Serializable {
 		player.setCurrentRoom(first);
 		Room[] rooms = {first};
 		this.playGame(rooms, player);
+	}
+	
+	public void loadGame(File location) {
+		
 	}
 
 	public void playGame(Room[] rooms, Player player) {
@@ -35,7 +45,10 @@ public class Game implements Serializable {
 				case("engage"):
 				case("examine"):
 					for(int i = 0; i < player.getCurrentRoom().getContents().length; i++) {
-						if(player.getCurrentRoom().getContents()[i].getName() == verbObject);
+						if(player.getCurrentRoom().getContents()[i].getName() == verbObject) {
+							System.out.println(player.getCurrentRoom().getContents()[i].getDescription());
+							break;
+						}
 						//finish this to allow the player to examine objects.
 					}
 			}

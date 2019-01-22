@@ -72,20 +72,24 @@ public class Menu {
 	}
 
 	public void newGame() {
-		System.out.println("File name: ");
-		String name = Utilities.StrInput();
-		File file = new File("SaveGames/" + name);
-		try {
-			if (file.createNewFile()) {
-				System.out.println("Game created.");
-				@SuppressWarnings("unused")
-				Game runtime = new Game();
-			} else {
-				System.out.println("A save with name: " + name + " already exists.");
+		while (true) {
+			System.out.println("File name: ");
+			String name = Utilities.StrInput();
+			File file = new File("SaveGames/" + name + ".gme");
+			try {
+				if (file.createNewFile()) {
+					System.out.println("Game created.");
+					break;
+				} else {
+					System.out.println("A save with name: " + name + " already exists.");
+					continue;
+				}
+			} catch (IOException e) {
+				System.out.println("Something went wrong with that file name.");
 			}
-		} catch (IOException e) {
-			System.out.println("Something went wrong with that file name.");
 		}
+		@SuppressWarnings("unused")
+		Game runtime = new Game();
 	}
 
 	public void options() {
