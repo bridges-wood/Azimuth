@@ -61,15 +61,14 @@ public class Utilities {
 		return base;
 	}
 
-	public static Object[] loadGame(File file) throws ClassNotFoundException, IOException {
+	public static Game loadGame(File file) throws ClassNotFoundException, IOException {
 		try {
 			FileInputStream fileStream = new FileInputStream(file);
 			ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-			Room[] savedState = (Room[]) objectStream.readObject();
-			Player player = (Player) objectStream.readObject();
+			Game stored = (Game) objectStream.readObject();
 			objectStream.close();
 			fileStream.close();
-			return {savedState, player}; //Fix
+			return stored; //Fix
 		} catch (IOException i) {
 			i.printStackTrace();
 			return null;
@@ -80,11 +79,11 @@ public class Utilities {
 		}
 	}
 
-	public static void saveGame(File file, Room[] rooms) throws IOException {
+	public static void saveGame(File file, Game game) throws IOException {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(file);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(rooms);
+			out.writeObject(game);
 			out.close();
 			fileOut.close();
 			System.out.println("Data saved in: " + file.getName());

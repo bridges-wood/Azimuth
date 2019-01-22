@@ -60,7 +60,7 @@ public class Menu {
 		}
 	}
 
-	public void showSaves() {
+	public static void showSaves() {
 		File[] files = new File("SaveGames/").listFiles();
 		int counter = 0;
 		for (File file : files) {
@@ -89,7 +89,7 @@ public class Menu {
 			}
 		}
 		@SuppressWarnings("unused")
-		Game runtime = new Game();
+		Game runtime = new Game(true);
 	}
 
 	public void options() {
