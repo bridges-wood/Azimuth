@@ -66,9 +66,10 @@ public class Game implements Serializable {
 							System.out.println(current.getDescription());
 							break;
 						}
-						//finish this to allow the player to examine objects.
+						//finish this to allow the player to examine other things like their own weapons etc.
 					}
 				break;
+				//TODO add more verbs.
 			}
 		}
 	}
