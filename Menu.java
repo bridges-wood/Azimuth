@@ -36,9 +36,15 @@ public class Menu {
 		case 2:
 			showSaves();
 			String in = Utilities.StrInput();
-			File file = new File(in);
+			File file = null;
+			if(in.endsWith(".gme")) {
+				file = new File("SaveGames/" + in);
+			} else {
+				file = new File("SaveGames/" + in + ".gme");
+			}
 			try {
-				Utilities.loadGame(file);
+				Game runtime = Utilities.loadGame(file);
+				runtime.playGame();
 			} catch (ClassNotFoundException | IOException e) {
 				System.out.println("There has been an error ");
 			}
@@ -89,7 +95,7 @@ public class Menu {
 			}
 		}
 		@SuppressWarnings("unused")
-		Game runtime = new Game(true);
+		Game runtime = new Game();
 	}
 
 	public void options() {

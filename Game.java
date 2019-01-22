@@ -10,17 +10,14 @@ public class Game implements Serializable {
 
 	private Player player;
 	
-	public Game(boolean newGame) {
-		System.out.println("Got this far.");
-		if(newGame) {
+	public Game() {
 			this.init();
-		} else {
-			//Insert method to load the existing game from the file.;
 		}
-	}
+
 
 	public void init() {
 		int[] REPLICAS = {1,1,1,1,1,1,1,1};
+		//TODO add in a character creator when the player first initialises the game.
 		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, null, REPLICAS, null, null, null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, 400, 0);
 		Object[] contents = {bed};
@@ -32,7 +29,6 @@ public class Game implements Serializable {
 		playGame();
 	}
 	
-
 	public void playGame() {
 		boolean playing = true;
 		while(playing) {
@@ -43,7 +39,7 @@ public class Game implements Serializable {
 			for(int i = 1; i < inputArr.length; i++) {
 				verbObject = inputArr[i] + " ";
 			}
-			verbObject.trim();
+			verbObject = verbObject.toLowerCase().trim();
 			switch(verb) {
 				case("save"):
 					Menu.showSaves();
@@ -56,19 +52,23 @@ public class Game implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				break;
 				case("get"):
+					break;
 				case("use"):
+					break;
 				case("engage"):
+					break;
 				case("examine"):
 					for(int i = 0; i < player.getCurrentRoom().getContents().length; i++) {
 						Object current = player.getCurrentRoom().getContents()[i];
-						if(current.getName() == verbObject) {
+						if(current.getName().toLowerCase().equals(verbObject)) {
 							System.out.println(current.getDescription());
-							//Need to find out why nothing gets here.
 							break;
 						}
 						//finish this to allow the player to examine objects.
 					}
+				break;
 			}
 		}
 	}
