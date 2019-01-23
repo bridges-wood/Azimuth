@@ -29,44 +29,49 @@ public class Menu {
 				System.out.print("> ");
 			}
 		}
-		switch (choice) {
-		case 1:
-			newGame();
-			break;
-		case 2:
-			showSaves();
-			String in = Utilities.StrInput();
-			File file = null;
-			if(in.endsWith(".gme")) {
-				file = new File("SaveGames/" + in);
-			} else {
-				file = new File("SaveGames/" + in + ".gme");
+		while (true) {
+			switch (choice) {
+			case 1:
+				newGame();
+				break;
+			case 2:
+				showSaves();
+				String in = Utilities.StrInput();
+				File file = null;
+				if(in.endsWith(".gme")) {
+					file = new File("SaveGames/" + in);
+				} else {
+					file = new File("SaveGames/" + in + ".gme");
+				}
+				try {
+					Game runtime = Utilities.loadGame(file);
+					runtime.playGame();
+				} catch (ClassNotFoundException | IOException  | FileNotFoundException e) {
+					System.out.println("There has been an error ");
+				}
+				break;
+			case 3:
+				options();
+				break;
+			case 4:
+				credits();
+				break;
+			case 5:
+				System.out.println("Are you sure that you want to quit? [Y/n]");
+				System.out.print("> ");
+				String confirm = Utilities.StrInput();
+				if (confirm.toLowerCase() == "y") {
+					System.exit(0);
+				}
+				break;
 			}
-			try {
-				Game runtime = Utilities.loadGame(file);
-				runtime.playGame();
-			} catch (ClassNotFoundException | IOException e) {
-				System.out.println("There has been an error ");
-			}
-			break;
-		case 3:
-			options();
-			break;
-		case 4:
-			credits();
-			break;
-		case 5:
-			System.out.println("Are you sure that you want to quit? [Y/n]");
-			System.out.print("> ");
-			String confirm = Utilities.StrInput();
-			if (confirm.toLowerCase() == "y") {
-				System.exit(0);
-			}
-			break;
 		}
+		
+		
 	}
 
 	public static void showSaves() {
+		System.out.println("Your saves: ");
 		File[] files = new File("SaveGames/").listFiles();
 		int counter = 0;
 		for (File file : files) {

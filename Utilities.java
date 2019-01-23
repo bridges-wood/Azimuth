@@ -76,7 +76,7 @@ public class Utilities {
 			System.out.println("Room class not found.");
 			c.printStackTrace();
 			return null;
-		}
+		} catch (FileNot) //TODO fix file not found exception
 	}
 
 	public static void saveGame(File file, Game game) throws IOException {

@@ -121,6 +121,10 @@ public class Character implements Serializable {/**
 	public void setInventory(List<Object> inventory) {
 		this.inventory = inventory;
 	}
+	
+	public void addToInventory(Object toAdd) {
+		this.inventory.add(toAdd);
+	}
 
 	public int[] getREPLICAS() {
 		return REPLICAS;
