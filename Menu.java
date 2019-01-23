@@ -15,21 +15,22 @@ public class Menu {
 		System.out.println("3. Options");
 		System.out.println("4. Credits");
 		System.out.println("5. Quit");
-		System.out.print("> ");
-		while (choice > 5 || choice < 1) {
-			String in = "";
+		while (true) { //Continues prompting user for input if a non-terminal input is selected.
 			choice = 0;
-			in = Utilities.StrInput();
-			try {
-				choice = Integer.parseInt(in);
-				if (choice > 5 || choice < 1) {
+			System.out.print("> ");
+			while (choice > 5 || choice < 1) { //Checks if the user's choice is valid.
+				String in = "";
+				choice = 0;
+				in = Utilities.StrInput();
+				try {
+					choice = Integer.parseInt(in);
+					if (choice > 5 || choice < 1) {
+						System.out.print("> ");
+					}
+				} catch (Exception E) {
 					System.out.print("> ");
 				}
-			} catch (Exception E) {
-				System.out.print("> ");
 			}
-		}
-		while (true) {
 			switch (choice) {
 			case 1:
 				newGame();
@@ -38,15 +39,16 @@ public class Menu {
 				showSaves();
 				String in = Utilities.StrInput();
 				File file = null;
-				if(in.endsWith(".gme")) {
+				if (in.endsWith(".gme")) {
 					file = new File("SaveGames/" + in);
 				} else {
 					file = new File("SaveGames/" + in + ".gme");
 				}
 				try {
 					Game runtime = Utilities.loadGame(file);
+					System.out.println("Game successfully loaded.");
 					runtime.playGame();
-				} catch (ClassNotFoundException | IOException  | FileNotFoundException e) {
+				} catch (ClassNotFoundException | IOException e) {
 					System.out.println("There has been an error ");
 				}
 				break;
@@ -57,17 +59,11 @@ public class Menu {
 				credits();
 				break;
 			case 5:
-				System.out.println("Are you sure that you want to quit? [Y/n]");
-				System.out.print("> ");
-				String confirm = Utilities.StrInput();
-				if (confirm.toLowerCase() == "y") {
-					System.exit(0);
-				}
+				Utilities.testQuit();
 				break;
 			}
 		}
-		
-		
+
 	}
 
 	public static void showSaves() {
@@ -77,7 +73,8 @@ public class Menu {
 		for (File file : files) {
 			if (file.getName().endsWith(".gme")) {
 				counter++;
-				System.out.println(counter + ". " + file.getName());
+				System.out.println(counter + ". " + file.getName().substring(0, file.getName().length() -4));
+				//Cleans up filename to avoid confusion with name to be inputed in order to get a successful load.
 			}
 		}
 	}

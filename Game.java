@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game implements Serializable {
 	private static final long serialVersionUID = 557779407485802525L;
@@ -15,9 +16,13 @@ public class Game implements Serializable {
 	public void init() {
 		int[] REPLICAS = { 1, 1, 1, 1, 1, 1, 1, 1 };
 		// TODO add in a character creator when the player first initialises the game.
-		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, null, REPLICAS, null, null, null);
+		List<Object> emptyInventory = new ArrayList<Object>();
+		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyInventory, REPLICAS, null, null, null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, 400, 0);
-		Object[] contents = { bed };
+		Object torch = new Object(true, "Torch", "It is a torch.", null, 10, 0);
+		List<Object> contents = new ArrayList<Object>();
+		contents.add(torch);
+		contents.add(bed);
 		Room first = new Room(contents, null, "It is your bedroom", 1, null, null);
 		player.setCurrentRoom(first);
 		ArrayList<Room> rooms = new ArrayList<Room>();
@@ -40,9 +45,7 @@ public class Game implements Serializable {
 			verbObject = verbObject.toLowerCase().trim();
 			switch (verb) {
 			case ("quit"):
-				System.out.println("Are you sure you want to quit? [Y/n]");
-				String response = Utilities.StrInput(); //Ch
-				if (response.toLowerCase().equals("y")) System.exit(0);
+				Utilities.testQuit();
 				break;
 			case ("save"):
 				Menu.showSaves();
@@ -57,16 +60,20 @@ public class Game implements Serializable {
 				}
 				break;
 			case ("get"):
-				for (int i = 0; i < player.getCurrentRoom().getContents().length; i++) { //Checks if player wants to get meta-objects in a room.
-					Object current = player.getCurrentRoom().getContents()[i];
-					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()) {
-						player.addToInventory(current); //If the object is what they are trying to get, and it is able to be picked up, they can.
+				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) { //Checks if player wants to get meta-objects in a room.
+					Object current = player.getCurrentRoom().getContents().get(i);
+					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable() && (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
+						player.addToInventory(current); //If the object is what they are trying to get, and it is able to be picked up, they can, as long as it isn't too heavy.
+						player.getCurrentRoom().getContents().remove(current); //Removes the object from the room.
+						System.out.println("You pick the " + current.getName().toLowerCase() + " up.");
 						break;
-					} else if (current.getParts().length > 0) { //Checks if they want to get sub-objects.
-						for (i = 0; i < current.getParts().length; i++) {
-							current = player.getCurrentRoom().getContents()[i];
-							if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()) {
+					} else if (current.getParts() != null && current.getParts().size() > 0) { //Checks if they want to get sub-objects.
+						for (i = 0; i < current.getParts().size(); i++) {
+							Object currentPart = current.getParts().get(i);
+							if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable() && (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
 								player.addToInventory(current);
+								current.getParts().remove(currentPart); //Removes the object from the parts of the meta-object.
+								System.out.println("You pick the " + currentPart.getName().toLowerCase() + " up.");
 								break;
 							}
 						}
@@ -82,15 +89,18 @@ public class Game implements Serializable {
 				//TODO Initiates a fight.
 				break;
 			case ("examine"):
-				for (int i = 0; i < player.getCurrentRoom().getContents().length; i++) {
-					Object current = player.getCurrentRoom().getContents()[i];
+				boolean found = false;
+				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
+					Object current = player.getCurrentRoom().getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject)) {
 						System.out.println(current.getDescription());
+						found = true;
 						break;
 					}
 					// TODO finish this to allow the player to examine other things like their own
 					// weapons etc.
 				}
+				if(!found) System.out.println("You couldn't find that to look at.");
 				break;
 			// TODO add more verbs.
 			}

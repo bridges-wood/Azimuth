@@ -1,18 +1,19 @@
 import java.io.Serializable;
+import java.util.List;
 
 public class Room implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3521702290298779279L;
-	private Object[] contents;
+	private List<Object> contents;
 	private Character[] characters;
 	private String description;
 	private int id;
 	private int[] rooms;
 	private boolean[] access;
 	
-	public Room(Object[] contents, Character[] characters, String description, int id, int[] rooms, boolean[] access) {
+	public Room(List<Object> contents, Character[] characters, String description, int id, int[] rooms, boolean[] access) {
 		this.contents = contents;
 		this.characters = characters;
 		this.description = description;
@@ -38,10 +39,10 @@ public class Room implements Serializable {
 	public void setAccess(boolean[] access) {
 		this.access = access;
 	}
-	public Object[] getContents() {
+	public List<Object> getContents() {
 		return contents;
 	}
-	public void setContents(Object[] contents) {
+	public void setContents(List<Object> contents) {
 		this.contents = contents;
 	}
 	public Character[] getCharacters() {
@@ -56,4 +57,5 @@ public class Room implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 }

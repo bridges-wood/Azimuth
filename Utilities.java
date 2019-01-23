@@ -27,7 +27,7 @@ public class Utilities {
 
 	public static String StrInput() {
 		// Takes string input from the console.
-		@SuppressWarnings("resource") //Suppression of Resource Not Closed.
+		@SuppressWarnings("resource") // Suppression of Resource Not Closed.
 		Scanner in = new Scanner(System.in);
 		String out = "";
 		out = in.nextLine();
@@ -62,21 +62,12 @@ public class Utilities {
 	}
 
 	public static Game loadGame(File file) throws ClassNotFoundException, IOException {
-		try {
-			FileInputStream fileStream = new FileInputStream(file);
-			ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-			Game stored = (Game) objectStream.readObject();
-			objectStream.close();
-			fileStream.close();
-			return stored; //Fix
-		} catch (IOException i) {
-			i.printStackTrace();
-			return null;
-		} catch (ClassNotFoundException c) {
-			System.out.println("Room class not found.");
-			c.printStackTrace();
-			return null;
-		} catch (FileNot) //TODO fix file not found exception
+		FileInputStream fileStream = new FileInputStream(file);
+		ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+		Game stored = (Game) objectStream.readObject();
+		objectStream.close();
+		fileStream.close();
+		return stored;
 	}
 
 	public static void saveGame(File file, Game game) throws IOException {
@@ -90,5 +81,12 @@ public class Utilities {
 		} catch (IOException i) {
 			i.printStackTrace();
 		}
+	}
+	
+	public static void testQuit() {
+		System.out.println("Are you sure that you want to quit? [Y/n]");
+		System.out.print("> ");
+		String confirm = Utilities.StrInput();
+		if (confirm.toLowerCase().equals("y")) System.exit(0);
 	}
 }
