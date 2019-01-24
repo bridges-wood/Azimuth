@@ -17,7 +17,8 @@ public class Game implements Serializable {
 		int[] REPLICAS = { 1, 1, 1, 1, 1, 1, 1, 1 };
 		// TODO add in a character creator when the player first initialises the game.
 		List<Object> emptyInventory = new ArrayList<Object>();
-		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyInventory, REPLICAS, null, null, null);
+		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyInventory, REPLICAS, null,
+				null, null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, 400, 0);
 		Object torch = new Object(true, "Torch", "It is a torch.", null, 10, 0);
 		List<Object> contents = new ArrayList<Object>();
@@ -33,8 +34,11 @@ public class Game implements Serializable {
 
 	public void playGame() {
 		boolean playing = true;
+		boolean moved = true;
 		while (playing) {
-			//TODO when player enters a room, display the description, contents and occupying characters.
+			if(moved) {
+				System.out.println(player.);
+			}
 			String userIn = Utilities.StrInput();
 			String[] inputArr = userIn.split(" ");
 			String verb = inputArr[0];
@@ -60,19 +64,27 @@ public class Game implements Serializable {
 				}
 				break;
 			case ("get"):
-				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) { //Checks if player wants to get meta-objects in a room.
+				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) { // Checks if player wants to
+																							// get meta-objects in a
+																							// room.
 					Object current = player.getCurrentRoom().getContents().get(i);
-					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable() && (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
-						player.addToInventory(current); //If the object is what they are trying to get, and it is able to be picked up, they can, as long as it isn't too heavy.
-						player.getCurrentRoom().getContents().remove(current); //Removes the object from the room.
+					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
+							&& (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
+						player.addToInventory(current); // If the object is what they are trying to get, and it is able
+														// to be picked up, they can, as long as it isn't too heavy.
+						player.getCurrentRoom().getContents().remove(current); // Removes the object from the room.
 						System.out.println("You pick the " + current.getName().toLowerCase() + " up.");
 						break;
-					} else if (current.getParts() != null && current.getParts().size() > 0) { //Checks if they want to get sub-objects.
+					} else if (current.getParts() != null && current.getParts().size() > 0) { // Checks if they want to
+																								// get sub-objects.
 						for (i = 0; i < current.getParts().size(); i++) {
 							Object currentPart = current.getParts().get(i);
-							if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable() && (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
+							if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
+									&& (player.getInventorySize() > player.getTotalInventoryWeight()
+											+ current.getWeight())) {
 								player.addToInventory(current);
-								current.getParts().remove(currentPart); //Removes the object from the parts of the meta-object.
+								current.getParts().remove(currentPart); // Removes the object from the parts of the
+																		// meta-object.
 								System.out.println("You pick the " + currentPart.getName().toLowerCase() + " up.");
 								break;
 							}
@@ -81,12 +93,15 @@ public class Game implements Serializable {
 				}
 				break;
 			case ("use"):
-				//Allows use of keys on doors etc. to solve puzzles or whatever else.
-				//TODO Will need a  different way of handling input to check if the two objects can be used on each other.
-				//This will also require a change to the object class to determine which objects can interact with others as well as possible states like locked and unlocked etc. 
+				// Allows use of keys on doors etc. to solve puzzles or whatever else.
+				// TODO Will need a different way of handling input to check if the two objects
+				// can be used on each other.
+				// This will also require a change to the object class to determine which
+				// objects can interact with others as well as possible states like locked and
+				// unlocked etc.
 				break;
 			case ("engage"):
-				//TODO Initiates a fight.
+				// TODO Initiates a fight.
 				break;
 			case ("examine"):
 				boolean found = false;
@@ -100,9 +115,22 @@ public class Game implements Serializable {
 					// TODO finish this to allow the player to examine other things like their own
 					// weapons etc.
 				}
-				if(!found) System.out.println("You couldn't find that to look at.");
+				if (!found)
+					System.out.println("You couldn't find that to look at.");
 				break;
-			// TODO add more verbs.
+			case ("go"):
+				switch (verbObject) {
+				case ("up"):
+					if()
+				case("down"):
+				case("left"):
+				case("right"):
+				case("forwards"):
+				case("backwards"):
+				case("in"):
+				case("out"):
+				}
+				// TODO add more verbs.
 			}
 		}
 	}

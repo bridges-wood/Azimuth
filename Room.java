@@ -10,7 +10,7 @@ public class Room implements Serializable {
 	private Character[] characters;
 	private String description;
 	private int id;
-	private int[] rooms;
+	private int[] rooms; //Up, down, left, right, forward, backward, in, out.
 	private boolean[] access;
 	
 	public Room(List<Object> contents, Character[] characters, String description, int id, int[] rooms, boolean[] access) {
