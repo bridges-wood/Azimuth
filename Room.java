@@ -7,13 +7,13 @@ public class Room implements Serializable {
 	 */
 	private static final long serialVersionUID = -3521702290298779279L;
 	private List<Object> contents;
-	private Character[] characters;
+	private List<Character> characters;
 	private String description;
 	private int id;
-	private int[] rooms; //Up, down, left, right, forward, backward, in, out.
+	private Room[] rooms; //Up, down, left, right, forward, backward, in, out.
 	private boolean[] access;
 	
-	public Room(List<Object> contents, Character[] characters, String description, int id, int[] rooms, boolean[] access) {
+	public Room(List<Object> contents, List<Character> characters, String description, int id, Room[] rooms, boolean[] access) {
 		this.contents = contents;
 		this.characters = characters;
 		this.description = description;
@@ -27,10 +27,10 @@ public class Room implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int[] getRooms() {
+	public Room[] getRooms() {
 		return rooms;
 	}
-	public void setRooms(int[] rooms) {
+	public void setRooms(Room[] rooms) {
 		this.rooms = rooms;
 	}
 	public boolean[] getAccess() {
@@ -45,10 +45,10 @@ public class Room implements Serializable {
 	public void setContents(List<Object> contents) {
 		this.contents = contents;
 	}
-	public Character[] getCharacters() {
+	public List<Character> getCharacters() {
 		return characters;
 	}
-	public void setCharacters(Character[] characters) {
+	public void setCharacters(List<Character> characters) {
 		this.characters = characters;
 	}
 	public String getDescription() {

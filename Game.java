@@ -8,6 +8,8 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = 557779407485802525L;
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private Player player;
+	List<Character> emptyCharacters = new ArrayList<Character>();
+	List<Object> emptyObjects = new ArrayList<Object>();
 
 	public Game() {
 		this.init();
@@ -16,15 +18,14 @@ public class Game implements Serializable {
 	public void init() {
 		int[] REPLICAS = { 1, 1, 1, 1, 1, 1, 1, 1 };
 		// TODO add in a character creator when the player first initialises the game.
-		List<Object> emptyInventory = new ArrayList<Object>();
-		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyInventory, REPLICAS, null,
-				null, null);
+		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyObjects, REPLICAS, null, null,
+				null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, 400, 0);
 		Object torch = new Object(true, "Torch", "It is a torch.", null, 10, 0);
 		List<Object> contents = new ArrayList<Object>();
 		contents.add(torch);
 		contents.add(bed);
-		Room first = new Room(contents, null, "It is your bedroom", 1, null, null);
+		Room first = new Room(contents, emptyCharacters, "It is your bedroom", 1, null, null);
 		player.setCurrentRoom(first);
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		rooms.add(first);
@@ -36,8 +37,27 @@ public class Game implements Serializable {
 		boolean playing = true;
 		boolean moved = true;
 		while (playing) {
-			if(moved) {
-				System.out.println(player.);
+			if (moved) {
+				System.out.println(player.getCurrentRoom().getDescription());
+				if (player.getCurrentRoom().getContents().size() > 0) {
+					System.out.println("Around you, you can see: ");
+					for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
+						//Set this to make it say a or an before each object.
+						System.out.println("> " + player.getCurrentRoom().getContents().get(i).getName());
+					}
+					System.out.println();
+				} else {
+					System.out.println("There is nothing in this room.");
+				}
+				if (player.getCurrentRoom().getCharacters().size() > 0) {
+					System.out.println("There are others with you. You see: ");
+					for (int i = 0; i < player.getCurrentRoom().getCharacters().size(); i++) {
+						System.out.println(player.getCurrentRoom().getCharacters().get(i).getName());
+					}
+				} else {
+					System.out.println("There is no one else here.");
+				}
+				moved = false;
 			}
 			String userIn = Utilities.StrInput();
 			String[] inputArr = userIn.split(" ");
@@ -121,14 +141,53 @@ public class Game implements Serializable {
 			case ("go"):
 				switch (verbObject) {
 				case ("up"):
-					if()
-				case("down"):
-				case("left"):
-				case("right"):
-				case("forwards"):
-				case("backwards"):
-				case("in"):
-				case("out"):
+					if (player.getCurrentRoom().getAccess()[0]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[0]);
+						moved = true;
+					}
+					break;
+				case ("down"):
+					if (player.getCurrentRoom().getAccess()[1]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[1]);
+						moved = true;
+					}
+					break;
+				case ("left"):
+					if (player.getCurrentRoom().getAccess()[2]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[2]);
+						moved = true;
+					}
+					break;
+				case ("right"):
+					if (player.getCurrentRoom().getAccess()[3]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[3]);
+						moved = true;
+					}
+					break;
+				case ("forwards"):
+					if (player.getCurrentRoom().getAccess()[4]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[4]);
+						moved = true;
+					}
+					break;
+				case ("backwards"):
+					if (player.getCurrentRoom().getAccess()[5]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[5]);
+						moved = true;
+					}
+					break;
+				case ("in"):
+					if (player.getCurrentRoom().getAccess()[6]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[6]);
+						moved = true;
+					}
+					break;
+				case ("out"):
+					if (player.getCurrentRoom().getAccess()[7]) {
+						player.setCurrentRoom(player.getCurrentRoom().getRooms()[7]);
+						moved = true;
+					}
+					break;
 				}
 				// TODO add more verbs.
 			}
