@@ -25,7 +25,9 @@ public class Game implements Serializable {
 		List<Object> contents = new ArrayList<Object>();
 		contents.add(torch);
 		contents.add(bed);
-		Room first = new Room(contents, emptyCharacters, "It is your bedroom", 1, null, null);
+		Room first = new Room(contents, emptyCharacters,
+				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.",
+				1, null, null);
 		player.setCurrentRoom(first);
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		rooms.add(first);
@@ -34,6 +36,11 @@ public class Game implements Serializable {
 	}
 
 	public void playGame() {
+		try {
+			Utilities.saveGame(Menu.getCurrentFile(), this, false);
+		} catch (IOException e1) {
+			System.out.println("Autosave failed.");
+		}
 		boolean playing = true;
 		boolean moved = true;
 		while (playing) {
@@ -42,8 +49,14 @@ public class Game implements Serializable {
 				if (player.getCurrentRoom().getContents().size() > 0) {
 					System.out.println("Around you, you can see: ");
 					for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
-						//Set this to make it say a or an before each object.
-						System.out.println("> " + player.getCurrentRoom().getContents().get(i).getName());
+						String currentName = player.getCurrentRoom().getContents().get(i).getName();
+						System.out.print("> ");
+						if (currentName.startsWith("[aeiou]")) {
+							System.out.print("An ");
+						} else {
+							System.out.print("A ");
+						}
+						System.out.println(currentName.toLowerCase());
 					}
 					System.out.println();
 				} else {
@@ -77,10 +90,9 @@ public class Game implements Serializable {
 				String name = Utilities.StrInput();
 				File file = new File("SaveGames/" + name + ".gme");
 				try {
-					Utilities.saveGame(file, this);
+					Utilities.saveGame(file, this, true);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Save failed.");
 				}
 				break;
 			case ("get"):
@@ -109,6 +121,9 @@ public class Game implements Serializable {
 								break;
 							}
 						}
+					} else {
+						System.out.println("You couldn't pick that up.");
+						break;
 					}
 				}
 				break;
@@ -132,8 +147,23 @@ public class Game implements Serializable {
 						found = true;
 						break;
 					}
-					// TODO finish this to allow the player to examine other things like their own
-					// weapons etc.
+				}
+				//TODO able to examine sub parts of objects.
+				if(verbObject.equals("inventory")) {
+					System.out.println("In your inventory you have: ");
+					for(int i = 0; i < player.getInventory().size(); i++) {
+						String currentName = player.getInventory().get(i).getName();
+						System.out.print("> ");
+						if (currentName.startsWith("[aeiou]")) {
+							System.out.print("An ");
+						} else {
+							System.out.print("A ");
+						}
+						System.out.println(currentName.toLowerCase());
+						//TODO case for if amount of ammunition in inventory. 
+					}
+					found = true;
+					break;
 				}
 				if (!found)
 					System.out.println("You couldn't find that to look at.");

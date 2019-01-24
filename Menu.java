@@ -2,7 +2,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Menu {
-
+	private static File currentFile;
+	
 	public static void main(String[] args) {
 		new Menu();
 	}
@@ -47,6 +48,7 @@ public class Menu {
 				try {
 					Game runtime = Utilities.loadGame(file);
 					System.out.println("Game successfully loaded.");
+					setCurrentFile(file);
 					runtime.playGame();
 				} catch (ClassNotFoundException | IOException e) {
 					System.out.println("There has been an error ");
@@ -87,6 +89,7 @@ public class Menu {
 			try {
 				if (file.createNewFile()) {
 					System.out.println("Game created.");
+					setCurrentFile(file);
 					break;
 				} else {
 					System.out.println("A save with name: " + name + " already exists.");
@@ -106,6 +109,14 @@ public class Menu {
 
 	public void credits() {
 
+	}
+
+	public static File getCurrentFile() {
+		return currentFile;
+	}
+
+	public void setCurrentFile(File currentFile) {
+		Menu.currentFile = currentFile;
 	}
 
 }

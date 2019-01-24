@@ -70,14 +70,14 @@ public class Utilities {
 		return stored;
 	}
 
-	public static void saveGame(File file, Game game) throws IOException {
+	public static void saveGame(File file, Game game, boolean display) throws IOException {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(file);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(game);
 			out.close();
 			fileOut.close();
-			System.out.println("Data saved in: " + file.getName());
+			if(display) System.out.println("Data saved in: " + file.getName());
 		} catch (IOException i) {
 			i.printStackTrace();
 		}
