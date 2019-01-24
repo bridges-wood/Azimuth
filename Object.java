@@ -10,14 +10,16 @@ public class Object implements Serializable { /**
 	private boolean inventoriable;
 	private String name, description;
 	private List<Object> parts;
+	private String[] combinable;
 	private int weight, value;
 
 	public Object(boolean inventoriable, String name, String description, 
-			List<Object> parts, int weight, int value) {
+			List<Object> parts, String[] combinable, int weight, int value) {
 		this.inventoriable = inventoriable;
 		this.name = name;
 		this.description = description;
 		this.parts = parts;
+		this.combinable = combinable;
 		this.weight = weight;
 		this.value = value;
 	}
@@ -70,6 +72,14 @@ public class Object implements Serializable { /**
 
 	public void setParts(List<Object> parts) {
 		this.parts = parts;
+	}
+
+	public String[] getCombinable() {
+		return combinable;
+	}
+
+	public void setCombinable(String[] combinable) {
+		this.combinable = combinable;
 	}
 
 }

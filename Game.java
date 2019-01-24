@@ -20,8 +20,12 @@ public class Game implements Serializable {
 		// TODO add in a character creator when the player first initialises the game.
 		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyObjects, REPLICAS, null, null,
 				null);
-		Object bed = new Object(false, "Bed", "It is your bed.", null, 400, 0);
-		Object torch = new Object(true, "Torch", "It is a torch.", null, 10, 0);
+		Object bed = new Object(false, "Bed", "It is your bed.", null, null, 400, 0);
+		String[] combinable = {"Torch"};
+		Object battery = new Object(true, "Battery", "It is a battery.", null, combinable, 1, 0);
+		List<Object> parts = new ArrayList<Object>();
+		parts.add(battery);
+		Object torch = new Object(true, "Torch", "It is a torch.", parts, null, 10, 0);
 		List<Object> contents = new ArrayList<Object>();
 		contents.add(torch);
 		contents.add(bed);
@@ -30,6 +34,8 @@ public class Game implements Serializable {
 				1, null, null);
 		player.setCurrentRoom(first);
 		ArrayList<Room> rooms = new ArrayList<Room>();
+
+		// TODO Clean up this method to add rooms, objects and characters separately.
 		rooms.add(first);
 		setRooms(rooms);
 		playGame();
@@ -96,7 +102,7 @@ public class Game implements Serializable {
 				}
 				break;
 			case ("get"):
-				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) { // Checks if player wants to
+				for (int i = 0; i < player.getCurrentRoom().getContents().size();) { // Checks if player wants to
 																							// get meta-objects in a
 																							// room.
 					Object current = player.getCurrentRoom().getContents().get(i);
@@ -111,16 +117,16 @@ public class Game implements Serializable {
 																								// get sub-objects.
 						for (i = 0; i < current.getParts().size(); i++) {
 							Object currentPart = current.getParts().get(i);
-							if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
+							if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()
 									&& (player.getInventorySize() > player.getTotalInventoryWeight()
-											+ current.getWeight())) {
-								player.addToInventory(current);
+											+ currentPart.getWeight())) {
+								player.addToInventory(currentPart);
 								current.getParts().remove(currentPart); // Removes the object from the parts of the
 																		// meta-object.
 								System.out.println("You pick the " + currentPart.getName().toLowerCase() + " up.");
-								break;
 							}
 						}
+						break;
 					} else {
 						System.out.println("You couldn't pick that up.");
 						break;
@@ -128,12 +134,44 @@ public class Game implements Serializable {
 				}
 				break;
 			case ("use"):
+				String actStr = "", objStr = "";
+				boolean complete = false, successful = false;
+				for(int i = 1; i < inputArr.length; i++) {
+					if (!complete && !inputArr[i].equals("on")) {
+						actStr = actStr + inputArr[i] + " ";
+					} else if (!complete) {
+						complete = true;
+					} else if (complete && !inputArr[i].equals("on")) {
+						objStr = objStr + inputArr[i] + " ";
+					}
+				}
+				actStr = actStr.trim();
+				objStr = objStr.trim();
+				Object actObj = null, objObj = null;
+				for(int i = 0; i < player.getInventory().size(); i++) {
+					if (player.getInventory().get(i).getName().equals(actStr)) {
+						actObj = player.getInventory().get(i);
+					} else if (player.getInventory().get(i).getName().equals(objStr)) {
+						objObj = player.getInventory().get(i);
+					}
+				}
+				if(!actObj.equals(null) && !actObj.getCombinable().equals(null) && actObj.getCombinable().length > 0) {
+					for(int i = 0; i < actObj.getCombinable().length; i++) {
+						if(objObj != null && actObj.getCombinable()[i].equals(objStr)) {
+							actObj.getParts().add(objObj);
+							player.getInventory().remove(objObj);
+							successful = true;
+						}
+					}
+				}
+				if(successful) System.out.println(actStr + " and " + objStr + " successfully combined.");
 				// Allows use of keys on doors etc. to solve puzzles or whatever else.
 				// TODO Will need a different way of handling input to check if the two objects
 				// can be used on each other.
 				// This will also require a change to the object class to determine which
 				// objects can interact with others as well as possible states like locked and
 				// unlocked etc.
+				// TODO PRIORITY Also need to determine which objects can be used on others.
 				break;
 			case ("engage"):
 				// TODO Initiates a fight.
@@ -144,14 +182,37 @@ public class Game implements Serializable {
 					Object current = player.getCurrentRoom().getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject)) {
 						System.out.println(current.getDescription());
+						if(current.getParts() != null && current.getParts().size() > 0) {
+							for(i = 0; i < current.getParts().size(); i++) {
+								System.out.println("You see it contains: ");
+								String currentName = current.getParts().get(i).getName();
+								System.out.print("> ");
+								if (currentName.startsWith("[aeiou]")) {
+									System.out.print("An ");
+								} else {
+									System.out.print("A ");
+								}
+								System.out.println(currentName.toLowerCase());
+							}
+							}
 						found = true;
 						break;
+					} else if (current.getParts() != null && current.getParts().size() > 0) {
+						for (i = 0; i < current.getParts().size(); i++) {
+							Object currentPart = current.getParts().get(i);
+							if (currentPart.getName().toLowerCase().equals(verbObject)) {
+								System.out.println(currentPart.getDescription());
+								found = true;
+								break;
+							}
+						}
 					}
 				}
-				//TODO able to examine sub parts of objects.
-				if(verbObject.equals("inventory")) {
+
+				// TODO able to examine sub parts of objects.
+				if (verbObject.equals("inventory")) {
 					System.out.println("In your inventory you have: ");
-					for(int i = 0; i < player.getInventory().size(); i++) {
+					for (int i = 0; i < player.getInventory().size(); i++) {
 						String currentName = player.getInventory().get(i).getName();
 						System.out.print("> ");
 						if (currentName.startsWith("[aeiou]")) {
@@ -160,7 +221,7 @@ public class Game implements Serializable {
 							System.out.print("A ");
 						}
 						System.out.println(currentName.toLowerCase());
-						//TODO case for if amount of ammunition in inventory. 
+						// TODO case for if amount of ammunition in inventory.
 					}
 					found = true;
 					break;
@@ -221,7 +282,9 @@ public class Game implements Serializable {
 				}
 				// TODO add more verbs.
 			}
-		}
+
+	}
+
 	}
 
 	public ArrayList<Room> getRooms() {
