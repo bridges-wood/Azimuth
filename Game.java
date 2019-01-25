@@ -10,6 +10,7 @@ public class Game implements Serializable {
 	private Player player;
 	List<Character> emptyCharacters = new ArrayList<Character>();
 	List<Object> emptyObjects = new ArrayList<Object>();
+	Object nullObject = new Object(false, null, null, null, null, 0, 0);
 
 	public Game() {
 		this.init();
@@ -147,24 +148,24 @@ public class Game implements Serializable {
 				}
 				actStr = actStr.trim();
 				objStr = objStr.trim();
-				Object actObj = null, objObj = null;
+				Object actObj = nullObject, objObj = nullObject;
 				for(int i = 0; i < player.getInventory().size(); i++) {
-					if (player.getInventory().get(i).getName().equals(actStr)) {
+					if (player.getInventory().get(i).getName().toLowerCase().equals(actStr)) {
 						actObj = player.getInventory().get(i);
-					} else if (player.getInventory().get(i).getName().equals(objStr)) {
+					} else if (player.getInventory().get(i).getName().toLowerCase().equals(objStr)) {
 						objObj = player.getInventory().get(i);
 					}
 				}
-				if(!actObj.equals(null) && !actObj.getCombinable().equals(null) && actObj.getCombinable().length > 0) {
+				if(!actObj.equals(nullObject) && !actObj.getCombinable().equals(null) && actObj.getCombinable().length > 0) {
 					for(int i = 0; i < actObj.getCombinable().length; i++) {
-						if(objObj != null && actObj.getCombinable()[i].equals(objStr)) {
-							actObj.getParts().add(objObj);
-							player.getInventory().remove(objObj);
+						if(!objObj.equals(nullObject) && actObj.getCombinable()[i].toLowerCase().equals(objStr)) {
+							objObj.getParts().add(actObj);
+							player.getInventory().remove(actObj);
 							successful = true;
 						}
 					}
 				}
-				if(successful) System.out.println(actStr + " and " + objStr + " successfully combined.");
+				if(successful) System.out.println(actStr.substring(0, 1).toUpperCase() + actStr.substring(1) + " and " + objStr + " successfully combined.");
 				// Allows use of keys on doors etc. to solve puzzles or whatever else.
 				// TODO Will need a different way of handling input to check if the two objects
 				// can be used on each other.

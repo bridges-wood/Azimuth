@@ -1,5 +1,9 @@
 
 public class Consumables extends Object {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5822284005527688486L;
 	//heals, replicas, skills
 	private int healing;
 	private int[] skills;
