@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Collections;
 
 public class Ammunition extends Object implements Serializable {//TODO Kinetic(Bullets), Plasma Cells, Power Cells, Missiles, Ferrous projectiles.
 	/**
@@ -10,7 +11,7 @@ public class Ammunition extends Object implements Serializable {//TODO Kinetic(B
 	
 	public Ammunition(String name, Object[] parts, 
 			int value, int weight, float calibre, String damageType, String description) {
-		super(true, name, description, null, value, 0);
+		super(true, name, description, Collections.emptyList(), null, value, 0);
 		this.calibre = calibre;
 		this.damageType = damageType;
 	}

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.List;
 
 public class Apparel extends Object implements Serializable {
 	/**
@@ -9,10 +10,10 @@ public class Apparel extends Object implements Serializable {
 	private int area, damageThreshold;
 	private int[] REPLICASmodifiers, resistances; //Corrosive, Kinetic, Energy, Thermal, Radiation.
 	
-	public Apparel(String name, String description, Object[] parts, 
+	public Apparel(String name, String description, List<Object> parts, 
 			int weight, int value, boolean isUnderClothes, int area, 
 			int[] resistances, int[] REPLICASmodifiers, int damageThreshold) {
-		super(true, name, description, parts, weight, value);
+		super(true, name, description, parts, null, weight, value);
 		this.isUnderClothes = isUnderClothes;
 		this.area = area;
 		this.resistances = resistances;

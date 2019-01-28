@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 public class Terminal extends Object implements Serializable {
@@ -13,7 +14,7 @@ public class Terminal extends Object implements Serializable {
 	private int difficulty;
 
 	public Terminal(String name, String description, int difficulty, boolean[] locked, String[] logNames, String[] logs, String[] usernames, String[] passwords) {
-		super(false, name, description, null, 0, 0);
+		super(false, name, description, Collections.emptyList(), null, 0, 0);
 		this.usernames = usernames; //0 is MASTER.
 		this.passwords = passwords; //0 is appropriate master password.
 		this.difficulty = difficulty;

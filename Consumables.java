@@ -1,24 +1,44 @@
+
 import java.io.Serializable;
+import java.util.List;
 
 public class Consumables extends Object implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4352137502541921937L;
-	private int healthModifier;
-	private int[] skillsModifiers;
-	private int[] replicasModifiers;
+	private static final long serialVersionUID = -5822284005527688486L;
+	// heals, replicas, skills
+	private int healing;
+	private int[] skills;
+	private int[] replicas;
 	private int duration;
 
-	public Consumables(boolean inventoriable, String name, String description, Object[] parts, int weight, int value,
-			int healthModifier, int[] skillsModifiers, int[] replicasModifiers, int duration) {
-		super(inventoriable, name, description, parts, weight, value);
-		this.healthModifier = healthModifier;
-		this.skillsModifiers = skillsModifiers;
-		this.replicasModifiers = replicasModifiers;
-		this.duration = duration;
+
+	public Consumables(boolean inventoriable, String name, String description, List<Object> parts, String[] combinable,
+			int weight, int value, int healing, int[] skills, int[] replicas, int duration) {
+		super(inventoriable, name, description, parts, combinable, weight, value);
+	}
+	
+	public int getHealing() {
+		return healing;
 	}
 
+	public void setHealing(int healing) {
+		this.healing = healing;
+	}
+
+	public int[] getSkills() {
+		return skills;
+	}
+
+	public void setSkills(int[] skills) {
+		this.skills = skills;
+	}
+
+	public int[] getReplicas() {
+		return replicas;
+	}
+
+	public void setReplicas(int[] replicas) {
+		this.replicas = replicas;
+	}
 
 	public int getDuration() {
 		return duration;
@@ -28,28 +48,7 @@ public class Consumables extends Object implements Serializable {
 		this.duration = duration;
 	}
 
-	public int[] getReplicasModifiers() {
-		return replicasModifiers;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
-
-	public void setReplicasModifiers(int[] replicasModifiers) {
-		this.replicasModifiers = replicasModifiers;
-	}
-
-	public int[] getSkillsModifiers() {
-		return skillsModifiers;
-	}
-
-	public void setSkillsModifiers(int[] skillsModifiers) {
-		this.skillsModifiers = skillsModifiers;
-	}
-
-	public int getHealthModifier() {
-		return healthModifier;
-	}
-
-	public void setHealthModifier(int healthModifier) {
-		this.healthModifier = healthModifier;
-	}
-
 }

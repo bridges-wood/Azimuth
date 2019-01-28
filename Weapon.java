@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.List;
 
 public class Weapon extends Object implements Serializable { //Plasma, Gauss/Railgun, Laser, Melee, Kinetic. 
 	/**
@@ -12,11 +13,11 @@ public class Weapon extends Object implements Serializable { //Plasma, Gauss/Rai
 	private Ammunition ammunition;
 	
 	public Weapon(boolean inventoriable, String name, int weight, int value, 
-			String description, Object[] parts, String type, int damage, 
+			String description, List<Object> parts, String[] combinable, String type, int damage, 
 			int rateOfFire, int condition, int durability, float accuracy, 
 			float critChance, float critDamage, Modification[] modifications, 
 			Ammunition ammunition, int magazineCapacity) {
-		super(inventoriable, name, description, parts, weight, value);
+		super(inventoriable, name, description, parts, combinable, weight, value);
 		this.type = type;
 		this.damage = damage;
 		this.rateOfFire = rateOfFire;

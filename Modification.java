@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Collections;
 
 public class Modification extends Object implements Serializable {/**
 	 * 
@@ -15,7 +16,7 @@ public class Modification extends Object implements Serializable {/**
 			int rateOfFireMod, int conditionMod, int durabilityMod, float accuracyMod,
 			float critChanceMod, float critDamageMod, Ammunition ammunitionMod, 
 			int magazineCapacityMod, Skill skilledUse) {
-		super(true, name, description, null, weight, value);
+		super(true, name, description, Collections.emptyList(), null, weight, value);
 		this.typeMod = typeMod;
 		this.damageMod = damageMod;
 		this.rateOfFireMod = rateOfFireMod;
