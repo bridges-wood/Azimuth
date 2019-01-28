@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game implements Serializable {
@@ -10,7 +11,7 @@ public class Game implements Serializable {
 	private Player player;
 	List<Character> emptyCharacters = new ArrayList<Character>();
 	List<Object> emptyObjects = new ArrayList<Object>();
-	Object nullObject = new Object(false, null, null, null, null, 0, 0);
+	Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);
 
 	public Game() {
 		this.init();
@@ -19,14 +20,16 @@ public class Game implements Serializable {
 	public void init() {
 		int[] REPLICAS = { 1, 1, 1, 1, 1, 1, 1, 1 };
 		// TODO add in a character creator when the player first initialises the game.
-		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyObjects, REPLICAS, null, null,
+		// NOTE when creating objects with null references, create an empty data type
+		// instance.
+		this.player = new Player("Player", "", 0, 0, 20, 0, null, null, null, null, 20, emptyObjects, REPLICAS, null, null,
 				null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, null, 400, 0);
 		String[] combinable = { "Torch" };
-		Object battery = new Object(true, "Battery", "It is a battery.", null, combinable, 1, 0);
+		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
 		List<Object> parts = new ArrayList<Object>();
 		parts.add(battery);
-		Object torch = new Object(true, "Torch", "It is a torch.", parts, null, 10, 0);
+		Object torch = new Object(true, "Torch", "It is a torch.", parts, new String[0], 10, 0);
 		List<Object> contents = new ArrayList<Object>();
 		contents.add(torch);
 		contents.add(bed);
@@ -51,7 +54,7 @@ public class Game implements Serializable {
 		boolean playing = true;
 		boolean moved = true;
 		while (playing) {
-			Room currentRoom = player.getCurrentRoom(); //Impermanent room reference.
+			Room currentRoom = player.getCurrentRoom(); // Impermanent room reference.
 			if (moved) {
 				System.out.println(currentRoom.getDescription());
 				if (currentRoom.getContents().size() > 0) {
@@ -88,10 +91,12 @@ public class Game implements Serializable {
 				verbObject = inputArr[i] + " ";
 			}
 			verbObject = verbObject.toLowerCase().trim();
+
 			switch (verb) {
 			case ("quit"):
 				Utilities.testQuit();
 				break;
+
 			case ("save"):
 				Menu.showSaves();
 				System.out.println("Input the names of the file you wish to save in: ");
@@ -103,23 +108,25 @@ public class Game implements Serializable {
 					System.out.println("Save failed.");
 				}
 				break;
-				
+
 			case ("drop"):
 				boolean success = false;
-				for(int i = 0; i < player.getInventory().size(); i++) {
+				for (int i = 0; i < player.getInventory().size(); i++) {
 					Object current = player.getInventory().get(i);
-					if(current.getName().toLowerCase().equals(verbObject)) {
-						player.getCurrentRoom().getContents().add(current);
+					if (current.getName().toLowerCase().equals(verbObject)) {
+						currentRoom.getContents().add(current);
 						player.getInventory().remove(current);
 						success = true;
 					}
 				}
-				if(success) System.out.println("You drop the " + verbObject + ".");
-			break;
-			
+				if (success)
+					System.out.println("You drop the " + verbObject + ".");
+				break;
+
 			case ("get"):
-				for (int i = 0; i < player.getCurrentRoom().getContents().size();) { // Checks if player wants to																						// get meta-objects in 																	// room.
-					Object current = player.getCurrentRoom().getContents().get(i);
+				for (int i = 0; i < currentRoom.getContents().size();) { // Checks if player wants to // get
+																			// meta-objects in // room.
+					Object current = currentRoom.getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
 							&& (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
 						player.addToInventory(current); // If the object is what they are trying to get, and it is able
@@ -147,6 +154,7 @@ public class Game implements Serializable {
 					}
 				}
 				break;
+
 			case ("use"):
 				String actStr = "", objStr = "";
 				boolean complete = false, successful = false;
@@ -169,7 +177,7 @@ public class Game implements Serializable {
 						objObj = player.getInventory().get(i);
 					}
 				}
-				if (!actObj.equals(nullObject) && !actObj.getCombinable().equals(null)
+				if (!actObj.equals(nullObject) && !actObj.getCombinable().equals(new String[0])
 						&& actObj.getCombinable().length > 0) {
 					for (int i = 0; i < actObj.getCombinable().length; i++) {
 						if (!objObj.equals(nullObject) && actObj.getCombinable()[i].toLowerCase().equals(objStr)) {
@@ -187,17 +195,19 @@ public class Game implements Serializable {
 				// objects can interact with others as well as possible states like locked and
 				// unlocked etc.
 				break;
+
 			case ("engage"):
 				// TODO Initiates a fight.
 				break;
+
 			case ("examine"):
 				boolean found = false;
 				for (int i = 0; i < currentRoom.getContents().size(); i++) {
 					Object current = currentRoom.getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject)) {
 						System.out.println(current.getDescription());
-						if(current.getParts() != null && current.getParts().size() > 0) {
-							for(i = 0; i < current.getParts().size(); i++) {
+						if (current.getParts() != null && current.getParts().size() > 0) {
+							for (i = 0; i < current.getParts().size(); i++) {
 								System.out.println("You see it contains: ");
 								String currentName = current.getParts().get(i).getName();
 								System.out.print("> ");
@@ -208,7 +218,7 @@ public class Game implements Serializable {
 								}
 								System.out.println(currentName.toLowerCase());
 							}
-							}
+						}
 						found = true;
 						break;
 					} else if (current.getParts() != null && current.getParts().size() > 0) {
@@ -222,8 +232,6 @@ public class Game implements Serializable {
 						}
 					}
 				}
-
-				// TODO able to examine sub parts of objects.
 				if (verbObject.equals("inventory")) {
 					System.out.println("In your inventory you have: ");
 					for (int i = 0; i < player.getInventory().size(); i++) {
@@ -240,8 +248,8 @@ public class Game implements Serializable {
 					found = true;
 					break;
 				}
-				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
-					Object current = player.getCurrentRoom().getContents().get(i);
+				for (int i = 0; i < currentRoom.getContents().size(); i++) {
+					Object current = currentRoom.getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject)) {
 						System.out.println(current.getDescription());
 						Utilities.printSubObjects(current);
@@ -258,9 +266,9 @@ public class Game implements Serializable {
 						}
 					}
 				}
-				for(int i = 0; i < player.getInventory().size(); i++) {
+				for (int i = 0; i < player.getInventory().size(); i++) {
 					Object current = player.getInventory().get(i);
-					if(current.getName().toLowerCase().equals(verbObject)) {
+					if (current.getName().toLowerCase().equals(verbObject)) {
 						System.out.println(current.getDescription());
 						Utilities.printSubObjects(current);
 						found = true;
@@ -270,6 +278,7 @@ public class Game implements Serializable {
 				if (!found)
 					System.out.println("You couldn't find that to look at.");
 				break;
+
 			case ("go"):
 				switch (verbObject) {
 				case ("up"):

@@ -9,6 +9,34 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Utilities {
+	
+	public static Character CreateCharacter(boolean debug) {
+		System.out.println("CHARACTER CREATOR: ");
+		System.out.print("Name > ");
+		String name = Utilities.StrInput();
+		boolean inComplete = true;
+		while(inComplete) {
+			System.out.print("Rationality > ");
+			Integer r = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Endurance > ");
+			Integer e = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Perception > ");
+			Integer p = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Luck > ");
+			Integer l = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Intelligence > ");
+			Integer i = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Charisma > ");
+			Integer c = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Agility > ");
+			Integer a = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Name > ");
+			Integer s = Integer.parseInt(Utilities.StrInput());
+			if(!(r+e+p+l+i+c+a+s == 15)) inComplete = false; 
+		}
+		//TODO finish
+		return null;
+	}
 
 	public static String randomLine(File text) throws FileNotFoundException {
 		// Takes an input text file and when a randomly generated integer is equal to 0,

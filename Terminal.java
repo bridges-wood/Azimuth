@@ -46,7 +46,8 @@ public class Terminal extends Object implements Serializable {
 	public void hack(int difficulty, int hackingSkill) {
 		int dim = (int) Math.ceil((double) (1/difficulty * 10)); /*Calculates the dimensions of the array as ten 
 		 														   times the reciprocal of the difficulty. This
-		 														   is then rounded up to avoid 0 length arrays.*/
+		 														   is then rounded up to avoid 0 length arrays.
+		 														   TODO check this and make sure it doesn't break also check balance*/
 		
 		int guesses = (int) ((dim*dim * 0.05) + (hackingSkill * 0.05)); /*Guesses are equal 5% of the number of passwords in the grid
 		 																 plus 5% of the players hackingSkill.*/
@@ -67,7 +68,7 @@ public class Terminal extends Object implements Serializable {
 			for (int y = 0; y < dim; y++) {
 				System.out.print(passwordsPoss[x][y] + " ");
 			}
-			System.out.println(""); //Prints out the 2D array of passwords for the player.
+			System.out.println(); //Prints out the 2D array of passwords for the player.
 		}
 		for(int i = 0; i < guesses; i ++) {
 			int sames = 0;
