@@ -51,12 +51,13 @@ public class Game implements Serializable {
 		boolean playing = true;
 		boolean moved = true;
 		while (playing) {
+			Room currentRoom = player.getCurrentRoom(); //Impermanent room reference.
 			if (moved) {
-				System.out.println(player.getCurrentRoom().getDescription());
-				if (player.getCurrentRoom().getContents().size() > 0) {
+				System.out.println(currentRoom.getDescription());
+				if (currentRoom.getContents().size() > 0) {
 					System.out.println("Around you, you can see: ");
-					for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
-						String currentName = player.getCurrentRoom().getContents().get(i).getName();
+					for (int i = 0; i < currentRoom.getContents().size(); i++) {
+						String currentName = currentRoom.getContents().get(i).getName();
 						System.out.print("> ");
 						if (currentName.startsWith("[aeiou]")) {
 							System.out.print("An ");
@@ -69,10 +70,10 @@ public class Game implements Serializable {
 				} else {
 					System.out.println("There is nothing in this room.");
 				}
-				if (player.getCurrentRoom().getCharacters().size() > 0) {
+				if (currentRoom.getCharacters().size() > 0) {
 					System.out.println("There are others with you. You see: ");
-					for (int i = 0; i < player.getCurrentRoom().getCharacters().size(); i++) {
-						System.out.println(player.getCurrentRoom().getCharacters().get(i).getName());
+					for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
+						System.out.println(currentRoom.getCharacters().get(i).getName());
 					}
 				} else {
 					System.out.println("There is no one else here.");
@@ -102,16 +103,28 @@ public class Game implements Serializable {
 					System.out.println("Save failed.");
 				}
 				break;
+				
+			case ("drop"):
+				boolean success = false;
+				for(int i = 0; i < player.getInventory().size(); i++) {
+					Object current = player.getInventory().get(i);
+					if(current.getName().toLowerCase().equals(verbObject)) {
+						player.getCurrentRoom().getContents().add(current);
+						player.getInventory().remove(current);
+						success = true;
+					}
+				}
+				if(success) System.out.println("You drop the " + verbObject + ".");
+			break;
+			
 			case ("get"):
-				for (int i = 0; i < player.getCurrentRoom().getContents().size();) { // Checks if player wants to
-																						// get meta-objects in a
-																						// room.
+				for (int i = 0; i < player.getCurrentRoom().getContents().size();) { // Checks if player wants to																						// get meta-objects in 																	// room.
 					Object current = player.getCurrentRoom().getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
 							&& (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
 						player.addToInventory(current); // If the object is what they are trying to get, and it is able
 														// to be picked up, they can, as long as it isn't too heavy.
-						player.getCurrentRoom().getContents().remove(current); // Removes the object from the room.
+						currentRoom.getContents().remove(current); // Removes the object from the room.
 						System.out.println("You pick the " + current.getName().toLowerCase() + " up.");
 						break;
 					} else if (current.getParts() != null && current.getParts().size() > 0) { // Checks if they want to
@@ -179,6 +192,38 @@ public class Game implements Serializable {
 				break;
 			case ("examine"):
 				boolean found = false;
+				for (int i = 0; i < currentRoom.getContents().size(); i++) {
+					Object current = currentRoom.getContents().get(i);
+					if (current.getName().toLowerCase().equals(verbObject)) {
+						System.out.println(current.getDescription());
+						if(current.getParts() != null && current.getParts().size() > 0) {
+							for(i = 0; i < current.getParts().size(); i++) {
+								System.out.println("You see it contains: ");
+								String currentName = current.getParts().get(i).getName();
+								System.out.print("> ");
+								if (currentName.startsWith("[aeiou]")) {
+									System.out.print("An ");
+								} else {
+									System.out.print("A ");
+								}
+								System.out.println(currentName.toLowerCase());
+							}
+							}
+						found = true;
+						break;
+					} else if (current.getParts() != null && current.getParts().size() > 0) {
+						for (i = 0; i < current.getParts().size(); i++) {
+							Object currentPart = current.getParts().get(i);
+							if (currentPart.getName().toLowerCase().equals(verbObject)) {
+								System.out.println(currentPart.getDescription());
+								found = true;
+								break;
+							}
+						}
+					}
+				}
+
+				// TODO able to examine sub parts of objects.
 				if (verbObject.equals("inventory")) {
 					System.out.println("In your inventory you have: ");
 					for (int i = 0; i < player.getInventory().size(); i++) {
@@ -228,50 +273,50 @@ public class Game implements Serializable {
 			case ("go"):
 				switch (verbObject) {
 				case ("up"):
-					if (player.getCurrentRoom().getAccess()[0]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[0]);
+					if (currentRoom.getAccess()[0]) {
+						player.setCurrentRoom(currentRoom.getRooms()[0]);
 						moved = true;
 					}
 					break;
 				case ("down"):
-					if (player.getCurrentRoom().getAccess()[1]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[1]);
+					if (currentRoom.getAccess()[1]) {
+						player.setCurrentRoom(currentRoom.getRooms()[1]);
 						moved = true;
 					}
 					break;
 				case ("left"):
-					if (player.getCurrentRoom().getAccess()[2]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[2]);
+					if (currentRoom.getAccess()[2]) {
+						player.setCurrentRoom(currentRoom.getRooms()[2]);
 						moved = true;
 					}
 					break;
 				case ("right"):
-					if (player.getCurrentRoom().getAccess()[3]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[3]);
+					if (currentRoom.getAccess()[3]) {
+						player.setCurrentRoom(currentRoom.getRooms()[3]);
 						moved = true;
 					}
 					break;
 				case ("forwards"):
-					if (player.getCurrentRoom().getAccess()[4]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[4]);
+					if (currentRoom.getAccess()[4]) {
+						player.setCurrentRoom(currentRoom.getRooms()[4]);
 						moved = true;
 					}
 					break;
 				case ("backwards"):
-					if (player.getCurrentRoom().getAccess()[5]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[5]);
+					if (currentRoom.getAccess()[5]) {
+						player.setCurrentRoom(currentRoom.getRooms()[5]);
 						moved = true;
 					}
 					break;
 				case ("in"):
-					if (player.getCurrentRoom().getAccess()[6]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[6]);
+					if (currentRoom.getAccess()[6]) {
+						player.setCurrentRoom(currentRoom.getRooms()[6]);
 						moved = true;
 					}
 					break;
 				case ("out"):
-					if (player.getCurrentRoom().getAccess()[7]) {
-						player.setCurrentRoom(player.getCurrentRoom().getRooms()[7]);
+					if (currentRoom.getAccess()[7]) {
+						player.setCurrentRoom(currentRoom.getRooms()[7]);
 						moved = true;
 					}
 					break;
