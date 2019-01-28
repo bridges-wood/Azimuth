@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class Consumables extends Object {
 	/**
@@ -10,8 +11,8 @@ public class Consumables extends Object {
 	private int[] replicas;
 	private int duration;
 	public Consumables(boolean inventoriable, String name, String description,
-			Object[] parts, int weight, int value, int healing, int[] skills, int[] replicas, int duration) {
-		super(inventoriable, name, description, parts, weight, value);
+			List<Object> parts, String[] combinable, int weight, int value, int healing, int[] skills, int[] replicas, int duration) {
+		super(inventoriable, name, description, parts, combinable, weight, value);
 	}
 	public int getHealing() {
 		return healing;

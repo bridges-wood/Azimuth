@@ -6,7 +6,7 @@ public class Object implements Serializable { /**
 	 * 
 	 */
 	private static final long serialVersionUID = 251080304814776649L;
-//TODO Terminals (controls and personal), rest-places, consumables, keys, crafting areas.
+	//TODO Terminals (controls and personal), rest-places, consumables, keys, crafting areas.
 	private boolean inventoriable;
 	private String name, description;
 	private List<Object> parts;

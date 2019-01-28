@@ -24,7 +24,24 @@ public class Utilities {
 		}
 		return "";
 	}
-
+	
+	public static void printSubObjects(Object object) {
+		//Prints all the sub-parts of an object to the user.
+		if (object.getParts() != null && object.getParts().size() > 0) {
+			for (int i = 0; i < object.getParts().size(); i++) {
+				System.out.println("You see it contains: ");
+				String currentName = object.getParts().get(i).getName();
+				System.out.print("> ");
+				if (currentName.startsWith("[aeiou]")) {
+					System.out.print("An ");
+				} else {
+					System.out.print("A ");
+				}
+				System.out.println(currentName.toLowerCase());
+			}
+		}
+	}
+	
 	public static String StrInput() {
 		// Takes string input from the console.
 		@SuppressWarnings("resource") // Suppression of Resource Not Closed.

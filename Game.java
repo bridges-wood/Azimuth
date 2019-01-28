@@ -22,7 +22,7 @@ public class Game implements Serializable {
 		this.player = new Player("Player", 0, 0, 20, 0, null, null, null, null, 20, emptyObjects, REPLICAS, null, null,
 				null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, null, 400, 0);
-		String[] combinable = {"Torch"};
+		String[] combinable = { "Torch" };
 		Object battery = new Object(true, "Battery", "It is a battery.", null, combinable, 1, 0);
 		List<Object> parts = new ArrayList<Object>();
 		parts.add(battery);
@@ -104,8 +104,8 @@ public class Game implements Serializable {
 				break;
 			case ("get"):
 				for (int i = 0; i < player.getCurrentRoom().getContents().size();) { // Checks if player wants to
-																							// get meta-objects in a
-																							// room.
+																						// get meta-objects in a
+																						// room.
 					Object current = player.getCurrentRoom().getContents().get(i);
 					if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
 							&& (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
@@ -137,7 +137,7 @@ public class Game implements Serializable {
 			case ("use"):
 				String actStr = "", objStr = "";
 				boolean complete = false, successful = false;
-				for(int i = 1; i < inputArr.length; i++) {
+				for (int i = 1; i < inputArr.length; i++) {
 					if (!complete && !inputArr[i].equals("on")) {
 						actStr = actStr + inputArr[i] + " ";
 					} else if (!complete) {
@@ -149,68 +149,36 @@ public class Game implements Serializable {
 				actStr = actStr.trim();
 				objStr = objStr.trim();
 				Object actObj = nullObject, objObj = nullObject;
-				for(int i = 0; i < player.getInventory().size(); i++) {
+				for (int i = 0; i < player.getInventory().size(); i++) {
 					if (player.getInventory().get(i).getName().toLowerCase().equals(actStr)) {
 						actObj = player.getInventory().get(i);
 					} else if (player.getInventory().get(i).getName().toLowerCase().equals(objStr)) {
 						objObj = player.getInventory().get(i);
 					}
 				}
-				if(!actObj.equals(nullObject) && !actObj.getCombinable().equals(null) && actObj.getCombinable().length > 0) {
-					for(int i = 0; i < actObj.getCombinable().length; i++) {
-						if(!objObj.equals(nullObject) && actObj.getCombinable()[i].toLowerCase().equals(objStr)) {
+				if (!actObj.equals(nullObject) && !actObj.getCombinable().equals(null)
+						&& actObj.getCombinable().length > 0) {
+					for (int i = 0; i < actObj.getCombinable().length; i++) {
+						if (!objObj.equals(nullObject) && actObj.getCombinable()[i].toLowerCase().equals(objStr)) {
 							objObj.getParts().add(actObj);
 							player.getInventory().remove(actObj);
 							successful = true;
 						}
 					}
 				}
-				if(successful) System.out.println(actStr.substring(0, 1).toUpperCase() + actStr.substring(1) + " and " + objStr + " successfully combined.");
+				if (successful)
+					System.out.println(actStr.substring(0, 1).toUpperCase() + actStr.substring(1) + " and " + objStr
+							+ " successfully combined.");
 				// Allows use of keys on doors etc. to solve puzzles or whatever else.
-				// TODO Will need a different way of handling input to check if the two objects
-				// can be used on each other.
-				// This will also require a change to the object class to determine which
+				// TODO Requires a change to the object class to determine which
 				// objects can interact with others as well as possible states like locked and
 				// unlocked etc.
-				// TODO PRIORITY Also need to determine which objects can be used on others.
 				break;
 			case ("engage"):
 				// TODO Initiates a fight.
 				break;
 			case ("examine"):
 				boolean found = false;
-				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
-					Object current = player.getCurrentRoom().getContents().get(i);
-					if (current.getName().toLowerCase().equals(verbObject)) {
-						System.out.println(current.getDescription());
-						if(current.getParts() != null && current.getParts().size() > 0) {
-							for(i = 0; i < current.getParts().size(); i++) {
-								System.out.println("You see it contains: ");
-								String currentName = current.getParts().get(i).getName();
-								System.out.print("> ");
-								if (currentName.startsWith("[aeiou]")) {
-									System.out.print("An ");
-								} else {
-									System.out.print("A ");
-								}
-								System.out.println(currentName.toLowerCase());
-							}
-							}
-						found = true;
-						break;
-					} else if (current.getParts() != null && current.getParts().size() > 0) {
-						for (i = 0; i < current.getParts().size(); i++) {
-							Object currentPart = current.getParts().get(i);
-							if (currentPart.getName().toLowerCase().equals(verbObject)) {
-								System.out.println(currentPart.getDescription());
-								found = true;
-								break;
-							}
-						}
-					}
-				}
-
-				// TODO able to examine sub parts of objects.
 				if (verbObject.equals("inventory")) {
 					System.out.println("In your inventory you have: ");
 					for (int i = 0; i < player.getInventory().size(); i++) {
@@ -226,6 +194,33 @@ public class Game implements Serializable {
 					}
 					found = true;
 					break;
+				}
+				for (int i = 0; i < player.getCurrentRoom().getContents().size(); i++) {
+					Object current = player.getCurrentRoom().getContents().get(i);
+					if (current.getName().toLowerCase().equals(verbObject)) {
+						System.out.println(current.getDescription());
+						Utilities.printSubObjects(current);
+						found = true;
+						break;
+					} else if (current.getParts() != null && current.getParts().size() > 0) {
+						for (i = 0; i < current.getParts().size(); i++) {
+							Object currentPart = current.getParts().get(i);
+							if (currentPart.getName().toLowerCase().equals(verbObject)) {
+								System.out.println(currentPart.getDescription());
+								found = true;
+								break;
+							}
+						}
+					}
+				}
+				for(int i = 0; i < player.getInventory().size(); i++) {
+					Object current = player.getInventory().get(i);
+					if(current.getName().toLowerCase().equals(verbObject)) {
+						System.out.println(current.getDescription());
+						Utilities.printSubObjects(current);
+						found = true;
+						break;
+					}
 				}
 				if (!found)
 					System.out.println("You couldn't find that to look at.");
@@ -284,7 +279,7 @@ public class Game implements Serializable {
 				// TODO add more verbs.
 			}
 
-	}
+		}
 
 	}
 
