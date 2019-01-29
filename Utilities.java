@@ -5,37 +5,43 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Utilities {
 	
-	public static Character CreateCharacter(boolean debug) {
+	public static Character CreateCharacter(boolean debug, boolean player) {
+		int r,e,p,l,i,c,a,s;
 		System.out.println("CHARACTER CREATOR: ");
 		System.out.print("Name > ");
 		String name = Utilities.StrInput();
 		boolean inComplete = true;
 		while(inComplete) {
+			System.out.println("SKILL POINT ASSIGNMENT (15 Max)");
 			System.out.print("Rationality > ");
-			Integer r = Integer.parseInt(Utilities.StrInput());
+			r = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Endurance > ");
-			Integer e = Integer.parseInt(Utilities.StrInput());
+			e = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Perception > ");
-			Integer p = Integer.parseInt(Utilities.StrInput());
+			p = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Luck > ");
-			Integer l = Integer.parseInt(Utilities.StrInput());
+			l = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Intelligence > ");
-			Integer i = Integer.parseInt(Utilities.StrInput());
+			i = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Charisma > ");
-			Integer c = Integer.parseInt(Utilities.StrInput());
+			c = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Agility > ");
-			Integer a = Integer.parseInt(Utilities.StrInput());
-			System.out.print("Name > ");
-			Integer s = Integer.parseInt(Utilities.StrInput());
-			if(!(r+e+p+l+i+c+a+s == 15)) inComplete = false; 
+			a = Integer.parseInt(Utilities.StrInput());
+			System.out.print("Strength > ");
+			s = Integer.parseInt(Utilities.StrInput());
+			if(!(r+e+p+l+i+c+a+s <= 15)) {
+				inComplete = false; 
+			} else System.out.println("These should add to 15.");
 		}
-		//TODO finish
-		return null;
+		int[] REPLCIAS = {r,e,p,l,i,c,a,s};
+		//TODO Allow any charater to be added to the game during runtime.
+		return new Character(name, 0, 1, s*10, 0, new Apparel[6], null, s*10, Collections.emptyList(), REPLICAS,  );
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {
