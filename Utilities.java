@@ -11,8 +11,15 @@ import java.util.Scanner;
 
 public class Utilities {
 	
-	public static Character CreateCharacter(boolean debug, boolean player) {
-		int r,e,p,l,i,c,a,s;
+	public static Character CreateCharacter(boolean debug, boolean player, Room currentRoom) {
+		int r = 0;
+		int e = 0;
+		int p = 0;
+		int l = 0;
+		int i = 0;
+		int c = 0;
+		int a = 0;
+		int s = 0;
 		System.out.println("CHARACTER CREATOR: ");
 		System.out.print("Name > ");
 		String name = Utilities.StrInput();
@@ -39,9 +46,13 @@ public class Utilities {
 				inComplete = false; 
 			} else System.out.println("These should add to 15.");
 		}
-		int[] REPLCIAS = {r,e,p,l,i,c,a,s};
-		//TODO Allow any charater to be added to the game during runtime.
-		return new Character(name, 0, 1, s*10, 0, new Apparel[6], null, s*10, Collections.emptyList(), REPLICAS,  );
+		int[] REPLICAS = {r,e,p,l,i,c,a,s};
+		//TODO Allow any character to be added to the game during runtime.
+		Ammunition tempA = new Ammunition("Fists", Collections.emptyList(),0,0,0,"Kinetic", "");
+		int[] resistances = {0, 10, 5, 15, 5};
+		Apparel tempAp = new Apparel("Uniform", "It is your uniform, basically all you are seen in now.", Collections.emptyList(), 1, 10, true, 1, resistances, new int[8], 10);
+		Weapon tempW = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight", Collections.emptyList(), new String[0], "Melee", s * 2, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0, Collections.emptyList(), tempA, -1);
+		return new Player(name, "It is you.", 0, 1, s*10, 0, new Apparel[6], new int[5], tempAp, tempW, s*10, Collections.emptyList(), REPLICAS, Collections.emptyList(), "None", currentRoom);
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {

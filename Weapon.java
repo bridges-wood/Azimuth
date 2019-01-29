@@ -9,23 +9,23 @@ public class Weapon extends Object implements Serializable { //Plasma, Gauss/Rai
 	private String type;
 	private int damage, rateOfFire, condition, durability, magazineCapacity;
 	private float accuracy, critChance, critDamage;
-	private Modification[] modifications;
+	private List<Modification> modifications;
 	private Ammunition ammunition;
 	
 	public Weapon(boolean inventoriable, String name, int weight, int value, 
 			String description, List<Object> parts, String[] combinable, String type, int damage, 
 			int rateOfFire, int condition, int durability, float accuracy, 
-			float critChance, float critDamage, Modification[] modifications, 
+			float critChance, float critDamage, List<Modification> modifications, 
 			Ammunition ammunition, int magazineCapacity) {
 		super(inventoriable, name, description, parts, combinable, weight, value);
 		this.type = type;
 		this.damage = damage;
 		this.rateOfFire = rateOfFire;
-		this.condition = condition;
-		this.durability = durability;
+		this.condition = condition; //If condition is -1, use is unlimited.
+		this.durability = durability; //If durability is -1, use is unlimited.
 		this.accuracy = accuracy;
 		this.critChance = critChance;
-		this.critDamage = critDamage;
+		this.critDamage = critDamage; //Modifier
 		this.modifications = modifications;
 		this.ammunition = ammunition;
 		this.magazineCapacity = magazineCapacity;
@@ -95,11 +95,11 @@ public class Weapon extends Object implements Serializable { //Plasma, Gauss/Rai
 		this.critDamage = critDamage;
 	}
 
-	public Modification[] getModifications() {
+	public List<Modification> getModifications() {
 		return modifications;
 	}
 
-	public void setModifications(Modification[] modifications) {
+	public void setModifications(List<Modification> modifications) {
 		this.modifications = modifications;
 	}
 
