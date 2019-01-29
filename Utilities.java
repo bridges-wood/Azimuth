@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class Utilities {
 	
-	public static Character CreateCharacter(boolean debug, boolean player, Room currentRoom) {
+	public static Player CreateCharacter(boolean debug, boolean player, Room currentRoom) {
 		int r = 0;
 		int e = 0;
 		int p = 0;
@@ -25,7 +25,7 @@ public class Utilities {
 		String name = Utilities.StrInput();
 		boolean inComplete = true;
 		while(inComplete) {
-			System.out.println("SKILL POINT ASSIGNMENT (15 Max)");
+			System.out.println("SKILL POINT ASSIGNMENT (24 Max)");
 			System.out.print("Rationality > ");
 			r = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Endurance > ");
@@ -42,7 +42,7 @@ public class Utilities {
 			a = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Strength > ");
 			s = Integer.parseInt(Utilities.StrInput());
-			if(!(r+e+p+l+i+c+a+s <= 15)) {
+			if(r+e+p+l+i+c+a+s <= 24) {
 				inComplete = false; 
 			} else System.out.println("These should add to 15.");
 		}

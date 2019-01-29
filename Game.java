@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class Game implements Serializable {
@@ -18,12 +19,6 @@ public class Game implements Serializable {
 	}
 
 	public void init() {
-		int[] REPLICAS = { 1, 1, 1, 1, 1, 1, 1, 1 };
-		// TODO add in a character creator when the player first initialises the game.
-		// NOTE when creating objects with null references, create an empty data type
-		// instance.
-		this.player = new Player("Player", "", 0, 0, 20, 0, null, null, null, null, 20, emptyObjects, REPLICAS, null, null,
-				null);
 		Object bed = new Object(false, "Bed", "It is your bed.", null, null, 400, 0);
 		String[] combinable = { "Torch" };
 		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
@@ -36,7 +31,7 @@ public class Game implements Serializable {
 		Room first = new Room(contents, emptyCharacters,
 				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.",
 				1, null, null);
-		player.setCurrentRoom(first);
+		player = Utilities.CreateCharacter(false, true, first);
 		ArrayList<Room> rooms = new ArrayList<Room>();
 
 		// TODO Clean up this method to add rooms, objects and characters separately.
@@ -56,7 +51,7 @@ public class Game implements Serializable {
 		while (playing) {
 			Room currentRoom = player.getCurrentRoom(); // Impermanent room reference.
 			if (moved) {
-				System.out.println(currentRoom.getDescription());
+				System.out.println(currentRoom.getDescription()); //TODO check why this fails.
 				if (currentRoom.getContents().size() > 0) {
 					System.out.println("Around you, you can see: ");
 					for (int i = 0; i < currentRoom.getContents().size(); i++) {
