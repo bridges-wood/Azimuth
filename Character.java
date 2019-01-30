@@ -74,13 +74,6 @@ public class Character implements Serializable {/**
 		this.hp = hp;
 	}
 
-	public Apparel[] getApparel() {
-		return armour;
-	}
-
-	public void setApparel(Apparel[] armour) {
-		this.armour = armour;
-	}
 
 	public int[] getResistances() {
 		return resistances;
@@ -148,6 +141,20 @@ public class Character implements Serializable {/**
 
 	public void setAffiliation(String affiliation) {
 		this.affiliation = affiliation;
+	}
+
+	/**
+	 * @return the armour
+	 */
+	public Apparel[] getArmour() {
+		return armour;
+	}
+
+	/**
+	 * @param armour the armour to set
+	 */
+	public void setArmour(Apparel[] armour) {
+		this.armour = armour;
 	}
 
 }

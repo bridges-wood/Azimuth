@@ -5,11 +5,41 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Utilities {
+	
+	public static void describeRoom(Room currentRoom) {
+		System.out.println(currentRoom.getDescription());
+		if (currentRoom.getContents().size() > 0) {
+			System.out.println("Around you, you can see: ");
+			for (int i = 0; i < currentRoom.getContents().size(); i++) {
+				String currentName = currentRoom.getContents().get(i).getName();
+				System.out.print("> ");
+				if (currentName.startsWith("[aeiou]")) {
+					System.out.print("An ");
+				} else {
+					System.out.print("A ");
+				}
+				System.out.println(currentName.toLowerCase());
+			}
+			System.out.println();
+		} else {
+			System.out.println("There is nothing in this room.");
+		}
+		if (currentRoom.getCharacters().size() > 0) {
+			System.out.println("There are others with you. You see: ");
+			for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
+				System.out.println(currentRoom.getCharacters().get(i).getName());
+			}
+		} else {
+			System.out.println("There is no one else here.");
+		}
+	}
 	
 	public static Player CreateCharacter(boolean debug, boolean player, Room currentRoom) {
 		int r = 0;
@@ -50,9 +80,15 @@ public class Utilities {
 		//TODO Allow any character to be added to the game during runtime.
 		Ammunition tempA = new Ammunition("Fists", Collections.emptyList(),0,0,0,"Kinetic", "");
 		int[] resistances = {0, 10, 5, 15, 5};
+		List <Skill> emptyS = new ArrayList<Skill>();
+		List <Object> emptyO = new ArrayList<Object>();
 		Apparel tempAp = new Apparel("Uniform", "It is your uniform, basically all you are seen in now.", Collections.emptyList(), 1, 10, true, 1, resistances, new int[8], 10);
 		Weapon tempW = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight", Collections.emptyList(), new String[0], "Melee", s * 2, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0, Collections.emptyList(), tempA, -1);
-		return new Player(name, "It is you.", 0, 1, s*10, 0, new Apparel[6], new int[5], tempAp, tempW, s*10, Collections.emptyList(), REPLICAS, Collections.emptyList(), "None", currentRoom);
+		int[] armourRes = new int[5];
+		int[] REPLICASmods = new int[8];
+		Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);
+		Apparel[] armour = {new Apparel("", "", emptyO, 0, 0, false, 0, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 1, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 2, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 3, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 4, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 5, armourRes, REPLICASmods, 0)};
+		return new Player(name, "It is you.", 0, 1, s*10, 0, armour, tempAp.getResistances(), tempAp, tempW, nullObject, s*10, emptyO, REPLICAS, emptyS, "None", currentRoom);
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {
