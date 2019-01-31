@@ -22,7 +22,7 @@ public class Game implements Serializable {
 	}
 
 	public void init() {
-		Object bed = new Object(false, "Bed", "It is your bed.", null, null, 400, 0);
+		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "Rest", "", Collections.emptyMap());
 		String[] combinable = { "Torch" };
 		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
 		List<Object> parts = new ArrayList<Object>();
@@ -232,9 +232,31 @@ public class Game implements Serializable {
 						}
 					} else if (actStr.equals(player.getOffHand().getName().toLowerCase())) {
 						if (!objStr.equals("")) {
-							// TODO allow players to use certain objects on certain others like keys on
-							// doors.
+							if(player.getOffHand().getClass().getSimpleName().equals("Usable")) {
+								Usable current = (Usable) player.getOffHand();
+								switch(current.getGenericUse().toLowerCase()) {
+								case("light"):
+									for(int i = 0; i < current.getParts().size(); i++) {
+										if(current.getParts().get(i).getName().equals("Battery")) {
+											if(current.getObjectState().equals("Off")) {
+												System.out.println("You turn the torch on.");
+												current.setObjectState("On");
+												break;
+											} else {
+												System.out.println("You turn the torch off.");
+												current.setObjectState("Off");
+												break;
+											}
+										}
+									}
+								break;
+								//TODO Capacity to add more variety to usable off-hand objects.
+								}
+							}
 						} else {
+							if(objObj.getClass().getSimpleName().equals("Usable")) {
+								//TODO check if the object can be used with the object in the player's offhand.
+							}
 							// System.out.println(player.getOffHand().getGenericUse()); TODO create this
 							// method to allow objects to just be 'used'.
 						}
