@@ -140,7 +140,6 @@ public class Game implements Serializable {
 						if (current.getParts() != null && current.getParts().size() > 0) { // Checks if they want to
 							// get sub-objects.
 							for (int j = 0; j < current.getParts().size(); j++) {
-								System.out.println("Got this far");
 								Object currentPart = current.getParts().get(j);
 								if (currentPart.getName().toLowerCase().equals(verbObject)
 										&& currentPart.isInventoriable()
@@ -217,31 +216,32 @@ public class Game implements Serializable {
 				if (successful)
 					System.out.println(actStr.substring(0, 1).toUpperCase() + actStr.substring(1) + " and " + objStr
 							+ " successfully combined.");
-				if(!successful) {
-					if(actStr.equals(player.getEquipped().getName().toLowerCase())) {
-						for(int i = 0; i < currentRoom.getCharacters().size(); i++) {
-							if(objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
-								//TODO create combat method. Allow player to engage other characters.
+				if (!successful) {
+					if (actStr.equals(player.getEquipped().getName().toLowerCase())) {
+						for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
+							if (objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
+								// TODO create combat method. Allow player to engage other characters.
 								successful = true;
 							}
 						}
-						for(int i = 0; i < currentRoom.getContents().size(); i++){
-							if(objStr.equals(currentRoom.getContents().get(i).getName().toLowerCase())) {
-								//TODO allow the player to damage objects in the room.
+						for (int i = 0; i < currentRoom.getContents().size(); i++) {
+							if (objStr.equals(currentRoom.getContents().get(i).getName().toLowerCase())) {
+								// TODO allow the player to damage objects in the room.
 								successful = true;
 							}
 						}
-					} else if(actStr.equals(player.getOffHand().getName().toLowerCase())) {
-						if(!objStr.equals("")) {
-							//TODO allow players to use certain objects on certain others like keys on doors.
+					} else if (actStr.equals(player.getOffHand().getName().toLowerCase())) {
+						if (!objStr.equals("")) {
+							// TODO allow players to use certain objects on certain others like keys on
+							// doors.
 						} else {
-							//System.out.println(player.getOffHand().getGenericUse()); TODO create this method to allow objects to just be 'used'.
+							// System.out.println(player.getOffHand().getGenericUse()); TODO create this
+							// method to allow objects to just be 'used'.
 						}
 					}
 				}
 				break;
-				
-				
+
 			case ("equip"):
 				found = false;
 				for (int i = 0; i < player.getInventory().size(); i++) {
@@ -304,7 +304,9 @@ public class Game implements Serializable {
 						System.out.println("> " + player.getEquipped().getName());
 					}
 					System.out.println("> " + player.getUnderClothes().getName());
-					System.out.println("> " + player.getOffHand().getName());
+					if (!player.getOffHand().getName().equals("")) {
+						System.out.println("> " + player.getOffHand().getName());
+					}
 					found = true;
 				} else if (verbObject.equals("inventory")) {
 					if (player.getInventory().size() > 0) {
