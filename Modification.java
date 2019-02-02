@@ -5,7 +5,7 @@ public class Modification extends Object implements Serializable {/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8286114933151004877L;
-//TODO: Conversion kits, scopes, receivers, barrels, stocks/grips, magazines, muzzle.
+	//TODO: Conversion kits, scopes, receivers, barrels, stocks/grips, magazines, muzzle.
 	private String typeMod;
 	private int damageMod, rateOfFireMod, conditionMod, durabilityMod, magazineCapacityMod;
 	private float accuracyMod, critChanceMod, critDamageMod;
@@ -15,8 +15,8 @@ public class Modification extends Object implements Serializable {/**
 	public Modification(String name, String description, int weight, int value,  String typeMod, int damageMod, 
 			int rateOfFireMod, int conditionMod, int durabilityMod, float accuracyMod,
 			float critChanceMod, float critDamageMod, Ammunition ammunitionMod, 
-			int magazineCapacityMod, Skill skilledUse) {
-		super(true, name, description, Collections.emptyList(), null, weight, value);
+			int magazineCapacityMod, Skill SkiledUse) {
+		super(true, name, description, Collections.emptyList(), new String[0] , weight, value);
 		this.typeMod = typeMod;
 		this.damageMod = damageMod;
 		this.rateOfFireMod = rateOfFireMod;
