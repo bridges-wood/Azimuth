@@ -10,7 +10,7 @@ public class Menu {
 
 	public Menu() {
 		int choice = 0;
-		System.out.println("MENU");
+		System.out.println("MENU (Please use numbers)");
 		System.out.println("1. New Game");
 		System.out.println("2. Load Game");
 		System.out.println("3. Options");
@@ -104,11 +104,13 @@ public class Menu {
 	}
 
 	public void options() {
-
+		
 	}
 
 	public void credits() {
-
+		System.out.println("/nCredits:");
+		System.out.println("Pretty much everything: Max Wood");
+		System.out.println("Copyright Max Wood 2019: All Rights Reserved");
 	}
 
 	public static File getCurrentFile() {
