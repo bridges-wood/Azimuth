@@ -25,7 +25,7 @@ public class Game implements Serializable {
 	}
 
 	public void init() {
-		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "Rest", "",
+		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.", "",
 				Collections.emptyMap());
 		Object key = new Object(true, "Key", "It is a key.", Collections.emptyList(), new String[0], 1, 0);
 		Map<Object, String> uses = new HashMap<Object, String>();
@@ -227,7 +227,6 @@ public class Game implements Serializable {
 		}
 		actStr = actStr.trim();
 		objStr = objStr.trim();
-		System.out.println(actStr + " " + objStr);
 		Object actObj = nullObject, objObj = nullObject;
 		for (int i = 0; i < player.getInventory().size(); i++) {
 			if (player.getInventory().get(i).getName().toLowerCase().equals(actStr)) {
@@ -263,8 +262,7 @@ public class Game implements Serializable {
 						successful = true;
 					}
 				}
-			} else if (actStr.equals(player.getOffHand().getName().toLowerCase())) {
-				System.out.println("Got this far A");
+			} else if (!successful && actStr.equals(player.getOffHand().getName().toLowerCase())) {
 				if (!objStr.equals("")) {
 					if (player.getOffHand().getClass().getSimpleName().equals("Usable")) {
 						Usable current = (Usable) player.getOffHand();
@@ -283,28 +281,72 @@ public class Game implements Serializable {
 									}
 								}
 							}
+							successful = true;
 							break;
 						// TODO Capacity to add more variety to usable off-hand objects.
 						}
 					} else {
-						System.out.println("Got this far");
-						if (objObj.getClass().getSimpleName().equals("Usable")) {
-							System.out.println("Got this far 2");
-							Usable target = (Usable) objObj; //TODO allow cast of objects to usable to they can be examined by this method.
-							Set<Object> keys = target.getSpecificUses().keySet();
-							Object key = nullObject;
-							for (Object i : keys) {
-								if (i.equals(player.getOffHand()))
-									System.out.println("Got this far 3");
-								key = i;
-								// TODO check if the object can be used with the object in the player's offhand.
+						Usable target = null;
+						int location = -1;
+						for (int i = 0; i < currentRoom.getContents().size(); i++) {
+							if (objStr.equals(currentRoom.getContents().get(i).getName().toLowerCase())) {
+								target = (Usable) currentRoom.getContents().get(i);
+								location = i;
 							}
-							if (!key.equals(nullObject))
-								System.out.println(target.getSpecificUses().get(key));
-							// System.out.println(player.getOffHand().getGenericUse()); TODO create this
-							// method to allow objects to just be 'used'.
+						}
+						Set<Object> keys = target.getSpecificUses().keySet();
+						Object key = nullObject;
+						for (Object i : keys) {
+							if (i.equals(player.getOffHand()))
+								key = i;
+							// TODO check if the object can be used with the object in the player's offhand.
+						}
+						if (location != -1 && !key.equals(nullObject)) {
+							System.out.println(target.getSpecificUses().get(key));
+							Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
+							String absoluteName = "Object";
+							try {
+								Class<?> tempClass = temp.getClassLoader()
+										.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
+								java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
+								absoluteName = tempObj.getClass().getSimpleName();
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							switch (absoluteName) {
+							case ("Door"):
+							case ("Container"):
+							case ("Puzzle"):
+							case ("Remains"):
+							case ("Terminal"):
+							case ("Player"):
+							}
+							successful = true;
+							// TODO create this method to allow objects to just be 'used'.
 						}
 					}
+				}
+			} else if(!successful) {
+				int location = -1;
+				for(int i = 0; i < currentRoom.getContents().size(); i++) {
+					if(currentRoom.getContents().get(i).getName().toLowerCase().equals(actStr)) location = i;
+				}
+				Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
+				String absoluteName = "Object";
+				try {
+					Class<?> tempClass = temp.getClassLoader()
+							.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
+					java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
+					absoluteName = tempObj.getClass().getSimpleName();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Usable used = (Usable) currentRoom.getContents().get(location);
+				System.out.println(used.getGenericUse());
+				switch(absoluteName) {
+					//TODO for different types of object, do different things.
 				}
 			}
 		}
