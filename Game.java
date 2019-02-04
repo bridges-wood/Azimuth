@@ -277,6 +277,10 @@ public class Game implements Serializable {
 						Usable current = (Usable) player.getOffHand();
 						for (int i = 0; i < current.getParts().size(); i++) {
 							System.out.println(current.getObjectState());
+							// current.setObjectState("Off");
+							// TODO solution: create a public usable variable that is updated when the
+							// player equips an object. All references are made to that, circumventing
+							// casting problems.
 							switch (current.getParts().get(i).getName()) {
 							case ("Battery"):
 								if (current.getObjectState().equals("Off")) {
