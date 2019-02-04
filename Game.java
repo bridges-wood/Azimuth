@@ -276,6 +276,7 @@ public class Game implements Serializable {
 					if (player.getOffHand().getClass().getSimpleName().equals("Usable")) {
 						Usable current = (Usable) player.getOffHand();
 						for (int i = 0; i < current.getParts().size(); i++) {
+							System.out.println(current.getObjectState());
 							switch (current.getParts().get(i).getName()) {
 							case ("Battery"):
 								if (current.getObjectState().equals("Off")) {
