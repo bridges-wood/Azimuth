@@ -27,11 +27,11 @@ public class Game implements Serializable {
 	public void init() {
 		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
-		Object key = new Object(true, "Key", "It is a key.", Collections.emptyList(), new String[0], 1, 0);
+		Key key = new Key("Key", "It is a key.", 10);
 		Map<Object, String> uses = new HashMap<Object, String>();
 		uses.put(key, "You manage to unlock the chest.");
-		Usable chest = new Usable(false, "Chest", "It is a chest.", Collections.emptyList(), new String[0], 0, 1,
-				"You try to open the chest but it doesn't budge.", "Locked", uses);
+		Key[] keys = {key};
+		Container chest = new Container("Chest", "It is a chest", Collections.emptyList(), 200, 100, uses, true, keys);
 		String[] combinable = { "Torch" };
 		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
 		List<Object> parts = new ArrayList<Object>();
@@ -54,7 +54,6 @@ public class Game implements Serializable {
 		// TODO Clean up this method to add rooms, objects and characters separately.
 		rooms.add(first);
 		setRooms(rooms);
-		System.out.println(torch.getObjectState() + ((Usable) (first.getContents().get(0))).getObjectState());
 		playGame();
 	}
 
@@ -349,6 +348,14 @@ public class Game implements Serializable {
 								}
 							}
 						case ("Container"):
+							Container container = (Container) currentRoom.getContents().get(location);
+							for(int i = 0; i < container.getWorkingKeys().length; i++) {
+								if(container.getWorkingKeys()[i].equals(player.getOffHand())) {
+									container.setLocked(false);
+									player.setOffHand(nullObject);
+									System.out.println("You unlock " + container.getName() + ".");
+								}
+							}
 						case ("Puzzle"):
 						case ("Remains"):
 						case ("Terminal"):
