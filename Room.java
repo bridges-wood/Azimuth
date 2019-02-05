@@ -9,23 +9,15 @@ public class Room implements Serializable {
 	private List<Object> contents;
 	private List<Character> characters;
 	private String description;
-	private int id;
 	private Room[] rooms; //Up, down, left, right, forward, backward, in, out.
 	private boolean[] access;
 	
-	public Room(List<Object> contents, List<Character> characters, String description, int id, Room[] rooms, boolean[] access) {
+	public Room(List<Object> contents, List<Character> characters, String description, Room[] rooms, boolean[] access) {
 		this.contents = contents;
 		this.characters = characters;
 		this.description = description;
-		this.id = id;
 		this.rooms = rooms;
 		this.access = access;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	public Room[] getRooms() {
 		return rooms;

@@ -19,7 +19,6 @@ public class Game implements Serializable {
 	Weapon fists = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
 			Collections.emptyList(), new String[1], "Melee", 0, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0,
 			Collections.emptyList(), tempA, -1);
-	java.lang.Object useOffHand;
 
 	public Game() {
 		this.init();
@@ -47,8 +46,7 @@ public class Game implements Serializable {
 		contents.add(chest);
 		contents.add(key);
 		Room first = new Room(contents, emptyCharacters,
-				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.",
-				1, null, null);
+				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.", null, null);
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		player = Utilities.CreateCharacter(false, true, first);
 		player.setCurrentRoom(first);
@@ -56,6 +54,7 @@ public class Game implements Serializable {
 		// TODO Clean up this method to add rooms, objects and characters separately.
 		rooms.add(first);
 		setRooms(rooms);
+		System.out.println(torch.getObjectState() + ((Usable) (first.getContents().get(0))).getObjectState());
 		playGame();
 	}
 
@@ -134,6 +133,18 @@ public class Game implements Serializable {
 			if (current.getName().toLowerCase().equals(verbObject)) {
 				currentRoom.getContents().add(current);
 				player.getInventory().remove(current);
+				success = true;
+			}
+		}
+		if (!success) {
+			if (player.getOffHand().getName().toLowerCase().equals(verbObject)) {
+				currentRoom.getContents().add(player.getOffHand());
+				player.setOffHand(nullObject);
+				success = true;
+			} else if (player.getEquipped().getName().toLowerCase().equals(verbObject)
+					&& !(player.getEquipped().getName().equals("Fists"))) {
+				currentRoom.getContents().add(player.getEquipped());
+				player.setEquipped(fists);
 				success = true;
 			}
 		}
@@ -247,7 +258,7 @@ public class Game implements Serializable {
 				&& actObj.getCombinable().length > 0) {
 			for (int i = 0; i < actObj.getCombinable().length; i++) {
 				if (!objObj.equals(nullObject) && actObj.getCombinable()[i].toLowerCase().equals(objStr)) {
-					objObj.getParts().add(actObj);
+					objObj.getParts().add(actObj); // Adds the object to the parts of the other respective object.
 					player.getInventory().remove(actObj);
 					successful = true;
 				}
@@ -261,28 +272,27 @@ public class Game implements Serializable {
 			if (actStr.equals(player.getEquipped().getName().toLowerCase())) {
 				for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
 					if (objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
+						// If the player is trying to use their weapon on a character...
 						// TODO create combat method. Allow player to engage other characters.
 						successful = true;
 					}
 				}
 				for (int i = 0; i < currentRoom.getContents().size(); i++) {
 					if (objStr.equals(currentRoom.getContents().get(i).getName().toLowerCase())) {
+						// If the player is trying to use the weapon on an object in the room...
 						// TODO allow the player to damage objects in the room.
 						successful = true;
 					}
 				}
+				// ----
 			} else if (!successful && actStr.equals(player.getOffHand().getName().toLowerCase())) {
-				System.out.println("Got this far A");
 				if (objStr.equals("")) {
 					if (player.getOffHand().getClass().getSimpleName().equals("Usable")) {
-						Usable current = (Usable) useOffHand;
+						Usable current = (Usable) player.getOffHand(); // If the object in the player's off-hand is
+																		// actually usable...
 						for (int i = 0; i < current.getParts().size(); i++) {
-							System.out.println(current.getObjectState());
-							// current.setObjectState("Off");
-							// TODO solution: create a public usable variable that is updated when the
-							// player equips an object. All references are made to that, circumventing
-							// casting problems.
-							switch (current.getParts().get(i).getName()) {
+							switch (current.getParts().get(i).getName()) { // If it contains a battery, the device can
+																			// be turned on or off.
 							case ("Battery"):
 								if (current.getObjectState().equals("Off")) {
 									System.out.println("You turn the torch on.");
@@ -331,6 +341,13 @@ public class Game implements Serializable {
 						}
 						switch (absoluteName) {
 						case ("Door"):
+							Door door = (Door) currentRoom.getContents().get(location);
+							for(int i = 0; i < door.getWorkingKeys().length; i++) {
+								if(door.getWorkingKeys()[i].equals((Key) player.getOffHand())) {
+									door.setLocked(false);
+									player.setOffHand(nullObject);
+								}
+							}
 						case ("Container"):
 						case ("Puzzle"):
 						case ("Remains"):
@@ -338,7 +355,6 @@ public class Game implements Serializable {
 						case ("Player"):
 						}
 						successful = true;
-						// TODO create this method to allow objects to just be 'used'.
 					}
 				}
 			}
@@ -397,9 +413,6 @@ public class Game implements Serializable {
 					if (!player.getOffHand().getName().equals(""))
 						player.getInventory().add(player.getOffHand());
 					player.setOffHand(current);
-					useOffHand = Usable.class.cast(player.getInventory().get(i));
-					Usable test = Usable.class.newInstance().; //TODO fix this to avoid conflicts.
-					System.out.println(test.getObjectState() + test.getName());
 					player.getInventory().remove(current);
 					found = true;
 				}

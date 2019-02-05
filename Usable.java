@@ -16,6 +16,7 @@ public class Usable extends Object implements Serializable {
 		super(inventoriable, name, description, parts, combinable, weight, value);
 		this.genericUse = genericUse;
 		this.specificUses = specificUses;
+		this.objectState = objectState;
 	}
 
 	public String getGenericUse() {
