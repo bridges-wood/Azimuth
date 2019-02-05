@@ -19,6 +19,7 @@ public class Game implements Serializable {
 	Weapon fists = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
 			Collections.emptyList(), new String[1], "Melee", 0, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0,
 			Collections.emptyList(), tempA, -1);
+	java.lang.Object useOffHand;
 
 	public Game() {
 		this.init();
@@ -274,7 +275,7 @@ public class Game implements Serializable {
 				System.out.println("Got this far A");
 				if (objStr.equals("")) {
 					if (player.getOffHand().getClass().getSimpleName().equals("Usable")) {
-						Usable current = (Usable) player.getOffHand();
+						Usable current = (Usable) useOffHand;
 						for (int i = 0; i < current.getParts().size(); i++) {
 							System.out.println(current.getObjectState());
 							// current.setObjectState("Off");
@@ -396,6 +397,9 @@ public class Game implements Serializable {
 					if (!player.getOffHand().getName().equals(""))
 						player.getInventory().add(player.getOffHand());
 					player.setOffHand(current);
+					useOffHand = Usable.class.cast(player.getInventory().get(i));
+					Usable test = Usable.class.newInstance().; //TODO fix this to avoid conflicts.
+					System.out.println(test.getObjectState() + test.getName());
 					player.getInventory().remove(current);
 					found = true;
 				}
