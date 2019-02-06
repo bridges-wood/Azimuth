@@ -21,17 +21,12 @@ public class Game implements Serializable {
 			Collections.emptyList(), tempA, -1);
 
 	public Game() {
-		this.init();
-	}
-
-	public void init() {
 		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
 		Key key = new Key("Key", "It is a key.", 10);
 		Map<Object, String> uses = new HashMap<Object, String>();
 		uses.put(key, "You manage to unlock the chest.");
 		Key[] keys = { key };
-		Container chest = new Container("Chest", "It is a chest", Collections.emptyList(), 200, 100, uses, true, keys);
 		String[] combinable = { "Torch" };
 		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
 		List<Object> parts = new ArrayList<Object>();
@@ -40,8 +35,15 @@ public class Game implements Serializable {
 		uses.put(battery, "You put the battery into the torch and it flickers to life.");
 		Usable torch = new Usable(true, "Torch", "It is a torch.", parts, new String[0], 10, 0,
 				"The torch can't be used like this.", "Off", uses);
+		List<Object> chestContents = new ArrayList<Object>();
+		chestContents.add(torch);
+		Container chest = new Container("Chest", "It is a chest.", chestContents, 200, 100, uses, true, keys);
+		boolean[] locked = {true}; 
+		String[] usernames = {"user"};
+		String[] passwords = {"pass"};
+		Terminal terminal = new Terminal("My terminal", "It is your terminal.", 5, locked, new String[0], new String[0], usernames, passwords);
 		List<Object> contents = new ArrayList<Object>();
-		contents.add(torch);
+		contents.add(terminal);
 		contents.add(bed);
 		contents.add(chest);
 		contents.add(key);
@@ -166,18 +168,24 @@ public class Game implements Serializable {
 				found = true;
 				break;
 			} else if (current.getParts() != null && current.getParts().size() > 0) { // Checks if they want to
-																						// get sub-objects.
-				for (int j = 0; j < current.getParts().size(); j++) {
-					Object currentPart = current.getParts().get(j);
-					if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()
-							&& (player.getInventorySize() > player.getTotalInventoryWeight()
-									+ currentPart.getWeight())) {
-						player.addToInventory(currentPart);
-						current.getParts().remove(currentPart); // Removes the object from the parts of the
-																// meta-object.
-						System.out.println("You pick the " + currentPart.getName().toLowerCase() + " up.");
-						found = true;
-						break;
+				boolean allowed = true;
+				if (current.getClass().getSimpleName().equals("Container")) {
+					Container container = (Container) current;
+					allowed = !container.isLocked();// get sub-objects.
+				}
+				if (allowed) {
+					for (int j = 0; j < current.getParts().size(); j++) {
+						Object currentPart = current.getParts().get(j);
+						if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()
+								&& (player.getInventorySize() > player.getTotalInventoryWeight()
+										+ currentPart.getWeight())) {
+							player.addToInventory(currentPart);
+							current.getParts().remove(currentPart); // Removes the object from the parts of the
+																	// meta-object.
+							System.out.println("You pick the " + currentPart.getName().toLowerCase() + " up.");
+							found = true;
+							break;
+						}
 					}
 				}
 			}
@@ -319,15 +327,19 @@ public class Game implements Serializable {
 							location = i;
 						}
 					}
-					Object key = nullObject;
-					if (false) {
+					if (currentRoom.getContents().get(location).getClass().getSimpleName().equals("Usable")) {
+						Object key = nullObject;
 						Set<Object> keys = target.getSpecificUses().keySet();
 						for (Object i : keys) {
 							if (i.equals(player.getOffHand()))
-								key = i;
-							// TODO check if the object can be used with the object in the player's offhand.
+								key = i; // Scans the dictionary of keys and values of the target object. Key is the
+											// object that the player has in their off hand. This will determine if the
+											// player can actually use their off hand.
 						}
-					} //TODO allow the checking is USABLE objects can be used on objects in the room.
+						if (!key.equals(nullObject)) {
+							System.out.println(target.getSpecificUses().get(key));
+						}
+					}
 					Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
 					String absoluteName = "Object";
 					try {
@@ -336,10 +348,8 @@ public class Game implements Serializable {
 						java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
 						absoluteName = tempObj.getClass().getSimpleName();
 					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.out.println("This is not possible.");
 					}
-					System.out.println("Got this far.");
 					switch (absoluteName) {
 					case ("Door"):
 						Door door = (Door) currentRoom.getContents().get(location);
@@ -355,7 +365,7 @@ public class Game implements Serializable {
 							if (container.getWorkingKeys()[i].equals(player.getOffHand())) {
 								container.setLocked(false);
 								player.setOffHand(nullObject);
-								System.out.println("You unlock " + container.getName() + ".");
+								System.out.println("You unlock the " + container.getName().toLowerCase() + ".");
 							}
 						}
 					case ("Puzzle"):
@@ -382,13 +392,42 @@ public class Game implements Serializable {
 				absoluteName = tempObj.getClass().getSimpleName();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e.getMessage();
 			}
 			Usable used = (Usable) currentRoom.getContents().get(location);
 			System.out.println(used.getGenericUse());
 			switch (absoluteName) {
-			// TODO for different types of object, do different things.
+			// TODO for different types of object, do different things. The object is in the
+			// room, eg a terminal.
+			case ("Terminal"):
+				Terminal terminal = (Terminal) currentRoom.getContents().get(location);
+				terminalHandler(terminal);
+				//TODO get this to actually work.
+				break;
 			}
+		}
+	}
+
+	public void terminalHandler(Terminal terminal) {
+		System.out.println(System.currentTimeMillis());
+		System.out.println(terminal.getName());
+		System.out.println("1. Login");
+		System.out.println("2. ###HACK###");
+		int choice = -1;
+		while (choice > 2 || choice < 1) {
+			choice = Integer.parseInt(Utilities.StrInput());
+		}
+		switch(choice) {
+		case 1:
+			System.out.print("Username: ");
+			String username = Utilities.StrInput();
+			System.out.print("Password: ");
+			String password = Utilities.StrInput();
+			terminal.unlock(username, password);
+			break;
+		case 2:
+			terminal.hack(terminal.getDifficulty(), player.getSkills().get(1).getLevel());
+			break;
 		}
 	}
 
@@ -481,10 +520,23 @@ public class Game implements Serializable {
 				Object current = currentRoom.getContents().get(i);
 				if (current.getName().toLowerCase().equals(verbObject)) {
 					System.out.println(current.getDescription());
-					Utilities.printSubObjects(current);
+					if (current.getClass().getSimpleName().equals("Container")) {
+						Container container = (Container) current;
+						if (!container.isLocked()) {
+							if (container.getParts().size() > 0) {
+								Utilities.printSubObjects(current);
+							} else {
+								System.out.println("It is empty.");
+							}
+						} else {
+							System.out.println("It is locked.");
+						}
+					} else {
+						Utilities.printSubObjects(current);
+					}
 					found = true;
 					break;
-				} else if (current.getParts() != null && current.getParts().size() > 0) {
+				} else if (found == false && current.getParts() != null && current.getParts().size() > 0) {
 					for (i = 0; i < current.getParts().size(); i++) {
 						Object currentPart = current.getParts().get(i);
 						if (currentPart.getName().toLowerCase().equals(verbObject)) {

@@ -109,8 +109,8 @@ public class Utilities {
 	public static void printSubObjects(Object object) {
 		//Prints all the sub-parts of an object to the user.
 		if (object.getParts() != null && object.getParts().size() > 0) {
+			System.out.println("You see it contains: ");
 			for (int i = 0; i < object.getParts().size(); i++) {
-				System.out.println("You see it contains: ");
 				String currentName = object.getParts().get(i).getName();
 				System.out.print("> ");
 				if (currentName.startsWith("[aeiou]")) {
