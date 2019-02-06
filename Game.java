@@ -30,7 +30,7 @@ public class Game implements Serializable {
 		Key key = new Key("Key", "It is a key.", 10);
 		Map<Object, String> uses = new HashMap<Object, String>();
 		uses.put(key, "You manage to unlock the chest.");
-		Key[] keys = {key};
+		Key[] keys = { key };
 		Container chest = new Container("Chest", "It is a chest", Collections.emptyList(), 200, 100, uses, true, keys);
 		String[] combinable = { "Torch" };
 		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
@@ -46,7 +46,8 @@ public class Game implements Serializable {
 		contents.add(chest);
 		contents.add(key);
 		Room first = new Room(contents, emptyCharacters,
-				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.", null, null);
+				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.",
+				null, null);
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		player = Utilities.CreateCharacter(false, true, first);
 		player.setCurrentRoom(first);
@@ -318,51 +319,51 @@ public class Game implements Serializable {
 							location = i;
 						}
 					}
-					Set<Object> keys = target.getSpecificUses().keySet();
 					Object key = nullObject;
-					for (Object i : keys) {
-						if (i.equals(player.getOffHand()))
-							key = i;
-						// TODO check if the object can be used with the object in the player's offhand.
-					}
-					if (location != -1 && !key.equals(nullObject)) {
-						System.out.println(target.getSpecificUses().get(key));
-						Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
-						String absoluteName = "Object";
-						try {
-							Class<?> tempClass = temp.getClassLoader()
-									.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
-							java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
-							absoluteName = tempObj.getClass().getSimpleName();
-						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+					if (false) {
+						Set<Object> keys = target.getSpecificUses().keySet();
+						for (Object i : keys) {
+							if (i.equals(player.getOffHand()))
+								key = i;
+							// TODO check if the object can be used with the object in the player's offhand.
 						}
-						switch (absoluteName) {
-						case ("Door"):
-							Door door = (Door) currentRoom.getContents().get(location);
-							for(int i = 0; i < door.getWorkingKeys().length; i++) {
-								if(door.getWorkingKeys()[i].equals((Key) player.getOffHand())) {
-									door.setLocked(false);
-									player.setOffHand(nullObject);
-								}
-							}
-						case ("Container"):
-							Container container = (Container) currentRoom.getContents().get(location);
-							for(int i = 0; i < container.getWorkingKeys().length; i++) {
-								if(container.getWorkingKeys()[i].equals(player.getOffHand())) {
-									container.setLocked(false);
-									player.setOffHand(nullObject);
-									System.out.println("You unlock " + container.getName() + ".");
-								}
-							}
-						case ("Puzzle"):
-						case ("Remains"):
-						case ("Terminal"):
-						case ("Player"):
-						}
-						successful = true;
+					} //TODO allow the checking is USABLE objects can be used on objects in the room.
+					Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
+					String absoluteName = "Object";
+					try {
+						Class<?> tempClass = temp.getClassLoader()
+								.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
+						java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
+						absoluteName = tempObj.getClass().getSimpleName();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+					System.out.println("Got this far.");
+					switch (absoluteName) {
+					case ("Door"):
+						Door door = (Door) currentRoom.getContents().get(location);
+						for (int i = 0; i < door.getWorkingKeys().length; i++) {
+							if (door.getWorkingKeys()[i].equals((Key) player.getOffHand())) {
+								door.setLocked(false);
+								player.setOffHand(nullObject);
+							}
+						}
+					case ("Container"):
+						Container container = (Container) currentRoom.getContents().get(location);
+						for (int i = 0; i < container.getWorkingKeys().length; i++) {
+							if (container.getWorkingKeys()[i].equals(player.getOffHand())) {
+								container.setLocked(false);
+								player.setOffHand(nullObject);
+								System.out.println("You unlock " + container.getName() + ".");
+							}
+						}
+					case ("Puzzle"):
+					case ("Remains"):
+					case ("Terminal"):
+					case ("Player"):
+					}
+					successful = true;
 				}
 			}
 		} else if (!successful) {
