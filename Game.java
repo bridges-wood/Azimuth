@@ -38,10 +38,11 @@ public class Game implements Serializable {
 		List<Object> chestContents = new ArrayList<Object>();
 		chestContents.add(torch);
 		Container chest = new Container("Chest", "It is a chest.", chestContents, 200, 100, uses, true, keys);
-		boolean[] locked = {true}; 
-		String[] usernames = {"user"};
-		String[] passwords = {"pass"};
-		Terminal terminal = new Terminal("My terminal", "It is your terminal.", 5, locked, new String[0], new String[0], usernames, passwords);
+		boolean[] locked = { true };
+		String[] usernames = { "user" };
+		String[] passwords = { "pass" };
+		Terminal terminal = new Terminal("My terminal", "It is your terminal.", 5, locked, new String[0], new String[0],
+				usernames, passwords);
 		List<Object> contents = new ArrayList<Object>();
 		contents.add(terminal);
 		contents.add(bed);
@@ -359,6 +360,8 @@ public class Game implements Serializable {
 								player.setOffHand(nullObject);
 							}
 						}
+						successful = true;
+						break;
 					case ("Container"):
 						Container container = (Container) currentRoom.getContents().get(location);
 						for (int i = 0; i < container.getWorkingKeys().length; i++) {
@@ -368,42 +371,57 @@ public class Game implements Serializable {
 								System.out.println("You unlock the " + container.getName().toLowerCase() + ".");
 							}
 						}
+						successful = true;
+						break;
 					case ("Puzzle"):
+						successful = true;
+						break;
 					case ("Remains"):
+						successful = true;
+						break;
 					case ("Terminal"):
+						successful = true;
+						break;
 					case ("Player"):
+						successful = true;
+						break;
+						
 					}
-					successful = true;
 				}
-			}
-		} else if (!successful) {
+			} else if (!successful) {
 
-			int location = -1;
-			for (int i = 0; i < currentRoom.getContents().size(); i++) {
-				if (currentRoom.getContents().get(i).getName().toLowerCase().equals(actStr))
-					location = i;
-			}
-			Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
-			String absoluteName = "Object";
-			try {
-				Class<?> tempClass = temp.getClassLoader()
-						.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
-				java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
-				absoluteName = tempObj.getClass().getSimpleName();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.getMessage();
-			}
-			Usable used = (Usable) currentRoom.getContents().get(location);
-			System.out.println(used.getGenericUse());
-			switch (absoluteName) {
-			// TODO for different types of object, do different things. The object is in the
-			// room, eg a terminal.
-			case ("Terminal"):
-				Terminal terminal = (Terminal) currentRoom.getContents().get(location);
-				terminalHandler(terminal);
-				//TODO get this to actually work.
-				break;
+				int location = -1;
+				for (int i = 0; i < currentRoom.getContents().size(); i++) {
+					if (currentRoom.getContents().get(i).getName().toLowerCase().equals(actStr))
+						location = i;
+				}
+				Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
+				String absoluteName = "Object";
+				try {
+					Class<?> tempClass = temp.getClassLoader()
+							.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
+					java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
+					absoluteName = tempObj.getClass().getSimpleName();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.getMessage();
+				}
+				//Usable used = (Usable) currentRoom.getContents().get(location);
+				//System.out.println(used.getGenericUse());
+				switch (absoluteName) {
+				// TODO for different types of object, do different things. The object is in the
+				// room, eg a terminal.
+				case ("Terminal"):
+					Terminal terminal = (Terminal) currentRoom.getContents().get(location);
+					terminalHandler(terminal);
+					// TODO get this to actually work.
+					break;
+				case ("Usable"):
+					Usable usable = (Usable) currentRoom.getContents().get(location);
+					System.out.println(usable.getGenericUse());
+					break;
+				}
+
 			}
 		}
 	}
@@ -417,7 +435,7 @@ public class Game implements Serializable {
 		while (choice > 2 || choice < 1) {
 			choice = Integer.parseInt(Utilities.StrInput());
 		}
-		switch(choice) {
+		switch (choice) {
 		case 1:
 			System.out.print("Username: ");
 			String username = Utilities.StrInput();

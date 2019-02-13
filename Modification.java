@@ -15,7 +15,7 @@ public class Modification extends Object implements Serializable {/**
 	public Modification(String name, String description, int weight, int value,  String typeMod, int damageMod, 
 			int rateOfFireMod, int conditionMod, int durabilityMod, float accuracyMod,
 			float critChanceMod, float critDamageMod, Ammunition ammunitionMod, 
-			int magazineCapacityMod, Skill SkiledUse) {
+			int magazineCapacityMod, Skill SkiledUse, Skill skilledUse) {
 		super(true, name, description, Collections.emptyList(), new String[0] , weight, value);
 		this.typeMod = typeMod;
 		this.damageMod = damageMod;

@@ -62,7 +62,7 @@ public class Terminal extends Object implements Serializable {
 				}
 			}
 		}
-		passwordsPoss[Utilities.rangedRandomInt(0, passwordsPoss[0].length - 1)] //Replaces one of the randomly generated passwords in the grid with the true password.
+		passwordsPoss[Utilities.rangedRandomInt(0, passwordsPoss[0].length)] //Replaces one of the randomly generated passwords in the grid with the true password.
 					 [Utilities.rangedRandomInt(0, passwordsPoss.length - 1)] = passwords[0];
 		for (int x = 0; x < dim; x++) {
 			for (int y = 0; y < dim; y++) {
