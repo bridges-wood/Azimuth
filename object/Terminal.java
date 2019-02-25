@@ -39,6 +39,7 @@ public class Terminal extends Object implements Serializable {
 		if (pairIndex != -1) {
 			if (userAtt == usernames[pairIndex] && passAtt == passwords[pairIndex]) {
 				this.unLocked(locked, pairIndex);
+				System.out.println("You unlock " + userAtt + "'s account");
 			}
 		}
 	}

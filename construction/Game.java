@@ -21,6 +21,7 @@ import weapon.Ammunition;
 import weapon.Bullet;
 import weapon.Magazine;
 import weapon.Weapon;
+import construction.Menu;
 
 public class Game implements Serializable {
 	private static final long serialVersionUID = 557779407485802525L;
@@ -508,23 +509,14 @@ public class Game implements Serializable {
 					}
 				}
 			} else if (!successful) {
-
 				int location = -1;
+				String absoluteName = "";
 				for (int i = 0; i < currentRoom.getContents().size(); i++) {
 					if (currentRoom.getContents().get(i).getName().toLowerCase().equals(actStr))
 						location = i;
 				}
-				Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
-				String absoluteName = "Object";
-				try {
-					Class<?> tempClass = temp.getClassLoader()
-							.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
-					java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
-					absoluteName = tempObj.getClass().getSimpleName();
-				} catch (ClassNotFoundException e) {
-					System.out.println("You can't appear to use that.");
-				}
-
+				if (location != -1)
+					absoluteName = currentRoom.getContents().get(location).getClass().getSimpleName();
 				switch (absoluteName) {
 				// Generic use of objects in the room.
 				case ("Terminal"):
@@ -568,6 +560,14 @@ public class Game implements Serializable {
 		case 2:
 			terminal.hack(terminal.getDifficulty(), player.getSkills().get(1).getLevel());
 			break;
+		}
+		if (!terminal.isLocked(0)) {
+			if (!terminal.getLogNames().equals(null)) {
+				for (int i = 0; i < terminal.getLogNames().length; i++) {
+					System.out.println(terminal.getLogNames()[i]);
+					System.out.println(terminal.getLogs()[i]);
+				}
+			}
 		}
 	}
 
