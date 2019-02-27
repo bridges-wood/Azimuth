@@ -95,7 +95,7 @@ public class Terminal extends Object implements Serializable {
 				System.out.println("There are " + sames + " characters the same as the password.");
 				continue;
 			} else {
-				System.out.println(this.getName().toLowerCase() + " is now unlocked.");
+				System.out.println(this.getName() + " is now unlocked.");
 				for (int x = 0; x < locked.length; x++) {
 					this.unLocked(locked, x); // Sets the locked value for all the users to unlocked.
 				}

@@ -164,7 +164,6 @@ public class Game implements Serializable {
 			}
 		}
 		for (int i = 0; i < player.getInventory().size(); i++) {
-			System.out.println(player.getInventory().get(i).getClass().getSimpleName());
 			if (player.getInventory().get(i).getClass().getSimpleName().equals("Magazine")) {
 				Magazine tempMagazine = (Magazine) player.getInventory().get(i);
 				if (tempMagazine.getAmmunition().equals(finalWeapon.getAmmunition())) {
@@ -175,12 +174,12 @@ public class Game implements Serializable {
 						player.getInventory().remove(tempMagazine);
 
 					} else {
-						List<Object> temp = player.getInventory().get(location).getParts();
+						List<Object> temp = new ArrayList<Object>(player.getInventory().get(location).getParts());
 						temp.add(tempMagazine);
 						player.getInventory().get(location).setParts(temp);
 						player.getInventory().remove(tempMagazine);
 					}
-					System.out.println("You load the ");
+					System.out.print("You load the ");
 					for (Object u : finalWeapon.getParts()) {
 						System.out.println(u.getName());
 					}
@@ -534,7 +533,6 @@ public class Game implements Serializable {
 	}
 
 	public void terminalHandler(Terminal terminal) {
-		System.out.println(System.currentTimeMillis());
 		System.out.println(terminal.getName());
 		System.out.println("1. Login");
 		System.out.println("2. ###HACK###");
@@ -562,7 +560,7 @@ public class Game implements Serializable {
 			break;
 		}
 		if (!terminal.isLocked(0)) {
-			if (!terminal.getLogNames().equals(null)) {
+			if (!(terminal.getLogs().length == 0)) {
 				for (int i = 0; i < terminal.getLogNames().length; i++) {
 					System.out.println(terminal.getLogNames()[i]);
 					System.out.println(terminal.getLogs()[i]);
@@ -677,14 +675,15 @@ public class Game implements Serializable {
 					found = true;
 					break;
 				} else if (found == false && current.getParts() != null && current.getParts().size() > 0) {
-					for (i = 0; i < current.getParts().size(); i++) {
-						Object currentPart = current.getParts().get(i);
+					for (int j = 0; j < current.getParts().size(); j++) {
+						Object currentPart = current.getParts().get(j);
 						if (currentPart.getName().toLowerCase().equals(verbObject)) {
 							System.out.println(currentPart.getDescription());
 							found = true;
 							break;
 						}
 					}
+					continue;
 				}
 			}
 			for (int i = 0; i < player.getInventory().size(); i++) {
