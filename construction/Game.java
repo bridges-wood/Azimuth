@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 import apparel.Apparel;
 import object.Container;
@@ -92,6 +95,15 @@ public class Game implements Serializable {
 		}
 		boolean playing = true;
 		boolean moved = true;
+		try {
+			AudioInputStream inStream = AudioSystem.getAudioInputStream(new File("StatRes/Cold-Moon.wav"));
+			Clip clip = AudioSystem.getClip();
+			clip.open(inStream);
+			clip.start();
+		} catch (Exception e) {
+			System.out.println("Failed to load audio resources.");
+			e.printStackTrace();
+		}
 		while (playing) {
 			Room currentRoom = player.getCurrentRoom(); // Impermanent room reference.
 			if (moved) {
@@ -533,7 +545,7 @@ public class Game implements Serializable {
 	}
 
 	public void terminalHandler(Terminal terminal) {
-		System.out.println(terminal.getName());
+		System.out.println("\n" + terminal.getName());
 		System.out.println("1. Login");
 		System.out.println("2. ###HACK###");
 		// TODO determine how to control the output of what options are available to the

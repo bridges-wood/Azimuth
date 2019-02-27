@@ -60,7 +60,11 @@ public class Terminal extends Object implements Serializable {
 		for (int x = 0; x < dim; x++) {
 			for (int y = 0; y < dim; y++) {
 				try {
-					passwordsPoss[x][y] = Utilities.generatePassword(difficulty).substring(0, this.getPasswords()[0].length()); // Populates the array with random
+					String tempPass = Utilities.generatePassword(difficulty);
+					while(tempPass.length() < this.getPasswords()[0].length() + 1) {
+						tempPass = tempPass + Utilities.generatePassword(difficulty);
+					}
+					passwordsPoss[x][y] = tempPass.substring(0, this.getPasswords()[0].length()); // Populates the array with random
 																					// passwords.
 				} catch (FileNotFoundException e) {
 					System.out.println(

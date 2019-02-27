@@ -110,7 +110,7 @@ public class Menu {
 	}
 
 	public void credits() {
-		System.out.println("/nCredits:");
+		System.out.println("\nCredits:");
 		System.out.println("Pretty much everything: Max Wood");
 		System.out.println("Copyright Max Wood 2019: All Rights Reserved");
 	}
