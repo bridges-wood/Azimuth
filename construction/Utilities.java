@@ -1,6 +1,6 @@
 package construction;
 
- import java.io.File;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,13 +12,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+
 import apparel.Apparel;
 import object.Object;
 import weapon.Ammunition;
 import weapon.Weapon;
 
 public class Utilities {
-	
+
 	public static void describeRoom(Room currentRoom) {
 		System.out.println(currentRoom.getDescription());
 		if (currentRoom.getContents().size() > 0) {
@@ -46,7 +51,7 @@ public class Utilities {
 			System.out.println("There is no one else here.");
 		}
 	}
-	
+
 	public static Player CreateCharacter(boolean debug, boolean player, Room currentRoom) {
 		int r = 0;
 		int e = 0;
@@ -60,7 +65,7 @@ public class Utilities {
 		System.out.print("Name > ");
 		String name = Utilities.StrInput();
 		boolean inComplete = true;
-		while(inComplete) {
+		while (inComplete) {
 			System.out.println("SKILL POINT ASSIGNMENT (24 Max)");
 			System.out.print("Rationality > ");
 			r = Integer.parseInt(Utilities.StrInput());
@@ -78,23 +83,33 @@ public class Utilities {
 			a = Integer.parseInt(Utilities.StrInput());
 			System.out.print("Strength > ");
 			s = Integer.parseInt(Utilities.StrInput());
-			if(r+e+p+l+i+c+a+s <= 24) {
-				inComplete = false; 
-			} else System.out.println("These should add to 15.");
+			if (r + e + p + l + i + c + a + s <= 24) {
+				inComplete = false;
+			} else
+				System.out.println("These should add to 15.");
 		}
-		int[] REPLICAS = {r,e,p,l,i,c,a,s};
-		//TODO Allow any character to be added to the game during runtime.
-		Ammunition tempA = new Ammunition("Fists", Collections.emptyList(),0,0,0,"Kinetic", "");
-		int[] resistances = {0, 10, 5, 15, 5};
-		List <Skill> emptyS = new ArrayList<Skill>();
-		List <Object> emptyO = new ArrayList<Object>();
-		Apparel tempAp = new Apparel("Uniform", "It is your uniform, basically all you are seen in now.", Collections.emptyList(), 1, 10, true, 1, resistances, new int[8], 10);
-		Weapon tempW = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight", Collections.emptyList(), new String[0], "Melee", s * 2, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0, Collections.emptyList(), tempA);
+		int[] REPLICAS = { r, e, p, l, i, c, a, s };
+		// TODO Allow any character to be added to the game during runtime.
+		Ammunition tempA = new Ammunition("Fists", Collections.emptyList(), 0, 0, 0, "Kinetic", "");
+		int[] resistances = { 0, 10, 5, 15, 5 };
+		List<Skill> emptyS = new ArrayList<Skill>();
+		List<Object> emptyO = new ArrayList<Object>();
+		Apparel tempAp = new Apparel("Uniform", "It is your uniform, basically all you are seen in now.",
+				Collections.emptyList(), 1, 10, true, 1, resistances, new int[8], 10);
+		Weapon tempW = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
+				Collections.emptyList(), new String[0], "Melee", s * 2, 1, -1, -1, (float) 1.0, (float) 0.05,
+				(float) 2.0, Collections.emptyList(), tempA);
 		int[] armourRes = new int[5];
 		int[] REPLICASmods = new int[8];
 		Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);
-		Apparel[] armour = {new Apparel("", "", emptyO, 0, 0, false, 0, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 1, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 2, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 3, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 4, armourRes, REPLICASmods, 0), new Apparel("", "", emptyO, 0, 0, false, 5, armourRes, REPLICASmods, 0)};
-		return new Player(name, "It is you.", 0, 1, s*10, 0, armour, tempAp.getResistances(), tempAp, tempW, nullObject, s*10, emptyO, REPLICAS, emptyS, "None", currentRoom);
+		Apparel[] armour = { new Apparel("", "", emptyO, 0, 0, false, 0, armourRes, REPLICASmods, 0),
+				new Apparel("", "", emptyO, 0, 0, false, 1, armourRes, REPLICASmods, 0),
+				new Apparel("", "", emptyO, 0, 0, false, 2, armourRes, REPLICASmods, 0),
+				new Apparel("", "", emptyO, 0, 0, false, 3, armourRes, REPLICASmods, 0),
+				new Apparel("", "", emptyO, 0, 0, false, 4, armourRes, REPLICASmods, 0),
+				new Apparel("", "", emptyO, 0, 0, false, 5, armourRes, REPLICASmods, 0) };
+		return new Player(name, "It is you.", 0, 1, s * 10, 0, armour, tempAp.getResistances(), tempAp, tempW,
+				nullObject, s * 10, emptyO, REPLICAS, emptyS, "None", currentRoom);
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {
@@ -109,7 +124,7 @@ public class Utilities {
 		sc.close();
 		return out;
 	}
-	
+
 	public static String longestWord(File text) throws FileNotFoundException {
 		// Takes an input text file and when a randomly generated integer is equal to 0,
 		// returns a line of the text file.
@@ -117,14 +132,15 @@ public class Utilities {
 		String longest = "";
 		for (int i = 0; i < 466544; i++) {
 			String current = sc.nextLine();
-			if(current.length() > longest.length()) longest = current;
+			if (current.length() > longest.length())
+				longest = current;
 		}
 		sc.close();
 		return longest;
 	}
-	
+
 	public static void printSubObjects(Object object) {
-		//Prints all the sub-parts of an object to the user.
+		// Prints all the sub-parts of an object to the user.
 		if (object.getParts() != null && object.getParts().size() > 0) {
 			System.out.println("You see it contains: ");
 			for (int i = 0; i < object.getParts().size(); i++) {
@@ -139,7 +155,7 @@ public class Utilities {
 			}
 		}
 	}
-	
+
 	public static String StrInput() {
 		// Takes string input from the console.
 		@SuppressWarnings("resource") // Suppression of Resource Not Closed.
@@ -192,16 +208,39 @@ public class Utilities {
 			out.writeObject(game);
 			out.close();
 			fileOut.close();
-			if(display) System.out.println("Data saved in: " + file.getName());
+			if (display)
+				System.out.println("Data saved in: " + file.getName());
 		} catch (IOException i) {
 			i.printStackTrace();
 		}
 	}
-	
+
 	public static void testQuit() {
 		System.out.println("Are you sure that you want to quit? [Y/n]");
 		System.out.print("> ");
 		String confirm = Utilities.StrInput();
-		if (confirm.toLowerCase().equals("y")) System.exit(0);
+		if (confirm.toLowerCase().equals("y"))
+			System.exit(0);
 	}
+
+	public static void playAudio(File audioFile, float volume) {
+		if (volume > 0) {
+			try {
+				AudioInputStream inStream = AudioSystem.getAudioInputStream(audioFile);
+				Clip clip = AudioSystem.getClip();
+				clip.open(inStream);
+				FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				volumeControl.setValue(volume);
+				clip.start();
+			} catch (Exception e) {
+				System.out.println("Failed to load audio resources.");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void options() {
+
+	}
+
 }

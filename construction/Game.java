@@ -9,10 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import apparel.Apparel;
 import object.Container;
 import object.Door;
@@ -37,7 +33,7 @@ public class Game implements Serializable {
 	Weapon fists = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
 			Collections.emptyList(), new String[1], "Melee", 0, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0,
 			Collections.emptyList(), tempA);
-
+	PublicSettings settings = new PublicSettings();
 	public Game() {
 		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
@@ -86,7 +82,7 @@ public class Game implements Serializable {
 		playGame();
 	}
 
-	public void playGame() {
+	void playGame() {
 		// Insures that initialised game is saved.
 		try {
 			Utilities.saveGame(Menu.getCurrentFile(), this, false);
@@ -95,15 +91,7 @@ public class Game implements Serializable {
 		}
 		boolean playing = true;
 		boolean moved = true;
-		try {
-			AudioInputStream inStream = AudioSystem.getAudioInputStream(new File("StatRes/Cold-Moon.wav"));
-			Clip clip = AudioSystem.getClip();
-			clip.open(inStream);
-			clip.start();
-		} catch (Exception e) {
-			System.out.println("Failed to load audio resources.");
-			e.printStackTrace();
-		}
+		Utilities.playAudio(new File("StatRes/Cold-Moon.wav"), 5);
 		while (playing) {
 			Room currentRoom = player.getCurrentRoom(); // Impermanent room reference.
 			if (moved) {
@@ -111,7 +99,6 @@ public class Game implements Serializable {
 														// new room that they are in.
 				moved = false;
 			}
-
 			String userIn = Utilities.StrInput();
 			String[] inputArr = userIn.split(" ");
 			String verb = inputArr[0];
@@ -151,12 +138,16 @@ public class Game implements Serializable {
 				break;
 			case ("load"):
 				load(currentRoom, verbObject);
+				break;
+			case ("settings"):
+				Utilities.options();
+			break;
 			}
 		}
 
 	}
 
-	public void load(Room currentRoom, String verbObject) {
+	private void load(Room currentRoom, String verbObject) {
 		Weapon finalWeapon = fists;
 		int location = -2;
 		if (player.getEquipped().getName().toLowerCase().equals(verbObject)) {
@@ -201,7 +192,7 @@ public class Game implements Serializable {
 		}
 	}
 
-	public void getHelp(String verbObject) {
+	private void getHelp(String verbObject) {
 		switch (verbObject) {
 		case ("quit"):
 			System.out.println("[Usage: quit] Quits the game.");
@@ -248,7 +239,7 @@ public class Game implements Serializable {
 
 	}
 
-	public void save() {
+	private void save() {
 		Menu.showSaves();
 		System.out.println("Input the names of the file you wish to save in: ");
 		String name = Utilities.StrInput();
@@ -260,7 +251,7 @@ public class Game implements Serializable {
 		}
 	}
 
-	public void drop(Room currentRoom, String verbObject) {
+	private void drop(Room currentRoom, String verbObject) {
 		boolean success = false;
 		for (int i = 0; i < player.getInventory().size(); i++) {
 			Object current = player.getInventory().get(i);
@@ -286,7 +277,7 @@ public class Game implements Serializable {
 			System.out.println("You drop the " + verbObject + ".");
 	}
 
-	public void get(Room currentRoom, String verbObject) {
+	private void get(Room currentRoom, String verbObject) {
 		boolean found = false;
 		for (int i = 0; i < currentRoom.getContents().size(); i++) { // Checks if player wants to get
 																		// meta-objects in room.
@@ -368,7 +359,7 @@ public class Game implements Serializable {
 		}
 	}
 
-	public void use(String[] inputArr, Room currentRoom) {
+	private void use(String[] inputArr, Room currentRoom) {
 		String actStr = "", objStr = "";
 		boolean complete = false, successful = false;
 		for (int i = 1; i < inputArr.length; i++) { // Checks for everything in the input.
@@ -412,8 +403,9 @@ public class Game implements Serializable {
 			if (actStr.equals(player.getEquipped().getName().toLowerCase())) {
 				for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
 					if (objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
-						// If the player is trying to use their weapon on a character...
-						// TODO create combat method. Allow player to engage other characters.
+						//TODO sort for agressive npcs...
+						List<Character> hostiles = new ArrayList<Character>();
+						combatHandler();
 						successful = true;
 					}
 				}
@@ -544,7 +536,12 @@ public class Game implements Serializable {
 		}
 	}
 
-	public void terminalHandler(Terminal terminal) {
+	private void combatHandler() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void terminalHandler(Terminal terminal) {
 		System.out.println("\n" + terminal.getName());
 		System.out.println("1. Login");
 		System.out.println("2. ###HACK###");
@@ -581,7 +578,7 @@ public class Game implements Serializable {
 		}
 	}
 
-	public void equip(String verbObject) {
+	private void equip(String verbObject) {
 		boolean found = false;
 		for (int i = 0; i < player.getInventory().size(); i++) {
 			Object current = player.getInventory().get(i);
@@ -619,7 +616,7 @@ public class Game implements Serializable {
 			System.out.println("Successfully equipped " + verbObject + ".");
 	}
 
-	public void examine(Room currentRoom, String verbObject) {
+	private void examine(Room currentRoom, String verbObject) {
 		boolean found = false;
 		if (verbObject.equals("room")) {
 			Utilities.describeRoom(currentRoom);
@@ -712,7 +709,7 @@ public class Game implements Serializable {
 			System.out.println("You couldn't find that to look at.");
 	}
 
-	public boolean go(Room currentRoom, String verbObject) {
+	private boolean go(Room currentRoom, String verbObject) {
 		boolean moved = false;
 		switch (verbObject) {
 		case ("up"):

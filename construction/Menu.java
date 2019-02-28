@@ -57,7 +57,7 @@ public class Menu {
 				}
 				break;
 			case 3:
-				options();
+				Utilities.options();
 				break;
 			case 4:
 				credits();
@@ -105,9 +105,6 @@ public class Menu {
 		Game runtime = new Game();
 	}
 
-	public void options() {
-		
-	}
 
 	public void credits() {
 		System.out.println("\nCredits:");
