@@ -98,7 +98,7 @@ public class Utilities {
 				Collections.emptyList(), 1, 10, true, 1, resistances, new int[8], 10);
 		Weapon tempW = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
 				Collections.emptyList(), new String[0], "Melee", s * 2, 1, -1, -1, (float) 1.0, (float) 0.05,
-				(float) 2.0, Collections.emptyList(), tempA);
+				(float) 2.0, Collections.emptyList(), tempA, null);
 		int[] armourRes = new int[5];
 		int[] REPLICASmods = new int[8];
 		Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);

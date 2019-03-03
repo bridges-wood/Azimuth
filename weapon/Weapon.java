@@ -16,10 +16,11 @@ public class Weapon extends Object implements Serializable { // Plasma, Gauss/Ra
 	private float accuracy, critChance, critDamage;
 	private List<Modification> modifications;
 	private Ammunition ammunition;
+	private Magazine loaded;
 
 	public Weapon(boolean inventoriable, String name, int weight, int value, String description, List<Object> parts,
 			String[] combinable, String type, int damage, int rateOfFire, int condition, int durability, float accuracy,
-			float critChance, float critDamage, List<Modification> modifications, Ammunition ammunition) {
+			float critChance, float critDamage, List<Modification> modifications, Ammunition ammunition, Magazine loaded) {
 		super(inventoriable, name, description, parts, combinable, weight, value);
 		this.type = type;
 		this.damage = damage;
@@ -31,6 +32,7 @@ public class Weapon extends Object implements Serializable { // Plasma, Gauss/Ra
 		this.critDamage = critDamage; // Modifier
 		this.modifications = modifications;
 		this.ammunition = ammunition;
+		this.loaded = loaded;
 	}
 
 	public String getType() {
@@ -111,6 +113,20 @@ public class Weapon extends Object implements Serializable { // Plasma, Gauss/Ra
 
 	public void setAmmunition(Ammunition ammunition) {
 		this.ammunition = ammunition;
+	}
+
+	/**
+	 * @return the loaded
+	 */
+	public Magazine getLoaded() {
+		return loaded;
+	}
+
+	/**
+	 * @param loaded the loaded to set
+	 */
+	public void setLoaded(Magazine loaded) {
+		this.loaded = loaded;
 	}
 
 }

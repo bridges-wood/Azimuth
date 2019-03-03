@@ -32,7 +32,7 @@ public class Game implements Serializable {
 	Ammunition tempA = new Ammunition("Fists", Collections.emptyList(), 0, 0, 0, "Kinetic", "");
 	Weapon fists = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
 			Collections.emptyList(), new String[1], "Melee", 0, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0,
-			Collections.emptyList(), tempA);
+			Collections.emptyList(), tempA, null);
 	PublicSettings settings = new PublicSettings();
 
 	public Game() {
@@ -66,7 +66,7 @@ public class Game implements Serializable {
 		Bullet ninemmA = new Bullet(Collections.emptyList(), 2, 0, 9);
 		Weapon ninemm = new Weapon(true, "9mm pistol", 1, 20, "A lightweight, compact 9mm pistol.",
 				Collections.emptyList(), new String[] { "9mm" }, "Kinetic", 10, 1, 25, 5, (float) 0.75, (float) 0.15,
-				(float) 2.0, Collections.emptyList(), ninemmA);
+				(float) 2.0, Collections.emptyList(), ninemmA, null);
 		contents.add(ninemm);
 		Magazine ninemmMag = new Magazine("9mm Magazine", null, 10, ninemmA);
 		contents.add(ninemmMag);
@@ -174,13 +174,13 @@ public class Game implements Serializable {
 					if (location == -1) {
 						List<Object> temp = player.getEquipped().getParts();
 						temp.add(tempMagazine);
-						player.getEquipped().setParts(temp);
+						player.getEquipped().setLoaded(tempMagazine);
 						player.getInventory().remove(tempMagazine);
 
 					} else {
 						List<Object> temp = new ArrayList<Object>(player.getInventory().get(location).getParts());
 						temp.add(tempMagazine);
-						player.getInventory().get(location).setParts(temp);
+						((Weapon) player.getInventory().get(location)).setLoaded(tempMagazine);
 						player.getInventory().remove(tempMagazine);
 					}
 					System.out.print("You load the ");
@@ -404,20 +404,51 @@ public class Game implements Serializable {
 			if (actStr.equals(player.getEquipped().getName().toLowerCase())) {
 				for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
 					if (objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
-						// TODO sort for agressive npcs...
+						Character target = currentRoom.getCharacters().get(i);
 						List<Character> hostiles = new ArrayList<Character>();
-						for(Character npc : currentRoom.getCharacters()) {
-							for(Relation relation : npc.getAffiliation().getRelations()) {
-								if(relation.getFaction().equals(player.getAffiliation())) {
-									if(relation.getModifier() < -3) {
+						hostiles.add(target);
+						List<Character> friendlies = new ArrayList<Character>();
+						for (Character npc : currentRoom.getCharacters()) {
+							/*
+							 * TODO this could possibly cause situations where players attack friendlies in
+							 * their own bases and membes of that faction will also attack the player's
+							 * target. This should be dependent on the player's standing with the faction
+							 * whether they follow him or not.
+							 */
+							if (npc.equals(target)) {
+								break;
+							}
+							if (npc.getAffiliation().equals(player.getAffiliation())) {
+								friendlies.add(npc);
+								break;
+							} else if (npc.getAffiliation().equals(target.getAffiliation())) {
+								hostiles.add(npc);
+								break;
+							}
+							for (Relation relation : npc.getAffiliation().getRelations()) {
+								if (relation.getFaction().equals(player.getAffiliation())) {
+									if (relation.getModifier() < -3) {
+										hostiles.add(npc);
+										break;
+									}
+									if (relation.getModifier() > 3) {
+										friendlies.add(npc);
+										break;
+									}
+								} else if (relation.getFaction().equals(target.getAffiliation())) {
+									if (relation.getModifier() < -3) {
+										friendlies.add(npc);
+										break;
+									}
+									if (relation.getModifier() > 3) {
 										hostiles.add(npc);
 										break;
 									}
 								}
 							}
-							
+
 						}
-						combatHandler(hostiles);
+						combatHandler(hostiles, friendlies);
 						successful = true;
 					}
 				}
@@ -548,8 +579,114 @@ public class Game implements Serializable {
 		}
 	}
 
-	private void combatHandler(List<Character> hostiles) {
-		// TODO Determine method of combat.
+	private void combatHandler(List<Character> hostiles, List<Character> friendlies) {
+		/*
+		 * Combat: Combat order. Every person in the order takes an action. Every person
+		 * in the order gets 1 action. Most of the enemies attacks should go towards the
+		 * weakest enemy in order to thin the damage output. Types of Action: - Attack -
+		 * Evade - Heal (self or other character) - Have mercy - Placate - Retreat -
+		 * Defend (other character)
+		 */
+		boolean conflict = true;
+		while (conflict) {
+			String userIn = Utilities.StrInput();
+			String[] inputArr = userIn.split(" ");
+			String verb = inputArr[0];
+			String verbObject = "";
+			for (int i = 1; i < inputArr.length; i++) {
+				verbObject = verbObject + inputArr[i] + " ";
+			}
+			verbObject = verbObject.toLowerCase().trim(); // Input handling.
+			
+			//TODO AI code for enemies and friendlies which determines what they have to do and when.
+			switch (verb) {
+			case ("attack"):
+				attack(verbObject, hostiles);
+				break;
+			case ("evade"):
+				evade();
+				break;
+			case ("heal"):
+				heal(verbObject, friendlies);
+				break;
+			case ("mercy"):
+				mercy(hostiles);
+				break;
+			case ("placate"):
+				placate(hostiles);
+				break;
+			case ("retreat"):
+				retreat();
+				break;
+			case ("defend"):
+				defend(verbObject);
+				break;
+			}
+		}
+
+	}
+
+	private boolean attack(String verbObject, List<Character> hostiles) {
+		if (player.getEquipped().getLoaded().getRounds() > 0) {
+			for (int i = 0; i < hostiles.size(); i++) {
+				Character tempHostile = hostiles.get(i);
+				if (tempHostile.getName().equals(verbObject)) {
+					float shotDamage = player.getEquipped().getDamage() * player.getEquipped().getRateOfFire();
+					player.getEquipped()
+							.setCondition(player.getEquipped().getCondition() - player.getEquipped().getDurability());
+					double hit = Math.random();
+					if (hit < player.getEquipped().getAccuracy()) {
+						double crit = Math.random();
+						if (crit < player.getEquipped().getCritChance()) {
+							shotDamage = shotDamage * player.getEquipped().getCritDamage();
+						}
+						tempHostile.setHp((int) (tempHostile.getHp() - shotDamage));
+						if (tempHostile.getHp() < 0) {
+							hostiles.remove(tempHostile);
+						}
+					}
+					
+					return true;
+				}
+			}
+		}
+		return false;
+
+	}
+
+	private boolean evade() {
+		return false;
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean heal(String verbObject, List<Character> friendlies) {
+		return false;
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean mercy(List<Character> hostiles) {
+		return false;
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean placate(List<Character> hostiles) {
+		return false;
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean retreat() {
+		return false;
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean defend(String verbObject) {
+		return false;
+		// TODO Auto-generated method stub
 
 	}
 
