@@ -12,7 +12,8 @@ public class Character implements Serializable {/**
 	 */
 	private static final long serialVersionUID = -2118679890920812909L;
 // Level banding of enemies and different types as well as character creator.
-	private String name, affiliation;
+	private Faction affiliation;
+	private String name;
 	private int exp, level, hp, credits, inventorySize;
 	private Apparel[] armour; //Head, Torso, Left Arm, Right Arm, Left Leg, Right Leg.
 	private int[] resistances, REPLICAS;
@@ -24,7 +25,7 @@ public class Character implements Serializable {/**
 	public Character( String name, int exp, int level, int hp, int credits, 
 			Apparel[] armour, int[] resistances, Apparel underClothes, Weapon equipped, 
 			int inventorySize, List<Object> inventory, int[] REPLICAS, 
-			List<Skill> skills, String affiliation ) {
+			List<Skill> skills, Faction affiliation ) {
 		this.name = name;
 		this.exp = exp;
 		this.hp = hp;
@@ -141,11 +142,11 @@ public class Character implements Serializable {/**
 		this.skill = skills;
 	}
 
-	public String getAffiliation() {
+	public Faction getAffiliation() {
 		return affiliation;
 	}
 
-	public void setAffiliation(String affiliation) {
+	public void setAffiliation(Faction affiliation) {
 		this.affiliation = affiliation;
 	}
 

@@ -109,7 +109,7 @@ public class Utilities {
 				new Apparel("", "", emptyO, 0, 0, false, 4, armourRes, REPLICASmods, 0),
 				new Apparel("", "", emptyO, 0, 0, false, 5, armourRes, REPLICASmods, 0) };
 		return new Player(name, "It is you.", 0, 1, s * 10, 0, armour, tempAp.getResistances(), tempAp, tempW,
-				nullObject, s * 10, emptyO, REPLICAS, emptyS, "None", currentRoom);
+				nullObject, s * 10, emptyO, REPLICAS, emptyS, null, currentRoom);
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {

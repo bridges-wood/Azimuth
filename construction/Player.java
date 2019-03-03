@@ -22,7 +22,7 @@ public class Player extends Character implements Serializable {
 
 	public Player(String name, String description, int exp, int level, int hp, int credits, Apparel[] armour,
 			int[] resistances, Apparel underClothes, Weapon equipped, Object offHand, int inventorySize, List<Object> inventory,
-			int[] REPLICAS, List<Skill> skills, String affiliation, Room currentRoom) {
+			int[] REPLICAS, List<Skill> skills, Faction affiliation, Room currentRoom) {
 		super(name, exp, level, hp, credits, armour, resistances, underClothes, equipped, inventorySize, inventory,
 				REPLICAS, skills, affiliation);
 		/*

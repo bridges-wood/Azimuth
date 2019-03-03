@@ -34,6 +34,7 @@ public class Game implements Serializable {
 			Collections.emptyList(), new String[1], "Melee", 0, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0,
 			Collections.emptyList(), tempA);
 	PublicSettings settings = new PublicSettings();
+
 	public Game() {
 		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
@@ -141,7 +142,7 @@ public class Game implements Serializable {
 				break;
 			case ("settings"):
 				Utilities.options();
-			break;
+				break;
 			}
 		}
 
@@ -403,9 +404,20 @@ public class Game implements Serializable {
 			if (actStr.equals(player.getEquipped().getName().toLowerCase())) {
 				for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
 					if (objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
-						//TODO sort for agressive npcs...
+						// TODO sort for agressive npcs...
 						List<Character> hostiles = new ArrayList<Character>();
-						combatHandler();
+						for(Character npc : currentRoom.getCharacters()) {
+							for(Relation relation : npc.getAffiliation().getRelations()) {
+								if(relation.getFaction().equals(player.getAffiliation())) {
+									if(relation.getModifier() < -3) {
+										hostiles.add(npc);
+										break;
+									}
+								}
+							}
+							
+						}
+						combatHandler(hostiles);
 						successful = true;
 					}
 				}
@@ -536,9 +548,9 @@ public class Game implements Serializable {
 		}
 	}
 
-	private void combatHandler() {
-		// TODO Auto-generated method stub
-		
+	private void combatHandler(List<Character> hostiles) {
+		// TODO Determine method of combat.
+
 	}
 
 	private void terminalHandler(Terminal terminal) {

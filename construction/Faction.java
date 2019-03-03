@@ -6,6 +6,7 @@ import java.util.List;
 class Relation {
 	private Faction faction;
 	private Float modifier; // In range 5 to -5. Allies to enemies.
+	//Despised Enemies Agressive Uneasy Denounced Indifferent Tolerated Favoured Partners Allies Federated
 
 	public Relation(Faction faction, Float modifier) {
 		this.setFaction(faction);
