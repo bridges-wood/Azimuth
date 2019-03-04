@@ -1,6 +1,12 @@
 package construction;
 
-public class PublicSettings {
+import java.io.Serializable;
+
+public class PublicSettings implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -172633784543168299L;
 	float volume;
 	
 	public PublicSettings() {

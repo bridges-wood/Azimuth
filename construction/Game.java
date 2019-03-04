@@ -26,8 +26,6 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = 557779407485802525L;
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private Player player;
-	List<Character> emptyCharacters = new ArrayList<Character>();
-	List<Object> emptyObjects = new ArrayList<Object>();
 	Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);
 	Ammunition tempA = new Ammunition("Fists", Collections.emptyList(), 0, 0, 0, "Kinetic", "");
 	Weapon fists = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
@@ -36,6 +34,7 @@ public class Game implements Serializable {
 	PublicSettings settings = new PublicSettings();
 
 	public Game() {
+		
 		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
 		Key key = new Key("Key", "It is a key.", 10);
@@ -70,7 +69,7 @@ public class Game implements Serializable {
 		contents.add(ninemm);
 		Magazine ninemmMag = new Magazine("9mm Magazine", null, 10, ninemmA);
 		contents.add(ninemmMag);
-		Room first = new Room(contents, emptyCharacters,
+		Room first = new Room(contents, Collections.emptyList(),
 				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.",
 				null, null);
 		ArrayList<Room> rooms = new ArrayList<Room>();
@@ -402,301 +401,143 @@ public class Game implements Serializable {
 		// ----
 		if (!successful) {
 			if (actStr.equals(player.getEquipped().getName().toLowerCase())) {
-				for (int i = 0; i < currentRoom.getCharacters().size(); i++) {
-					if (objStr.equals(currentRoom.getCharacters().get(i).getName().toLowerCase())) {
-						Character target = currentRoom.getCharacters().get(i);
-						List<Character> hostiles = new ArrayList<Character>();
-						hostiles.add(target);
-						List<Character> friendlies = new ArrayList<Character>();
-						for (Character npc : currentRoom.getCharacters()) {
-							/*
-							 * TODO this could possibly cause situations where players attack friendlies in
-							 * their own bases and membes of that faction will also attack the player's
-							 * target. This should be dependent on the player's standing with the faction
-							 * whether they follow him or not.
-							 */
-							if (npc.equals(target)) {
+				System.out.println("You have no idea how to use the " + player.getEquipped().getName().toLowerCase()
+						+ " in your hand.");
+				successful = true;
+			}
+		// ----
+		} if (!successful && actStr.equals(player.getOffHand().getName().toLowerCase())) {
+			if (objStr.equals("")) {
+				if (player.getOffHand().getClass().getSimpleName().equals("Usable")) {
+					Usable current = (Usable) player.getOffHand(); // If the object in the player's off-hand is
+																	// actually usable...
+					for (int i = 0; i < current.getParts().size(); i++) {
+						switch (current.getParts().get(i).getName()) { // If it contains a battery, the device can
+																		// be turned on or off.
+						case ("Battery"):
+							if (current.getObjectState().equals("Off")) {
+								System.out.println("You turn the torch on.");
+								current.setObjectState("On");
+								successful = true;
 								break;
-							}
-							if (npc.getAffiliation().equals(player.getAffiliation())) {
-								friendlies.add(npc);
+							} else {
+								System.out.println("You turn the torch off.");
+								current.setObjectState("Off");
+								successful = true;
 								break;
-							} else if (npc.getAffiliation().equals(target.getAffiliation())) {
-								hostiles.add(npc);
-								break;
-							}
-							for (Relation relation : npc.getAffiliation().getRelations()) {
-								if (relation.getFaction().equals(player.getAffiliation())) {
-									if (relation.getModifier() < -3) {
-										hostiles.add(npc);
-										break;
-									}
-									if (relation.getModifier() > 3) {
-										friendlies.add(npc);
-										break;
-									}
-								} else if (relation.getFaction().equals(target.getAffiliation())) {
-									if (relation.getModifier() < -3) {
-										friendlies.add(npc);
-										break;
-									}
-									if (relation.getModifier() > 3) {
-										hostiles.add(npc);
-										break;
-									}
-								}
 							}
 
 						}
-						combatHandler(hostiles, friendlies);
-						successful = true;
+						// TODO Capacity to add more variety to usable off-hand objects.
 					}
 				}
+			} else {
+				Usable target = null;
+				int location = -1;
 				for (int i = 0; i < currentRoom.getContents().size(); i++) {
 					if (objStr.equals(currentRoom.getContents().get(i).getName().toLowerCase())) {
-						// If the player is trying to use the weapon on an object in the room...
-						// TODO allow the player to damage objects in the room.
-						successful = true;
-					}
-				}
-				// ----
-			} else if (!successful && actStr.equals(player.getOffHand().getName().toLowerCase())) {
-				if (objStr.equals("")) {
-					if (player.getOffHand().getClass().getSimpleName().equals("Usable")) {
-						Usable current = (Usable) player.getOffHand(); // If the object in the player's off-hand is
-																		// actually usable...
-						for (int i = 0; i < current.getParts().size(); i++) {
-							switch (current.getParts().get(i).getName()) { // If it contains a battery, the device can
-																			// be turned on or off.
-							case ("Battery"):
-								if (current.getObjectState().equals("Off")) {
-									System.out.println("You turn the torch on.");
-									current.setObjectState("On");
-									successful = true;
-									break;
-								} else {
-									System.out.println("You turn the torch off.");
-									current.setObjectState("Off");
-									successful = true;
-									break;
-								}
-
-							}
-							// TODO Capacity to add more variety to usable off-hand objects.
-						}
-					}
-				} else {
-					Usable target = null;
-					int location = -1;
-					for (int i = 0; i < currentRoom.getContents().size(); i++) {
-						if (objStr.equals(currentRoom.getContents().get(i).getName().toLowerCase())) {
-							target = (Usable) currentRoom.getContents().get(i);
-							location = i;
-						}
-					}
-					if (currentRoom.getContents().get(location).getClass().getSimpleName().equals("Usable")) {
-						Object key = nullObject;
-						Set<Object> keys = target.getSpecificUses().keySet();
-						for (Object i : keys) {
-							if (i.equals(player.getOffHand()))
-								key = i; // Scans the dictionary of keys and values of the target object. Key is the
-											// object that the player has in their off hand. This will determine if the
-											// player can actually use their off hand.
-						}
-						if (!key.equals(nullObject)) {
-							System.out.println(target.getSpecificUses().get(key));
-						}
-					}
-					Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
-					String absoluteName = "Object";
-					try {
-						Class<?> tempClass = temp.getClassLoader()
-								.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
-						java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
-						absoluteName = tempObj.getClass().getSimpleName();
-					} catch (ClassNotFoundException e) {
-						System.out.println("This is not possible.");
-					}
-					switch (absoluteName) {
-					case ("Door"):
-						Door door = (Door) currentRoom.getContents().get(location);
-						for (int i = 0; i < door.getWorkingKeys().length; i++) {
-							if (door.getWorkingKeys()[i].equals((Key) player.getOffHand())) {
-								door.setLocked(false);
-								player.setOffHand(nullObject);
-							}
-						}
-						successful = true;
-						break;
-					case ("Container"):
-						Container container = (Container) currentRoom.getContents().get(location);
-						for (int i = 0; i < container.getWorkingKeys().length; i++) {
-							if (container.getWorkingKeys()[i].equals(player.getOffHand())) {
-								container.setLocked(false);
-								player.setOffHand(nullObject);
-								System.out.println("You unlock the " + container.getName().toLowerCase() + ".");
-							}
-						}
-						successful = true;
-						break;
-					case ("Puzzle"):
-						successful = true;
-						break;
-					case ("Remains"):
-						successful = true;
-						break;
-					case ("Terminal"):
-						successful = true;
-						break;
-					case ("Player"):
-						successful = true;
-						break;
-
-					}
-				}
-			} else if (!successful) {
-				int location = -1;
-				String absoluteName = "";
-				for (int i = 0; i < currentRoom.getContents().size(); i++) {
-					if (currentRoom.getContents().get(i).getName().toLowerCase().equals(actStr))
+						target = (Usable) currentRoom.getContents().get(i);
 						location = i;
+					}
 				}
-				if (location != -1)
-					absoluteName = currentRoom.getContents().get(location).getClass().getSimpleName();
+				if (currentRoom.getContents().get(location).getClass().getSimpleName().equals("Usable")) {
+					Object key = nullObject;
+					Set<Object> keys = target.getSpecificUses().keySet();
+					for (Object i : keys) {
+						if (i.equals(player.getOffHand()))
+							key = i; // Scans the dictionary of keys and values of the target object. Key is the
+										// object that the player has in their off hand. This will determine if the
+										// player can actually use their off hand.
+					}
+					if (!key.equals(nullObject)) {
+						System.out.println(target.getSpecificUses().get(key));
+					}
+				}
+				Class<? extends Object> temp = currentRoom.getContents().get(location).getClass();
+				String absoluteName = "Object";
+				try {
+					Class<?> tempClass = temp.getClassLoader()
+							.loadClass(currentRoom.getContents().get(location).getClass().getSimpleName());
+					java.lang.Object tempObj = tempClass.cast(currentRoom.getContents().get(location));
+					absoluteName = tempObj.getClass().getSimpleName();
+				} catch (ClassNotFoundException e) {
+					System.out.println("This is not possible.");
+				}
 				switch (absoluteName) {
-				// Generic use of objects in the room.
-				case ("Terminal"):
-					Terminal terminal = (Terminal) currentRoom.getContents().get(location);
-					terminalHandler(terminal);
-					break;
-				case ("Usable"):
-					Usable usable = (Usable) currentRoom.getContents().get(location);
-					System.out.println(usable.getGenericUse());
-					break;
-				}
-
-			}
-		}
-	}
-
-	private void combatHandler(List<Character> hostiles, List<Character> friendlies) {
-		/*
-		 * Combat: Combat order. Every person in the order takes an action. Every person
-		 * in the order gets 1 action. Most of the enemies attacks should go towards the
-		 * weakest enemy in order to thin the damage output. Types of Action: - Attack -
-		 * Evade - Heal (self or other character) - Have mercy - Placate - Retreat -
-		 * Defend (other character)
-		 */
-		boolean conflict = true;
-		while (conflict) {
-			String userIn = Utilities.StrInput();
-			String[] inputArr = userIn.split(" ");
-			String verb = inputArr[0];
-			String verbObject = "";
-			for (int i = 1; i < inputArr.length; i++) {
-				verbObject = verbObject + inputArr[i] + " ";
-			}
-			verbObject = verbObject.toLowerCase().trim(); // Input handling.
-			
-			//TODO AI code for enemies and friendlies which determines what they have to do and when.
-			switch (verb) {
-			case ("attack"):
-				attack(verbObject, hostiles);
-				break;
-			case ("evade"):
-				evade();
-				break;
-			case ("heal"):
-				heal(verbObject, friendlies);
-				break;
-			case ("mercy"):
-				mercy(hostiles);
-				break;
-			case ("placate"):
-				placate(hostiles);
-				break;
-			case ("retreat"):
-				retreat();
-				break;
-			case ("defend"):
-				defend(verbObject);
-				break;
-			}
-		}
-
-	}
-
-	private boolean attack(String verbObject, List<Character> hostiles) {
-		if (player.getEquipped().getLoaded().getRounds() > 0) {
-			for (int i = 0; i < hostiles.size(); i++) {
-				Character tempHostile = hostiles.get(i);
-				if (tempHostile.getName().equals(verbObject)) {
-					float shotDamage = player.getEquipped().getDamage() * player.getEquipped().getRateOfFire();
-					player.getEquipped()
-							.setCondition(player.getEquipped().getCondition() - player.getEquipped().getDurability());
-					double hit = Math.random();
-					if (hit < player.getEquipped().getAccuracy()) {
-						double crit = Math.random();
-						if (crit < player.getEquipped().getCritChance()) {
-							shotDamage = shotDamage * player.getEquipped().getCritDamage();
-						}
-						tempHostile.setHp((int) (tempHostile.getHp() - shotDamage));
-						if (tempHostile.getHp() < 0) {
-							hostiles.remove(tempHostile);
+				case ("Door"):
+					Door door = (Door) currentRoom.getContents().get(location);
+					for (int i = 0; i < door.getWorkingKeys().length; i++) {
+						if (door.getWorkingKeys()[i].equals((Key) player.getOffHand())) {
+							door.setLocked(false);
+							player.setOffHand(nullObject);
 						}
 					}
-					
-					return true;
+					successful = true;
+					break;
+				case ("Container"):
+					Container container = (Container) currentRoom.getContents().get(location);
+					for (int i = 0; i < container.getWorkingKeys().length; i++) {
+						if (container.getWorkingKeys()[i].equals(player.getOffHand())) {
+							container.setLocked(false);
+							player.setOffHand(nullObject);
+							System.out.println("You unlock the " + container.getName().toLowerCase() + ".");
+						}
+					}
+					successful = true;
+					break;
+				case ("Puzzle"):
+					successful = true;
+					break;
+				case ("Remains"):
+					successful = true;
+					break;
+				case ("Terminal"):
+					successful = true;
+					break;
+				case ("Player"):
+					successful = true;
+					break;
+
 				}
 			}
+		} else if (!successful) {
+			int location = -1;
+			String absoluteName = "";
+			for (int i = 0; i < currentRoom.getContents().size(); i++) {
+				if (currentRoom.getContents().get(i).getName().toLowerCase().equals(actStr))
+					location = i;
+			}
+			if (location != -1)
+				absoluteName = currentRoom.getContents().get(location).getClass().getSimpleName();
+			switch (absoluteName) {
+			// Generic use of objects in the room.
+			case ("Terminal"):
+				Terminal terminal = (Terminal) currentRoom.getContents().get(location);
+				terminalHandler(terminal);
+				break;
+			case ("Usable"):
+				Usable usable = (Usable) currentRoom.getContents().get(location);
+				System.out.println(usable.getGenericUse());
+				break;
+			}
+
 		}
-		return false;
-
-	}
-
-	private boolean evade() {
-		return false;
-		// TODO Auto-generated method stub
-
-	}
-
-	private boolean heal(String verbObject, List<Character> friendlies) {
-		return false;
-		// TODO Auto-generated method stub
-
-	}
-
-	private boolean mercy(List<Character> hostiles) {
-		return false;
-		// TODO Auto-generated method stub
-
-	}
-
-	private boolean placate(List<Character> hostiles) {
-		return false;
-		// TODO Auto-generated method stub
-
-	}
-
-	private boolean retreat() {
-		return false;
-		// TODO Auto-generated method stub
-
-	}
-
-	private boolean defend(String verbObject) {
-		return false;
-		// TODO Auto-generated method stub
-
 	}
 
 	private void terminalHandler(Terminal terminal) {
 		System.out.println("\n" + terminal.getName());
 		System.out.println("1. Login");
-		System.out.println("2. ###HACK###");
-		// TODO determine how to control the output of what options are available to the
-		// player. If the terminal has been successfully hacked, the terminal should
-		// just unlock straight away etc.
+		boolean allUnlocked = true;
+		for(boolean bool : terminal.getLocked()) {
+			if (!bool) {
+				allUnlocked = false;
+			}
+		}
+		if(terminal.isLocked(0) || !allUnlocked) {
+			System.out.println("2. ###HACK###");
+		}
+
+		// TODO functions: login. switch user. hack. display logs.
 		int choice = -1;
 		while (choice > 2 || choice < 1) {
 			try {
@@ -707,12 +548,22 @@ public class Game implements Serializable {
 		}
 		switch (choice) {
 		case 1:
+			int location = -1;
 			System.out.print("Username: ");
 			String username = Utilities.StrInput();
+			for(int i = 0; i < terminal.getUsernames().length; i++) {
+				if(terminal.getUsernames()[i].equals(username)) {
+					location = i;
+				}
+			}
 			System.out.print("Password: ");
 			String password = Utilities.StrInput();
 			terminal.unlock(username, password);
-			break;
+			if(location == 0) {
+				System.out.println("Master account unlocked.");
+			} else if (location > 0) {
+				System.out.println(username + "'s account unlocked.");
+			}
 		case 2:
 			terminal.hack(terminal.getDifficulty(), player.getSkills().get(1).getLevel());
 			break;
@@ -805,7 +656,6 @@ public class Game implements Serializable {
 						System.out.print("A ");
 					}
 					System.out.println(currentName.toLowerCase());
-					// TODO case for if amount of ammunition in inventory.
 				}
 			} else {
 				System.out.println("Your inventory is empty.");

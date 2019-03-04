@@ -1,4 +1,5 @@
 package object;
+
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -29,9 +30,10 @@ public class Terminal extends Object implements Serializable {
 	 * Unlocks the given username that the player gives provided that the password
 	 * given is correct.
 	 * 
-	 * @param userAtt the username the player will try to unlock the terminal.
-	 * @param passAtt the password the player will user to try to unlock the
-	 *                terminal.
+	 * @param userAtt
+	 *            the username the player will try to unlock the terminal.
+	 * @param passAtt
+	 *            the password the player will user to try to unlock the terminal.
 	 */
 	public void unlock(String userAtt, String passAtt) {
 
@@ -45,9 +47,11 @@ public class Terminal extends Object implements Serializable {
 	}
 
 	/**
-	 * @param difficulty   the level of encryption on the system that affects the
-	 *                     difficulty of the hacking process.
-	 * @param hackingSkill the skill of the level of the player.
+	 * @param difficulty
+	 *            the level of encryption on the system that affects the difficulty
+	 *            of the hacking process.
+	 * @param hackingSkill
+	 *            the skill of the level of the player.
 	 */
 	public void hack(int difficulty, int hackingSkill) {
 		int dim = difficulty;
@@ -61,11 +65,12 @@ public class Terminal extends Object implements Serializable {
 			for (int y = 0; y < dim; y++) {
 				try {
 					String tempPass = Utilities.generatePassword(difficulty);
-					while(tempPass.length() < this.getPasswords()[0].length() + 1) {
+					while (tempPass.length() < this.getPasswords()[0].length() + 1) {
 						tempPass = tempPass + Utilities.generatePassword(difficulty);
 					}
-					passwordsPoss[x][y] = tempPass.substring(0, this.getPasswords()[0].length()); // Populates the array with random
-																					// passwords.
+					passwordsPoss[x][y] = tempPass.substring(0, this.getPasswords()[0].length()); // Populates the array
+																									// with random
+					// passwords.
 				} catch (FileNotFoundException e) {
 					System.out.println(
 							"There has been an error. " + "This terminal cannot be hacked due to missing resources");
@@ -143,6 +148,14 @@ public class Terminal extends Object implements Serializable {
 
 	public boolean isLocked(int index) {
 		return locked[index];
+	}
+
+	public boolean[] getLocked() {
+		return locked;
+	}
+
+	public void setPasswords(String[] passwords) {
+		this.passwords = passwords;
 	}
 
 	public void setLocked(boolean[] locked) {
