@@ -12,33 +12,14 @@ public class Object implements Serializable { /**
 	private String name, description;
 	private List<Object> parts;
 	private String[] combinable;
-	private int weight, value;
 
 	public Object(boolean inventoriable, String name, String description, 
-			List<Object> parts, String[] combinable, int weight, int value) {
+			List<Object> parts, String[] combinable) {
 		this.inventoriable = inventoriable;
 		this.name = name;
 		this.description = description;
 		this.parts = parts;
 		this.combinable = combinable;
-		this.weight = weight;
-		this.value = value;
-	}
-
-	public int getWeight() {
-		return weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
 	}
 
 	public String getName() {

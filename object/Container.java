@@ -1,4 +1,5 @@
 package object;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,9 @@ public class Container extends Usable implements Serializable {
 	private boolean locked;
 	private Key[] workingKeys;
 
-	public Container(String name, String description, List<Object> parts, int weight, int value,
-			Map<Object, String> specificUses, boolean locked, Key[] workingKeys) {
-		super(false, name, description, parts, new String[0], weight, value, "", "", specificUses);
+	public Container(String name, String description, List<Object> parts, Map<Object, String> specificUses,
+			boolean locked, Key[] workingKeys) {
+		super(false, name, description, parts, new String[0], "", "", specificUses);
 		this.locked = locked;
 		this.workingKeys = workingKeys;
 	}

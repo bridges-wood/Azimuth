@@ -9,7 +9,7 @@ public class Magazine extends Object implements Serializable {
 	private Ammunition ammunition;
 
 	public Magazine(String name, String description, int rounds, Ammunition ammunition) {
-		super(true, name, description, Collections.emptyList(), new String[0], 1, 0);
+		super(true, name, description, Collections.emptyList(), new String[0]);
 		this.rounds = rounds;
 		this.ammunition = ammunition;
 	}

@@ -1,4 +1,5 @@
 package object;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -11,10 +12,10 @@ public class Usable extends Object implements Serializable {
 	private static final long serialVersionUID = -2993920639711393879L;
 	private String genericUse, objectState;
 	private Map<Object, String> specificUses;
-	
+
 	public Usable(boolean inventoriable, String name, String description, List<Object> parts, String[] combinable,
-			int weight, int value, String genericUse, String objectState, Map<Object, String> specificUses) {
-		super(inventoriable, name, description, parts, combinable, weight, value);
+			String genericUse, String objectState, Map<Object, String> specificUses) {
+		super(inventoriable, name, description, parts, combinable);
 		this.genericUse = genericUse;
 		this.specificUses = specificUses;
 		this.objectState = objectState;

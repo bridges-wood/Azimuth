@@ -26,32 +26,30 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = 557779407485802525L;
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private Player player;
-	Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);
+	Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0]);
 	Ammunition tempA = new Ammunition("Fists", Collections.emptyList(), 0, 0, 0, "Kinetic", "");
-	Weapon fists = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
-			Collections.emptyList(), new String[1], "Melee", 0, 1, -1, -1, (float) 1.0, (float) 0.05, (float) 2.0,
-			Collections.emptyList(), tempA, null);
+	Weapon fists = new Weapon(false, "Fists", "Your fists are slightly bruised from a previous fight",
+			Collections.emptyList());
 	PublicSettings settings = new PublicSettings();
 
 	public Game() {
 		
-		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, 400, 0, "You use the bed and feel rested.",
+		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
-		Key key = new Key("Key", "It is a key.", 10);
+		Key key = new Key("Key", "It is a key.");
 		Map<Object, String> uses = new HashMap<Object, String>();
 		uses.put(key, "You manage to unlock the chest.");
 		Key[] keys = { key };
 		String[] combinable = { "Torch" };
-		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable, 1, 0);
+		Object battery = new Object(true, "Battery", "It is a battery.", Collections.emptyList(), combinable);
 		List<Object> parts = new ArrayList<Object>();
 		parts.add(battery);
 		uses.remove(key);
 		uses.put(battery, "You put the battery into the torch and it flickers to life.");
-		Usable torch = new Usable(true, "Torch", "It is a torch.", parts, new String[0], 10, 0,
-				"The torch can't be used like this.", "Off", uses);
+		Usable torch = new Usable(true, "Torch", "It is a torch.", parts, new String[0], "The torch can't be used like this.", "Off", uses);
 		List<Object> chestContents = new ArrayList<Object>();
 		chestContents.add(torch);
-		Container chest = new Container("Chest", "It is a chest.", chestContents, 200, 100, uses, true, keys);
+		Container chest = new Container("Chest", "It is a chest.", chestContents, uses, true, keys);
 		boolean[] locked = { true };
 		String[] usernames = { "user" };
 		String[] passwords = { "pass" };
@@ -63,9 +61,8 @@ public class Game implements Serializable {
 		contents.add(chest);
 		contents.add(key);
 		Bullet ninemmA = new Bullet(Collections.emptyList(), 2, 0, 9);
-		Weapon ninemm = new Weapon(true, "9mm pistol", 1, 20, "A lightweight, compact 9mm pistol.",
-				Collections.emptyList(), new String[] { "9mm" }, "Kinetic", 10, 1, 25, 5, (float) 0.75, (float) 0.15,
-				(float) 2.0, Collections.emptyList(), ninemmA, null);
+		Weapon ninemm = new Weapon(true, "9mm pistol", "A lightweight, compact 9mm pistol.",
+				Collections.emptyList());
 		contents.add(ninemm);
 		Magazine ninemmMag = new Magazine("9mm Magazine", null, 10, ninemmA);
 		contents.add(ninemmMag);
@@ -75,7 +72,6 @@ public class Game implements Serializable {
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		player = Utilities.CreateCharacter(false, true, first);
 		player.setCurrentRoom(first);
-		fists.setDamage(player.getREPLICAS()[7] * 2);
 		// TODO Clean up this method to add rooms, objects and characters separately.
 		rooms.add(first);
 		setRooms(rooms);
@@ -136,9 +132,6 @@ public class Game implements Serializable {
 			case ("help"):
 				getHelp(verbObject);
 				break;
-			case ("load"):
-				load(currentRoom, verbObject);
-				break;
 			case ("settings"):
 				Utilities.options();
 				break;
@@ -147,50 +140,6 @@ public class Game implements Serializable {
 
 	}
 
-	private void load(Room currentRoom, String verbObject) {
-		Weapon finalWeapon = fists;
-		int location = -2;
-		if (player.getEquipped().getName().toLowerCase().equals(verbObject)) {
-			finalWeapon = player.getEquipped();
-			location = -1;
-		}
-		if (location == -2) {
-			for (int i = 0; i < player.getInventory().size(); i++) {
-				if (player.getInventory().get(i).getClass().getSimpleName().equals("Weapon")) {
-					Weapon tempWeapon = (Weapon) player.getInventory().get(i);
-					if (tempWeapon.getName().toLowerCase().equals(verbObject)) {
-						location = i;
-						finalWeapon = tempWeapon;
-						break;
-					}
-				}
-			}
-		}
-		for (int i = 0; i < player.getInventory().size(); i++) {
-			if (player.getInventory().get(i).getClass().getSimpleName().equals("Magazine")) {
-				Magazine tempMagazine = (Magazine) player.getInventory().get(i);
-				if (tempMagazine.getAmmunition().equals(finalWeapon.getAmmunition())) {
-					if (location == -1) {
-						List<Object> temp = player.getEquipped().getParts();
-						temp.add(tempMagazine);
-						player.getEquipped().setLoaded(tempMagazine);
-						player.getInventory().remove(tempMagazine);
-
-					} else {
-						List<Object> temp = new ArrayList<Object>(player.getInventory().get(location).getParts());
-						temp.add(tempMagazine);
-						((Weapon) player.getInventory().get(location)).setLoaded(tempMagazine);
-						player.getInventory().remove(tempMagazine);
-					}
-					System.out.print("You load the ");
-					for (Object u : finalWeapon.getParts()) {
-						System.out.println(u.getName());
-					}
-					break;
-				}
-			}
-		}
-	}
 
 	private void getHelp(String verbObject) {
 		switch (verbObject) {
@@ -282,10 +231,9 @@ public class Game implements Serializable {
 		for (int i = 0; i < currentRoom.getContents().size(); i++) { // Checks if player wants to get
 																		// meta-objects in room.
 			Object current = currentRoom.getContents().get(i);
-			if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()
-					&& (player.getInventorySize() > player.getTotalInventoryWeight() + current.getWeight())) {
+			if (current.getName().toLowerCase().equals(verbObject) && current.isInventoriable()) {
 				player.addToInventory(current); // If the object is what they are trying to get, and it is able
-												// to be picked up, they can, as long as it isn't too heavy.
+												// to be picked up, they can.
 				currentRoom.getContents().remove(current); // Removes the object from the room.
 				System.out.println("You pick the " + current.getName().toLowerCase() + " up.");
 				found = true;
@@ -299,9 +247,7 @@ public class Game implements Serializable {
 				if (allowed) {
 					for (int j = 0; j < current.getParts().size(); j++) {
 						Object currentPart = current.getParts().get(j);
-						if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()
-								&& (player.getInventorySize() > player.getTotalInventoryWeight()
-										+ currentPart.getWeight())) {
+						if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()) {
 							player.addToInventory(currentPart);
 							current.getParts().remove(currentPart); // Removes the object from the parts of the
 																	// meta-object.
@@ -322,9 +268,7 @@ public class Game implements Serializable {
 					// get sub-objects.
 					for (int j = 0; j < current.getParts().size(); j++) {
 						Object currentPart = current.getParts().get(j);
-						if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()
-								&& (player.getInventorySize() > player.getTotalInventoryWeight()
-										+ currentPart.getWeight())) {
+						if (currentPart.getName().toLowerCase().equals(verbObject) && currentPart.isInventoriable()) {
 							player.addToInventory(currentPart);
 							current.getParts().remove(currentPart); // Removes the object from the parts of the
 							// meta-object.
@@ -565,7 +509,7 @@ public class Game implements Serializable {
 				System.out.println(username + "'s account unlocked.");
 			}
 		case 2:
-			terminal.hack(terminal.getDifficulty(), player.getSkills().get(1).getLevel());
+			terminal.hack(terminal.getDifficulty());
 			break;
 		}
 		if (!terminal.isLocked(0)) {

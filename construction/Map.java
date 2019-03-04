@@ -1,41 +1,28 @@
 package construction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import apparel.LeftArm;
+import apparel.Apparel;
+import object.Container;
+import object.Key;
 import object.Terminal;
+import object.Usable;
+import weapon.Magazine;
 import weapon.Weapon;
 
 public class Map {
 	
-	public List<Object> createRoomContents() {
+	public List<object.Object> createSubObjects() {
 		boolean creating = true;
-		List<Object> toReturn = new ArrayList<Object>();
+		List<object.Object> toReturn = new ArrayList<object.Object>();
 		while(creating) {
-			System.out.print("Object Type: ");
+			System.out.print("Object: ");
 			String Class = Utilities.StrInput();
 			switch(Class) {
 			case ("apparel"):
 				toReturn.add(createApparel());
-				break;
-			case ("helmet"):
-				toReturn.add(createHelmet());
-				break;
-			case ("leftarm"):
-				toReturn.add(createLeftArm());
-				break;
-			case ("leftleg"):
-				toReturn.add(createLeftLeg());
-				break;
-			case ("rightarm"):
-				toReturn.add(createRightArm());
-				break;
-			case ("rightleg"):
-				toReturn.add(createRightLeg());
-				break;
-			case ("torso"):
-				toReturn.add(createTorso());
 				break;
 			case ("container"):
 				toReturn.add(createContainer());
@@ -58,14 +45,28 @@ public class Map {
 			case ("weapon"):
 				toReturn.add(createWeapon());
 				break;
+			case("quit"):
+				creating = false;
+				break;
 			}
 		}
 		return toReturn;
 	}
 
 	private Weapon createWeapon() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.print("Inventoriable: ");
+		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Description: ");
+		String description = Utilities.StrInput();
+		System.out.print("Parts? [y/n]: ");
+		String confirm = Utilities.StrInput();
+		List<object.Object> parts = Collections.emptyList();
+		if(confirm.toLowerCase().equals("y")) {
+			parts = createSubObjects();
+		}
+		return new Weapon(inv, name, description, parts);
 	}
 
 	private Magazine createMagazine() {
@@ -83,7 +84,7 @@ public class Map {
 		return null;
 	}
 
-	private Object createObject() {
+	private object.Object createObject() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -94,36 +95,6 @@ public class Map {
 	}
 
 	private Container createContainer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private Torso createTorso() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private RightLeg createRightLeg() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private RightArm createRightArm() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private LeftLeg createLeftLeg() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private LeftArm createLeftArm() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private helmet createHelmet() {
 		// TODO Auto-generated method stub
 		return null;
 	}

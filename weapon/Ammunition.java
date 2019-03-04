@@ -15,7 +15,7 @@ public class Ammunition extends Object implements Serializable {//TODO Kinetic(B
 	
 	public Ammunition(String name, List<Object> parts, 
 			int value, int weight, float calibre, String damageType, String description) {
-		super(true, name, description, Collections.emptyList(), null, value, 0);
+		super(true, name, description, Collections.emptyList(), null);
 		this.calibre = calibre;
 		this.damageType = damageType;
 	}

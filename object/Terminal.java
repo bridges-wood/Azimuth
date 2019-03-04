@@ -18,7 +18,7 @@ public class Terminal extends Object implements Serializable {
 
 	public Terminal(String name, String description, int difficulty, boolean[] locked, String[] logNames, String[] logs,
 			String[] usernames, String[] passwords) {
-		super(false, name, description, Collections.emptyList(), null, 0, 0);
+		super(false, name, description, Collections.emptyList(), null);
 		this.usernames = usernames; // 0 is MASTER.
 		this.passwords = passwords; // 0 is appropriate master password.
 		this.difficulty = difficulty;
@@ -53,10 +53,9 @@ public class Terminal extends Object implements Serializable {
 	 * @param hackingSkill
 	 *            the skill of the level of the player.
 	 */
-	public void hack(int difficulty, int hackingSkill) {
+	public void hack(int difficulty) {
 		int dim = difficulty;
-		int guesses = (int) ((dim * dim * 0.05)
-				+ (hackingSkill * 0.05)); /*
+		int guesses = (int) (dim * dim * 0.05); /*
 											 * Guesses are equal 5% of the number of passwords in the grid plus 5% of
 											 * the players hackingSkill.
 											 */

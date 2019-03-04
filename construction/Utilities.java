@@ -19,7 +19,6 @@ import javax.sound.sampled.FloatControl;
 
 import apparel.Apparel;
 import object.Object;
-import weapon.Ammunition;
 import weapon.Weapon;
 
 public class Utilities {
@@ -88,28 +87,16 @@ public class Utilities {
 			} else
 				System.out.println("These should add to 15.");
 		}
-		int[] REPLICAS = { r, e, p, l, i, c, a, s };
-		// TODO Allow any character to be added to the game during runtime.
-		Ammunition tempA = new Ammunition("Fists", Collections.emptyList(), 0, 0, 0, "Kinetic", "");
-		int[] resistances = { 0, 10, 5, 15, 5 };
-		List<Skill> emptyS = new ArrayList<Skill>();
 		List<Object> emptyO = new ArrayList<Object>();
 		Apparel tempAp = new Apparel("Uniform", "It is your uniform, basically all you are seen in now.",
-				Collections.emptyList(), 1, 10, true, 1, resistances, new int[8], 10);
-		Weapon tempW = new Weapon(false, "Fists", 0, 0, "Your fists are slightly bruised from a previous fight",
-				Collections.emptyList(), new String[0], "Melee", s * 2, 1, -1, -1, (float) 1.0, (float) 0.05,
-				(float) 2.0, Collections.emptyList(), tempA, null);
-		int[] armourRes = new int[5];
-		int[] REPLICASmods = new int[8];
-		Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0], 0, 0);
-		Apparel[] armour = { new Apparel("", "", emptyO, 0, 0, false, 0, armourRes, REPLICASmods, 0),
-				new Apparel("", "", emptyO, 0, 0, false, 1, armourRes, REPLICASmods, 0),
-				new Apparel("", "", emptyO, 0, 0, false, 2, armourRes, REPLICASmods, 0),
-				new Apparel("", "", emptyO, 0, 0, false, 3, armourRes, REPLICASmods, 0),
-				new Apparel("", "", emptyO, 0, 0, false, 4, armourRes, REPLICASmods, 0),
-				new Apparel("", "", emptyO, 0, 0, false, 5, armourRes, REPLICASmods, 0) };
-		return new Player(name, "It is you.", 0, 1, s * 10, 0, armour, tempAp.getResistances(), tempAp, tempW,
-				nullObject, s * 10, emptyO, REPLICAS, emptyS, null, currentRoom);
+				Collections.emptyList(), true, 1);
+		Weapon tempW = new Weapon(false, "Fists", "Your fists are slightly bruised from a previous fight",
+				Collections.emptyList());
+		Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0]);
+		Apparel[] armour = { new Apparel("", "", emptyO, false, 0), new Apparel("", "", emptyO, false, 1),
+				new Apparel("", "", emptyO, false, 2), new Apparel("", "", emptyO, false, 3),
+				new Apparel("", "", emptyO, false, 4), new Apparel("", "", emptyO, false, 5) };
+		return new Player(name, "It is you.", 0, 1, s * 10, 0, armour, tempAp, tempW, nullObject, s * 10, emptyO, currentRoom);
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {

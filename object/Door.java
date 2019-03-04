@@ -14,8 +14,8 @@ public class Door extends Object implements Serializable {
 	private Room accessible;
 	private boolean locked;
 	
-	public Door(String name, String description, int weight, Key[] workingKeys, boolean locked, Room accessible) {
-		super(false, name, description, Collections.emptyList(), new String[0], weight, 0);
+	public Door(String name, String description, Key[] workingKeys, boolean locked, Room accessible) {
+		super(false, name, description, Collections.emptyList(), new String[0]);
 		this.workingKeys = workingKeys;
 		this.locked = locked;
 		this.accessible = accessible;;
