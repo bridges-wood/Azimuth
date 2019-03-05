@@ -9,10 +9,12 @@ import object.Container;
 import object.Key;
 import object.Terminal;
 import object.Usable;
+import weapon.Ammunition;
 import weapon.Magazine;
 import weapon.Weapon;
 
 public class Map {
+	public List<object.Object> existing = new ArrayList<object.Object>();
 	
 	public List<object.Object> createSubObjects() {
 		boolean creating = true;
@@ -45,6 +47,9 @@ public class Map {
 			case ("weapon"):
 				toReturn.add(createWeapon());
 				break;
+			case("existing"):
+				//TODO handle adding precreated objects to rooms. Allow minor modification
+				break;
 			case("quit"):
 				creating = false;
 				break;
@@ -70,6 +75,17 @@ public class Map {
 	}
 
 	private Magazine createMagazine() {
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Description: ");
+		String description = Utilities.StrInput();
+		System.out.print("Rounds: ");
+		int rounds = Integer.parseInt(Utilities.StrInput());
+		Ammunition ammunition = createAmmunition();
+		return new Magazine(name, description, rounds, ammunition);
+	}
+
+	private Ammunition createAmmunition() {
 		// TODO Auto-generated method stub
 		return null;
 	}
