@@ -1,5 +1,6 @@
 package construction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,19 +11,26 @@ import object.Key;
 import object.Terminal;
 import object.Usable;
 import weapon.Ammunition;
+import weapon.Bullet;
+import weapon.FerrousProjectile;
 import weapon.Magazine;
+import weapon.PlasmaCell;
 import weapon.Weapon;
 
-public class Map {
+public class Map implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2735214656381464211L;
 	public List<object.Object> existing = new ArrayList<object.Object>();
-	
+
 	public List<object.Object> createSubObjects() {
 		boolean creating = true;
 		List<object.Object> toReturn = new ArrayList<object.Object>();
-		while(creating) {
+		while (creating) {
 			System.out.print("Object: ");
 			String Class = Utilities.StrInput();
-			switch(Class) {
+			switch (Class) {
 			case ("apparel"):
 				toReturn.add(createApparel());
 				break;
@@ -47,10 +55,10 @@ public class Map {
 			case ("weapon"):
 				toReturn.add(createWeapon());
 				break;
-			case("existing"):
-				//TODO handle adding precreated objects to rooms. Allow minor modification
+			case ("existing"):
+				// TODO handle adding precreated objects to rooms. Allow minor modification
 				break;
-			case("quit"):
+			case ("quit"):
 				creating = false;
 				break;
 			}
@@ -68,7 +76,7 @@ public class Map {
 		System.out.print("Parts? [y/n]: ");
 		String confirm = Utilities.StrInput();
 		List<object.Object> parts = Collections.emptyList();
-		if(confirm.toLowerCase().equals("y")) {
+		if (confirm.toLowerCase().equals("y")) {
 			parts = createSubObjects();
 		}
 		return new Weapon(inv, name, description, parts);
@@ -86,8 +94,37 @@ public class Map {
 	}
 
 	private Ammunition createAmmunition() {
-		// TODO Auto-generated method stub
+		System.out.print("Type: ");
+		String type = Utilities.StrInput();
+		switch (type) {
+		case ("bullet"):
+			return (createBullet());
+		case ("ferrous"):
+			return(createFerrousProjectile());
+		case ("plasma"):
+			return(createPlasmaCell());
+		}
 		return null;
+	}
+
+	private Bullet createBullet() {
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Calibre");
+		Float calibre = Float.parseFloat(Utilities.StrInput());
+		return new Bullet(name, calibre);
+	}
+
+	private PlasmaCell createPlasmaCell() {
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
+
+	private FerrousProjectile createFerrousProjectile() {
+		return null;
+		// TODO Auto-generated method stub
+		
 	}
 
 	private Usable createUsable() {
@@ -119,6 +156,5 @@ public class Map {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }
