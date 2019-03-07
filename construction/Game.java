@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import apparel.Apparel;
 import object.Container;
 import object.Door;
 import object.Key;
@@ -27,7 +26,7 @@ public class Game implements Serializable {
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private Player player;
 	Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0]);
-	Ammunition tempA = new Ammunition("Fists", Collections.emptyList(), 0, 0, 0, "Kinetic", "");
+	Ammunition tempA = new Ammunition("Fists", 0, "Kinetic", "");
 	Weapon fists = new Weapon(false, "Fists", "Your fists are slightly bruised from a previous fight",
 			Collections.emptyList());
 	PublicSettings settings = new PublicSettings();
@@ -60,13 +59,13 @@ public class Game implements Serializable {
 		contents.add(bed);
 		contents.add(chest);
 		contents.add(key);
-		Bullet ninemmA = new Bullet(Collections.emptyList(), 2, 0, 9);
+		Bullet ninemmA = new Bullet("9mm", 9);
 		Weapon ninemm = new Weapon(true, "9mm pistol", "A lightweight, compact 9mm pistol.",
 				Collections.emptyList());
 		contents.add(ninemm);
 		Magazine ninemmMag = new Magazine("9mm Magazine", null, 10, ninemmA);
 		contents.add(ninemmMag);
-		Room first = new Room(contents, Collections.emptyList(),
+		Room first = new Room("Bedroom", contents, Collections.emptyList(),
 				"You are in your bedroom. It's rather spartan with the only feature being a single bed against the back wall.",
 				null, null);
 		ArrayList<Room> rooms = new ArrayList<Room>();
@@ -533,20 +532,6 @@ public class Game implements Serializable {
 					player.setEquipped(tempW);
 					player.getInventory().remove(tempW);
 					found = true;
-				} else if (current.getClass().getSimpleName().equals("Apparel")) {
-					Apparel tempA = (Apparel) player.getInventory().get(i);
-					if (tempA.isUnderClothes()) {
-						player.getInventory().add(player.getUnderClothes());
-						player.setUnderClothes(tempA);
-						found = true;
-					} else {
-						player.getInventory().add(player.getArmour()[tempA.getArea()]);
-						Apparel[] tempAr = player.getArmour();
-						tempAr[tempA.getArea()] = tempA;
-						player.setArmour(tempAr);
-						player.getInventory().remove(tempA);
-						found = true;
-					}
 				} else {
 					if (!player.getOffHand().getName().equals(""))
 						player.getInventory().add(player.getOffHand());
@@ -567,23 +552,9 @@ public class Game implements Serializable {
 			found = true;
 		} else if (verbObject.equals("equipped")) {
 			System.out.println("You have equipped: ");
-			Apparel[] armour = player.getArmour();
-			for (int i = 0; i < 6; i++) {
-				Apparel current = armour[i];
-				if (!current.getName().equals("")) {
-					System.out.print("> ");
-					if (current.getName().toLowerCase().startsWith("[aeiou]")) {
-						System.out.print("An ");
-					} else {
-						System.out.print("A ");
-					}
-					System.out.println(current.getName().toLowerCase());
-				}
-			}
 			if (!player.getEquipped().getName().equals("Fists")) {
 				System.out.println("> " + player.getEquipped().getName());
 			}
-			System.out.println("> " + player.getUnderClothes().getName());
 			if (!player.getOffHand().getName().equals("")) {
 				System.out.println("> " + player.getOffHand().getName());
 			}
