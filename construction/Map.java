@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
-import apparel.Apparel;
 import object.Container;
 import object.Key;
 import object.Object;
@@ -42,7 +42,7 @@ public class Map implements Serializable {
 		boolean creating = true;
 
 		while (creating) {
-			System.out.print("Type: ");
+			System.out.print("Menu -- Type: ");
 			String Class = Utilities.StrInput().toLowerCase();
 			switch (Class) {
 			case ("room"):
@@ -109,11 +109,11 @@ public class Map implements Serializable {
 
 	private List<Character> createCharacters() {
 		System.out.print("Name: ");
-		System.out.print("Armour: ");
-		System.out.print("Name: ");
-		System.out.print("Name: ");
-		System.out.print("Name: ");
-		return null;
+		String name = Utilities.StrInput();
+		System.out.print("Equipped: ");
+		Weapon equipped;
+		System.out.print("Inventory: ");
+		return new Character(name, equipped, inventory);
 	}
 
 	public List<object.Object> createSubObjects() {
@@ -123,9 +123,6 @@ public class Map implements Serializable {
 			System.out.print("Object: ");
 			String Class = Utilities.StrInput().toLowerCase();
 			switch (Class) {
-			case ("apparel"):
-				toReturn.add(createApparel());
-				break;
 			case ("container"):
 				toReturn.add(createContainer());
 				break;
@@ -281,43 +278,148 @@ public class Map implements Serializable {
 		if (confirm.toLowerCase().equals("y")) {
 			parts = createSubObjects();
 		}
-		//TODO Combinable
-		String[] combinable = null;
-		
+		System.out.println("Combinable: ");
+		List<String> combinable = new ArrayList<String>();
+		while (true) {
+			System.out.println("Object name: ");
+			String choice = Utilities.StrInput();
+			if (choice.equals("quit")) {
+				break;
+			} else {
+				combinable.add(choice);
+			}
+		}
 		System.out.print("Generic use statement: ");
 		String genericUse = Utilities.StrInput();
 		System.out.print("Object state: ");
 		String objectState = Utilities.StrInput();
-		
-		//TODO Specific uses.
-		java.util.Map<Object, String> specificUses = null;
-		
-		return new Usable(inv, name, description, parts, combinable, genericUse, objectState, specificUses);
+		System.out.println("Specific Uses: ");
+		HashMap<Object, String> specificUses = new HashMap<Object, String>();
+		for (Object i : objects) {
+			System.out.println(i.getName());
+		}
+		while (true) {
+			System.out.println("Object: ");
+			String object = Utilities.StrInput();
+			Object tempRef = null;
+			if (object.equals("quit")) {
+				break;
+			}
+			for (Object i : objects) {
+				if (i.getName().toLowerCase().equals(object.toLowerCase())) {
+					tempRef = i;
+				}
+			}
+			if (!tempRef.equals(null)) {
+				System.out.print("Description of use: ");
+				String use = Utilities.StrInput();
+				specificUses.put(tempRef, use);
+			}
+		}
+
+		return new Usable(inv, name, description, parts, (String[]) combinable.toArray(), genericUse, objectState,
+				specificUses);
 	}
 
 	private Terminal createTerminal() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Description: ");
+		String description = Utilities.StrInput();
+		System.out.print("Difficulty: ");
+		int difficulty = Integer.parseInt(Utilities.StrInput());
+		System.out.print("Number of users: ");
+		int numUsers = Integer.parseInt(Utilities.StrInput());
+		boolean[] locked = new boolean[numUsers];
+		String[] logNames = new String[numUsers];
+		String[] logs = new String[numUsers];
+		String[] usernames = new String[numUsers];
+		String[] passwords = new String[numUsers];
+		for (int i = 0; i < numUsers; i++) {
+			System.out.println("Locked: ");
+			locked[i] = Boolean.parseBoolean(Utilities.StrInput());
+			System.out.println("Log name: ");
+			logNames[i] = Utilities.StrInput();
+			System.out.println("Log: ");
+			logs[i] = Utilities.StrInput();
+			System.out.println("Username: ");
+			usernames[i] = Utilities.StrInput();
+			System.out.println("Password: ");
+			passwords[i] = Utilities.StrInput();
+		}
+
+		return new Terminal(name, description, difficulty, locked, logNames, logs, usernames, passwords);
 	}
 
 	private object.Object createObject() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.print("Inventoriable: ");
+		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Description: ");
+		String description = Utilities.StrInput();
+		System.out.print("Parts? [y/n]: ");
+		String confirm = Utilities.StrInput();
+		List<object.Object> parts = Collections.emptyList();
+		if (confirm.toLowerCase().equals("y")) {
+			parts = createSubObjects();
+		}
+		System.out.println("Combinable: ");
+		List<String> combinable = new ArrayList<String>();
+		while (true) {
+			System.out.println("Object name: ");
+			String choice = Utilities.StrInput();
+			if (choice.equals("quit")) {
+				break;
+			} else {
+				combinable.add(choice);
+			}
+		}
+		return new Object(inv, name, description, parts, (String[]) combinable.toArray());
 	}
 
 	private Key createKey() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Description: ");
+		String description = Utilities.StrInput();
+		return new Key(name, description);
 	}
 
 	private Container createContainer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private Apparel createApparel() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.print("Inventoriable: ");
+		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
+		System.out.print("Name: ");
+		String name = Utilities.StrInput();
+		System.out.print("Description: ");
+		String description = Utilities.StrInput();
+		System.out.print("Parts? [y/n]: ");
+		String confirm = Utilities.StrInput();
+		List<object.Object> parts = Collections.emptyList();
+		if (confirm.toLowerCase().equals("y")) {
+			parts = createSubObjects();
+		}
+		System.out.println("Locked: ");
+		boolean locked = Boolean.parseBoolean(Utilities.StrInput());
+		System.out.println("Working keys: ");
+		List<Key> workingKeys = new ArrayList<Key>();
+		while (true) {
+			System.out.println("Key name: ");
+			String choice = Utilities.StrInput();
+			if (choice.equals("quit")) {
+				break;
+			} else {
+				for(Object i : objects) {
+					if(i.getClass().getSimpleName().equals("Key")) {
+						Key key = (Key) i;
+						if(i.getName().toLowerCase().equals(choice.toLowerCase())) {
+							workingKeys.add(key);
+						}
+					}
+				}
+			}
+		}
+		return new Container(name, description, parts, locked, (Key[]) workingKeys.toArray());
 	}
 
 }

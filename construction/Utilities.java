@@ -17,7 +17,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
-import apparel.Apparel;
 import object.Object;
 import weapon.Weapon;
 
@@ -88,15 +87,10 @@ public class Utilities {
 				System.out.println("These should add to 15.");
 		}
 		List<Object> emptyO = new ArrayList<Object>();
-		Apparel tempAp = new Apparel("Uniform", "It is your uniform, basically all you are seen in now.",
-				Collections.emptyList(), true, 1);
 		Weapon tempW = new Weapon(false, "Fists", "Your fists are slightly bruised from a previous fight",
 				Collections.emptyList());
 		Object nullObject = new Object(false, "", "", Collections.emptyList(), new String[0]);
-		Apparel[] armour = { new Apparel("", "", emptyO, false, 0), new Apparel("", "", emptyO, false, 1),
-				new Apparel("", "", emptyO, false, 2), new Apparel("", "", emptyO, false, 3),
-				new Apparel("", "", emptyO, false, 4), new Apparel("", "", emptyO, false, 5) };
-		return new Player(name, "It is you.", 0, 1, s * 10, 0, armour, tempAp, tempW, nullObject, s * 10, emptyO, currentRoom);
+		return new Player(name, "It is you.", 0, 1, s * 10, 0, tempW, nullObject, s * 10, emptyO, currentRoom);
 	}
 
 	public static String randomLine(File text) throws FileNotFoundException {

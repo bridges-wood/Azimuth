@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Container extends Usable implements Serializable {
+public class Container extends Object implements Serializable {
 
 	/**
 	 * 
@@ -13,9 +13,8 @@ public class Container extends Usable implements Serializable {
 	private boolean locked;
 	private Key[] workingKeys;
 
-	public Container(String name, String description, List<Object> parts, Map<Object, String> specificUses,
-			boolean locked, Key[] workingKeys) {
-		super(false, name, description, parts, new String[0], "", "", specificUses);
+	public Container(String name, String description, List<Object> parts, boolean locked, Key[] workingKeys) {
+		super(false, name, description, parts, new String[0]);
 		this.locked = locked;
 		this.workingKeys = workingKeys;
 	}

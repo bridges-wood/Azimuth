@@ -48,7 +48,7 @@ public class Game implements Serializable {
 		Usable torch = new Usable(true, "Torch", "It is a torch.", parts, new String[0], "The torch can't be used like this.", "Off", uses);
 		List<Object> chestContents = new ArrayList<Object>();
 		chestContents.add(torch);
-		Container chest = new Container("Chest", "It is a chest.", chestContents, uses, true, keys);
+		Container chest = new Container("Chest", "It is a chest.", chestContents, true, keys);
 		boolean[] locked = { true };
 		String[] usernames = { "user" };
 		String[] passwords = { "pass" };
