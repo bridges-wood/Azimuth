@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import object.Container;
 import object.Door;
@@ -16,8 +13,6 @@ import object.Object;
 import object.Terminal;
 import object.Usable;
 import weapon.Ammunition;
-import weapon.Bullet;
-import weapon.Magazine;
 import weapon.Weapon;
 import construction.Menu;
 
@@ -30,10 +25,15 @@ public class Game implements Serializable {
 	Weapon fists = new Weapon(false, "Fists", "Your fists are slightly bruised from a previous fight",
 			Collections.emptyList());
 	PublicSettings settings = new PublicSettings();
-
+	
+	@SuppressWarnings("unchecked")
 	public Game() {
+		this.rooms = (ArrayList<Room>) construction.Map.load("StatRes/RoomRepository.rep");
+	}
+
+	public void Gameghfds() {
 		
-		Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, "You use the bed and feel rested.",
+		/*Usable bed = new Usable(false, "Bed", "It is your bed.", null, null, "You use the bed and feel rested.",
 				"", Collections.emptyMap());
 		Key key = new Key("Key", "It is a key.");
 		Map<Object, String> uses = new HashMap<Object, String>();
@@ -72,7 +72,7 @@ public class Game implements Serializable {
 		player = Utilities.CreateCharacter(false, true, first);
 		player.setCurrentRoom(first);
 		// TODO Clean up this method to add rooms, objects and characters separately.
-		rooms.add(first);
+		rooms.add(first);*/
 		setRooms(rooms);
 		playGame();
 	}
@@ -138,7 +138,6 @@ public class Game implements Serializable {
 		}
 
 	}
-
 
 	private void getHelp(String verbObject) {
 		switch (verbObject) {

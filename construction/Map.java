@@ -30,7 +30,7 @@ public class Map implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2735214656381464211L;
-	public List<object.Object> objects = new ArrayList<object.Object>();
+	public List<Object> objects = new ArrayList<Object>();
 	public List<Room> rooms = new ArrayList<Room>();
 
 	public static void main(String[] args) {
@@ -38,6 +38,7 @@ public class Map implements Serializable {
 		running.createMap();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void createMap() {
 		boolean creating = true;
 
@@ -49,14 +50,25 @@ public class Map implements Serializable {
 				rooms.add(createRoom());
 				break;
 			case ("existing"):
-				// TODO handle adding precreated room to rooms. Allow minor modification
+				for(Room i : rooms) {
+					System.out.println(i.getName());
+				}
+				String roomChoice = Utilities.StrInput();
+				for(Room i : rooms) {
+					if(i.getName().toLowerCase().equals(roomChoice.toLowerCase())) {
+						rooms.add(i);
+					}
+				}
 				break;
 			case ("save"):
 				save(rooms, "room");
+				save(objects, "object");
 				break;
 			case ("load"):
-				rooms = (List<Room>) load();
+				rooms = (List<Room>) load("StatRes/RoomRepository.rep");
 			case ("quit"):
+				save(rooms, "room");
+				save(objects, "object");
 				creating = false;
 				break;
 			}
@@ -64,10 +76,15 @@ public class Map implements Serializable {
 	}
 
 	private Room createRoom() {
-		System.out.print("Name :");
+		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.println("Contents: ");
-		List<object.Object> contents = createSubObjects();
+		List<Object> contents = createSubObjects();
+		for (Object i : contents) {
+			if (!objects.contains(i)) {
+				objects.add(i);
+			}
+		}
 		System.out.println("Characters: ");
 		List<construction.Character> characters = createCharacters();
 		System.out.println("Description: ");
@@ -108,15 +125,23 @@ public class Map implements Serializable {
 	}
 
 	private List<Character> createCharacters() {
-		System.out.print("Name: ");
-		String name = Utilities.StrInput();
-		System.out.print("Equipped: ");
-		Weapon equipped;
-		System.out.print("Inventory: ");
-		return new Character(name, equipped, inventory);
+		List<Character> temp = new ArrayList<Character>();
+		System.out.println("Number of characters: ");
+		int numChars = Integer.parseInt(Utilities.StrInput());
+		for (int i = 0; i < numChars; i++) {
+			System.out.print("Name: ");
+			String name = Utilities.StrInput();
+			System.out.print("Equipped: ");
+			Weapon equipped = createWeapon();
+			System.out.print("Inventory: ");
+			List<Object> inventory = createSubObjects();
+			temp.add(new Character(name, equipped, inventory));
+		}
+		return temp;
 	}
 
-	public List<object.Object> createSubObjects() {
+	@SuppressWarnings("unchecked")
+	public List<Object> createSubObjects() {
 		boolean creating = true;
 		List<object.Object> toReturn = new ArrayList<object.Object>();
 		while (creating) {
@@ -145,13 +170,13 @@ public class Map implements Serializable {
 				toReturn.add(createWeapon());
 				break;
 			case ("existing"):
-				// TODO handle adding precreated objects to rooms. Allow minor modification
+				// TODO handle adding pre-created objects to rooms. Allow minor modification
 				break;
 			case ("save"):
 				save(objects, "object");
 				break;
 			case ("load"):
-				objects = (List<object.Object>) load();
+				objects = (List<Object>) load("StatRes/ObjectRepository.rep");
 			case ("quit"):
 				creating = false;
 				break;
@@ -160,10 +185,10 @@ public class Map implements Serializable {
 		return toReturn;
 	}
 
-	private List<?> load() {
+	public static List<?> load(String file) {
 		List<?> existing = Collections.emptyList();
 		try {
-			FileInputStream fileStream = new FileInputStream(new File("StatRes/ObjectRepository.rep"));
+			FileInputStream fileStream = new FileInputStream(new File(file));
 			ObjectInputStream objectStream = new ObjectInputStream(fileStream);
 			existing = (List<?>) objectStream.readObject();
 			objectStream.close();
@@ -201,6 +226,29 @@ public class Map implements Serializable {
 	}
 
 	private Weapon createWeapon() {
+
+		System.out.print("Do you want this to be null? [y/n]: ");
+		String confirm = Utilities.StrInput();
+		if (confirm.toLowerCase().equals("y")) {
+			return new Weapon(false, "", "", Collections.emptyList());
+		}
+		System.out.print("Do you want to use an existing weapon? [y/n]: ");
+		confirm = Utilities.StrInput();
+		if (confirm.toLowerCase().equals("y")) {
+			System.out.println("Weapons: ");
+			for (Object i : objects) {
+				if (i.getClass().getSimpleName().equals("Weapon")) {
+					System.out.println(i.getName());
+				}
+			}
+			System.out.println("Selection: ");
+			String selection = Utilities.StrInput();
+			for (Object i : objects) {
+				if (i.getName().toLowerCase().equals(selection.toLowerCase())) {
+					return (Weapon) (i);
+				}
+			}
+		}
 		System.out.print("Inventoriable: ");
 		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
 		System.out.print("Name: ");
@@ -208,7 +256,7 @@ public class Map implements Serializable {
 		System.out.print("Description: ");
 		String description = Utilities.StrInput();
 		System.out.print("Parts? [y/n]: ");
-		String confirm = Utilities.StrInput();
+		confirm = Utilities.StrInput();
 		List<object.Object> parts = Collections.emptyList();
 		if (confirm.toLowerCase().equals("y")) {
 			parts = createSubObjects();
@@ -274,19 +322,21 @@ public class Map implements Serializable {
 		String description = Utilities.StrInput();
 		System.out.print("Parts? [y/n]: ");
 		String confirm = Utilities.StrInput();
-		List<object.Object> parts = Collections.emptyList();
+		List<Object> parts = new ArrayList<Object>();
 		if (confirm.toLowerCase().equals("y")) {
 			parts = createSubObjects();
 		}
-		System.out.println("Combinable: ");
 		List<String> combinable = new ArrayList<String>();
-		while (true) {
-			System.out.println("Object name: ");
-			String choice = Utilities.StrInput();
-			if (choice.equals("quit")) {
-				break;
-			} else {
-				combinable.add(choice);
+		if (inv) {
+			System.out.println("Combinable: ");
+			while (true) {
+				System.out.println("Object name: ");
+				String choice = Utilities.StrInput();
+				if (choice.equals("quit")) {
+					break;
+				} else {
+					combinable.add(choice);
+				}
 			}
 		}
 		System.out.print("Generic use statement: ");
@@ -317,7 +367,8 @@ public class Map implements Serializable {
 			}
 		}
 
-		return new Usable(inv, name, description, parts, (String[]) combinable.toArray(), genericUse, objectState,
+		return new Usable(inv, name, description, parts,
+				Arrays.copyOf(combinable.toArray(), combinable.size(), String[].class), genericUse, objectState,
 				specificUses);
 	}
 
@@ -351,7 +402,7 @@ public class Map implements Serializable {
 		return new Terminal(name, description, difficulty, locked, logNames, logs, usernames, passwords);
 	}
 
-	private object.Object createObject() {
+	private Object createObject() {
 		System.out.print("Inventoriable: ");
 		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
 		System.out.print("Name: ");
@@ -375,7 +426,8 @@ public class Map implements Serializable {
 				combinable.add(choice);
 			}
 		}
-		return new Object(inv, name, description, parts, (String[]) combinable.toArray());
+		return new Object(inv, name, description, parts,
+				Arrays.copyOf(combinable.toArray(), combinable.size(), String[].class));
 	}
 
 	private Key createKey() {
@@ -387,8 +439,6 @@ public class Map implements Serializable {
 	}
 
 	private Container createContainer() {
-		System.out.print("Inventoriable: ");
-		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
 		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.print("Description: ");
@@ -409,10 +459,10 @@ public class Map implements Serializable {
 			if (choice.equals("quit")) {
 				break;
 			} else {
-				for(Object i : objects) {
-					if(i.getClass().getSimpleName().equals("Key")) {
+				for (Object i : objects) {
+					if (i.getClass().getSimpleName().equals("Key")) {
 						Key key = (Key) i;
-						if(i.getName().toLowerCase().equals(choice.toLowerCase())) {
+						if (i.getName().toLowerCase().equals(choice.toLowerCase())) {
 							workingKeys.add(key);
 						}
 					}
