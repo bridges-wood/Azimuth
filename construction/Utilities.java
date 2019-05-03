@@ -223,5 +223,18 @@ public class Utilities {
 	public static void options() {
 
 	}
-
+	
+	public static int handleIntInput(int min, int max) {
+		int selection = -1;
+		try{
+			selection = Integer.parseInt(Utilities.StrInput());
+		} catch (Exception e) {
+			System.out.println("Incorrect input format.");
+		}
+		if (selection < min || selection > max) {
+			System.out.println("Number out of range.");
+			selection = -1;
+		}
+		return selection;
+	}
 }

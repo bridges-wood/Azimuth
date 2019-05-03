@@ -24,6 +24,7 @@ public class Terminal extends Object implements Serializable {
 		this.difficulty = difficulty;
 		this.locked = locked;
 		this.logs = logs;
+		this.logNames = logNames;
 	}
 
 	/**
@@ -56,9 +57,9 @@ public class Terminal extends Object implements Serializable {
 	public void hack(int difficulty) {
 		int dim = difficulty;
 		int guesses = (int) (dim * dim * 0.05); /*
-											 * Guesses are equal 5% of the number of passwords in the grid plus 5% of
-											 * the players hackingSkill.
-											 */
+												 * Guesses are equal 5% of the number of passwords in the grid plus 5%
+												 * of the players hackingSkill.
+												 */
 		String[][] passwordsPoss = new String[dim][dim];
 		for (int x = 0; x < dim; x++) {
 			for (int y = 0; y < dim; y++) {
@@ -173,4 +174,77 @@ public class Terminal extends Object implements Serializable {
 		this.logNames = logNames;
 	}
 
+	public static Terminal modifyTerminal(int selection, Terminal terminal) {
+		switch (selection) {
+		case 1:
+			System.out.println("New name: ");
+			terminal.setName(Utilities.StrInput());
+			break;
+		case 2:
+			System.out.println("New description: ");
+			terminal.setDescription(Utilities.StrInput());
+			break;
+		case 3:
+			System.out.println("New difficulty: ");
+			terminal.setDifficulty(Utilities.handleIntInput(1, Integer.MAX_VALUE));
+			break;
+		case 4:
+			System.out.println("User modification: ");
+			System.out.println("1. Delete User");
+			System.out.println("2. Add User");
+			int option = Utilities.handleIntInput(1, 2);
+			switch (option) {
+			case 1:
+				int removalIndex = -1;
+				for (String i : terminal.usernames) {
+					System.out.println(i);
+				}
+				String toDelete = Utilities.StrInput().toLowerCase();
+				for (int i = 0; i < terminal.usernames.length; i++) {
+					if (terminal.usernames[i].toLowerCase().equals(toDelete)) {
+						removalIndex = i;
+					}
+				}
+				terminal.logs = (String[]) dealArray(terminal.logs, removalIndex);
+				terminal.logNames = (String[]) dealArray(terminal.logNames, removalIndex);
+				terminal.usernames = (String[]) dealArray(terminal.usernames, removalIndex);
+				terminal.passwords = (String[]) dealArray(terminal.passwords, removalIndex);
+				terminal.locked = (boolean[]) dealArray(terminal.locked, removalIndex);
+				break;
+			case 2:
+				//TODO put in add into array routine with ability to lengthen array.
+				break;
+			}
+		}
+		return terminal;
+	}
+
+	private static boolean[] dealArray(boolean[] array, int toRemove) {
+		boolean[] newArray = new boolean[array.length - 1];
+		int counter = -1;
+		for (int i = 0; i < array.length; i++) {
+			counter++;
+			if (i == toRemove) {
+				counter--;
+				continue;
+			}
+			newArray[counter] = array[i];
+		}
+		return newArray;
+	}
+
+	public static java.lang.Object[] dealArray(java.lang.Object[] array, int toRemove) {
+		java.lang.Object[] newArray = new java.lang.Object[array.length - 1];
+		array[toRemove] = null;
+		int counter = -1;
+		for (java.lang.Object i : array) {
+			counter++;
+			if (!i.equals(null)) {
+				counter--;
+				continue;
+			}
+			newArray[counter] = i;
+		}
+		return newArray;
+	}
 }

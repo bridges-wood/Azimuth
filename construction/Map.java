@@ -30,8 +30,8 @@ public class Map implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2735214656381464211L;
-	public List<Object> objects = new ArrayList<Object>();
-	public List<Room> rooms = new ArrayList<Room>();
+	public static List<Object> objects = new ArrayList<Object>();
+	public static List<Room> rooms = new ArrayList<Room>();
 
 	public static void main(String[] args) {
 		Map running = new Map();
@@ -50,12 +50,12 @@ public class Map implements Serializable {
 				rooms.add(createRoom());
 				break;
 			case ("existing"):
-				for(Room i : rooms) {
+				for (Room i : rooms) {
 					System.out.println(i.getName());
 				}
 				String roomChoice = Utilities.StrInput();
-				for(Room i : rooms) {
-					if(i.getName().toLowerCase().equals(roomChoice.toLowerCase())) {
+				for (Room i : rooms) {
+					if (i.getName().toLowerCase().equals(roomChoice.toLowerCase())) {
 						rooms.add(i);
 					}
 				}
@@ -141,7 +141,7 @@ public class Map implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object> createSubObjects() {
+	public static List<Object> createSubObjects() {
 		boolean creating = true;
 		List<object.Object> toReturn = new ArrayList<object.Object>();
 		while (creating) {
@@ -170,7 +170,7 @@ public class Map implements Serializable {
 				toReturn.add(createWeapon());
 				break;
 			case ("existing"):
-				// TODO handle adding pre-created objects to rooms. Allow minor modification
+				toReturn.addAll(existingRoom());
 				break;
 			case ("save"):
 				save(objects, "object");
@@ -183,6 +183,180 @@ public class Map implements Serializable {
 			}
 		}
 		return toReturn;
+	}
+
+	private static List<Object> existingRoom() {
+		for (Room room : rooms) {
+			System.out.println(room.getName());
+		}
+		while (true) {
+			Room selection = null;
+			String choice = Utilities.StrInput().toLowerCase();
+			for (Room room : rooms) {
+				if (room.getName().toLowerCase().equals(choice)) {
+					selection = room;
+					break;
+				}
+			}
+			if (!selection.equals(null)) {
+				System.out.println("Room found! \n Contents:");
+				List<Object> tempList = selection.getContents();
+				for (Object object : tempList) {
+					System.out.println(object.getName());
+				}
+				System.out.println("Modify contents? [Y/n]");
+				String modify = Utilities.StrInput().toLowerCase();
+				if (modify.equals("y")) {
+					selection.setContents(modifyContents(tempList));
+				}
+				System.out.println("Confirm selection [Y/n]");
+				String confirm = Utilities.StrInput().toLowerCase();
+				if (confirm.equals("y")) {
+					break;
+				}
+			}
+
+		}
+		return null;
+	}
+
+	private static List<Object> modifyContents(List<Object> roomContents) {
+		while (true) {
+			System.out.println("Object to be modified: ");
+			String toBeModified = Utilities.StrInput().toLowerCase();
+			Object mod = null;
+			for (Object object : roomContents) {
+				if (object.getName().toLowerCase().equals(toBeModified)) {
+					mod = object;
+					roomContents.remove(object);
+				}
+			}
+			if (!mod.equals(null)) {
+				int selection = -1;
+				switch (mod.getClass().getSimpleName()) {
+				case ("Container"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Name");
+					System.out.println("2. Description");
+					System.out.println("3. Parts");
+					System.out.println("4. Locked");
+					System.out.println("5. Usable ");
+					selection = Utilities.handleIntInput(1, 5);
+					roomContents.add(Container.modifyContainer(selection, (Container) mod));
+					break;
+				case ("Key"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Name");
+					System.out.println("2. Description");
+					selection = Utilities.handleIntInput(1, 2);
+					roomContents.add(Key.modifyKey(selection, (Key) mod));
+					break;
+				case ("Object"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Inventoriable");
+					System.out.println("2. Combinable");
+					System.out.println("3. Name");
+					System.out.println("4. Description");
+					System.out.println("5. Parts");
+					selection = Utilities.handleIntInput(1, 5);
+					roomContents.add(Object.modifyObject(selection, (Object) mod));
+					break;
+				case ("Terminal"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Name");
+					System.out.println("2. Description");
+					System.out.println("3. Difficulty");
+					System.out.println("4. Users");
+					mod = modifyObject(Utilities.StrInput().toLowerCase(), "Terminal", mod);
+					break;
+				case ("Usable"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Inventoriable");
+					System.out.println("2. Name");
+					System.out.println("3. Description");
+					System.out.println("4. Parts");
+					System.out.println("5. Generic use statement");
+					System.out.println("6. Object state");
+					System.out.println("7. Specific uses");
+					mod = modifyObject(Utilities.StrInput().toLowerCase(), "Usable", mod);
+					break;
+				case ("Magazine"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Name");
+					System.out.println("2. Description");
+					System.out.println("3. Rounds");
+					mod = modifyObject(Utilities.StrInput().toLowerCase(), "Magazine", mod);
+					break;
+				case ("Weapon"):
+					System.out.println("Attributes: ");
+					System.out.println("1. Inventoriable");
+					System.out.println("2. Name");
+					System.out.println("3. Description");
+					System.out.println("4. Parts");
+					mod = modifyObject(Utilities.StrInput().toLowerCase(), "Weapon", mod);
+				}
+
+			}
+			System.out.println("Finished? [Y/n]");
+			if (Utilities.StrInput().toLowerCase().equals("y")) {
+				break;
+			}
+		}
+
+		return roomContents;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T extends Object> T modifyObject(String attribute, String type, Object object) {
+		int selection = -1;
+		try {
+			selection = Integer.parseInt(attribute);
+		} catch (Exception e) {
+			System.out.println("Incorrect input format.");
+			return (T) object;
+		}
+		switch (type) {
+		case ("Usable"):
+			switch (selection) {
+			case 1:
+				System.out.println("1. Inventoriable");
+			case 2:
+				System.out.println("2. Name");
+			case 3:
+				System.out.println("3. Description");
+			case 4:
+				System.out.println("4. Parts");
+			case 5:
+				System.out.println("5. Generic use statement");
+			case 6:
+				System.out.println("6. Object state");
+			case 7:
+				System.out.println("7. Specfic uses");
+			}
+			break;
+		case ("Magazine"):
+			switch (selection) {
+			case 1:
+				System.out.println("1. Name");
+			case 2:
+				System.out.println("2. Description");
+			case 3:
+				System.out.println("3. Rounds");
+			}
+			break;
+		case ("Weapon"):
+			switch (selection) {
+			case 1:
+				System.out.println("1. Inventoriable");
+			case 2:
+				System.out.println("2. Name");
+			case 3:
+				System.out.println("3. Description");
+			case 4:
+				System.out.println("4. Parts");
+			}
+		}
+		return object;
 	}
 
 	public static List<?> load(String file) {
@@ -199,7 +373,7 @@ public class Map implements Serializable {
 		return existing;
 	}
 
-	private void save(List<?> toSave, String type) {
+	private static void save(List<?> toSave, String type) {
 		if (type.equals("object")) {
 			try {
 				FileOutputStream fileOut = new FileOutputStream(new File("StatRes/ObjectRepository.rep"));
@@ -225,7 +399,7 @@ public class Map implements Serializable {
 		}
 	}
 
-	private Weapon createWeapon() {
+	private static Weapon createWeapon() {
 
 		System.out.print("Do you want this to be null? [y/n]: ");
 		String confirm = Utilities.StrInput();
@@ -264,7 +438,7 @@ public class Map implements Serializable {
 		return new Weapon(inv, name, description, parts);
 	}
 
-	private Magazine createMagazine() {
+	private static Magazine createMagazine() {
 		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.print("Description: ");
@@ -313,7 +487,7 @@ public class Map implements Serializable {
 		return new FerrousProjectile(name, calibre);
 	}
 
-	private Usable createUsable() {
+	private static Usable createUsable() {
 		System.out.print("Inventoriable: ");
 		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
 		System.out.print("Name: ");
@@ -372,7 +546,7 @@ public class Map implements Serializable {
 				specificUses);
 	}
 
-	private Terminal createTerminal() {
+	private static Terminal createTerminal() {
 		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.print("Description: ");
@@ -402,7 +576,7 @@ public class Map implements Serializable {
 		return new Terminal(name, description, difficulty, locked, logNames, logs, usernames, passwords);
 	}
 
-	private Object createObject() {
+	private static Object createObject() {
 		System.out.print("Inventoriable: ");
 		boolean inv = Boolean.parseBoolean(Utilities.StrInput());
 		System.out.print("Name: ");
@@ -430,7 +604,7 @@ public class Map implements Serializable {
 				Arrays.copyOf(combinable.toArray(), combinable.size(), String[].class));
 	}
 
-	private Key createKey() {
+	private static Key createKey() {
 		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.print("Description: ");
@@ -438,7 +612,7 @@ public class Map implements Serializable {
 		return new Key(name, description);
 	}
 
-	private Container createContainer() {
+	private static Container createContainer() {
 		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.print("Description: ");

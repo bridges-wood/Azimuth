@@ -1,7 +1,11 @@
 package object;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import construction.Map;
+import construction.Utilities;
 
 public class Container extends Object implements Serializable {
 
@@ -32,6 +36,54 @@ public class Container extends Object implements Serializable {
 
 	public void setWorkingKeys(Key[] workingKeys) {
 		this.workingKeys = workingKeys;
+	}
+	
+	public static Container modifyContainer(int selection, Container container) {
+		switch (selection) {
+		case 1:
+			System.out.println("New name: ");
+			container.setName(Utilities.StrInput());
+			break;
+		case 2:
+			System.out.println("New description: ");
+			container.setDescription(Utilities.StrInput());
+			break;
+		case 3:
+			System.out.println("New parts: ");
+			container.setParts(Map.createSubObjects());
+			break;
+		case 4:
+			System.out.println("New locked: ");
+			container.setLocked(Boolean.parseBoolean(Utilities.StrInput()));
+			break;
+		case 5:
+			System.out.println("5. Usable keys: ");
+			for (Object i : Map.objects) {
+				if (i.getClass().getSimpleName().equals("Key")) {
+					System.out.println(i.getName());
+				}
+			}
+			List<Key> workingKeys = new ArrayList<Key>();
+			while (true) {
+				System.out.println("Key name: ");
+				String choice = Utilities.StrInput();
+				if (choice.equals("quit")) {
+					break;
+				} else {
+					for (Object i : Map.objects) {
+						if (i.getClass().getSimpleName().equals("Key")) {
+							Key key = (Key) i;
+							if (i.getName().toLowerCase().equals(choice.toLowerCase())) {
+								workingKeys.add(key);
+							}
+						}
+					}
+				}
+			}
+			container.setWorkingKeys((Key[]) workingKeys.toArray());
+			break;
+		}
+		return container;
 	}
 
 }
