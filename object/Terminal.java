@@ -196,8 +196,10 @@ public class Terminal extends Object implements Serializable {
 			switch (option) {
 			case 1:
 				int removalIndex = -1;
+				int counter = 0;
 				for (String i : terminal.usernames) {
-					System.out.println(i);
+					System.out.println(counter + ". " + i);
+					counter++;
 				}
 				String toDelete = Utilities.StrInput().toLowerCase();
 				for (int i = 0; i < terminal.usernames.length; i++) {
@@ -205,21 +207,37 @@ public class Terminal extends Object implements Serializable {
 						removalIndex = i;
 					}
 				}
-				terminal.logs = (String[]) dealArray(terminal.logs, removalIndex);
-				terminal.logNames = (String[]) dealArray(terminal.logNames, removalIndex);
-				terminal.usernames = (String[]) dealArray(terminal.usernames, removalIndex);
-				terminal.passwords = (String[]) dealArray(terminal.passwords, removalIndex);
-				terminal.locked = (boolean[]) dealArray(terminal.locked, removalIndex);
+				terminal.logs = (String[]) reduceArray(terminal.logs, removalIndex);
+				terminal.logNames = (String[]) reduceArray(terminal.logNames, removalIndex);
+				terminal.usernames = (String[]) reduceArray(terminal.usernames, removalIndex);
+				terminal.passwords = (String[]) reduceArray(terminal.passwords, removalIndex);
+				terminal.locked = (boolean[]) reduceArray(terminal.locked, removalIndex);
 				break;
 			case 2:
-				//TODO put in add into array routine with ability to lengthen array.
+				System.out.println("Locked: ");
+				boolean isLocked = Boolean.parseBoolean(Utilities.StrInput());
+				System.out.println("Log name: ");
+				String logName = Utilities.StrInput();
+				System.out.println("Log: ");
+				String log = Utilities.StrInput();
+				System.out.println("Username: ");
+				String username = Utilities.StrInput();
+				System.out.println("Password: ");
+				String password = Utilities.StrInput();
+				System.out.println("Insertion index: ");
+				int index = Integer.parseInt(Utilities.StrInput());
+				terminal.logs = (String[]) expandArray(terminal.logs, log, index);
+				terminal.logNames = (String[]) expandArray(terminal.logNames, logName, index);
+				terminal.usernames = (String[]) expandArray(terminal.usernames, username, index);
+				terminal.passwords = (String[]) expandArray(terminal.passwords, password, index);
+				terminal.locked = (boolean[]) expandArray(terminal.locked, isLocked, index);
 				break;
 			}
 		}
 		return terminal;
 	}
 
-	private static boolean[] dealArray(boolean[] array, int toRemove) {
+	private static boolean[] reduceArray(boolean[] array, int toRemove) {
 		boolean[] newArray = new boolean[array.length - 1];
 		int counter = -1;
 		for (int i = 0; i < array.length; i++) {
@@ -233,7 +251,7 @@ public class Terminal extends Object implements Serializable {
 		return newArray;
 	}
 
-	public static java.lang.Object[] dealArray(java.lang.Object[] array, int toRemove) {
+	private static java.lang.Object[] reduceArray(java.lang.Object[] array, int toRemove) {
 		java.lang.Object[] newArray = new java.lang.Object[array.length - 1];
 		array[toRemove] = null;
 		int counter = -1;
@@ -244,6 +262,41 @@ public class Terminal extends Object implements Serializable {
 				continue;
 			}
 			newArray[counter] = i;
+		}
+		return newArray;
+	}
+
+	private static java.lang.Object[] expandArray(java.lang.Object[] array, java.lang.Object toInsert, int index) {
+		java.lang.Object[] newArray = new java.lang.Object[array.length + 1];
+		if(index > array.length) {
+			index = array.length;
+		} else if(index < 0) {
+			index = 0;
+		}
+		boolean found = false;
+		for(int i = 0; i < array.length; i++) {
+			if (i == index) {
+				found = true;
+			} 
+			if (found) {
+				newArray[i+1] = array[i];
+			} else {
+				newArray[i] = array[i];
+			}
+		}
+		return newArray;
+	}
+
+	private static boolean[] expandArray(boolean[] array, boolean toInsert, int toRemove) {
+		boolean[] newArray = new boolean[array.length - 1];
+		int counter = -1;
+		for (int i = 0; i < array.length; i++) {
+			counter++;
+			if (i == toRemove) {
+				counter--;
+				continue;
+			}
+			newArray[counter] = array[i];
 		}
 		return newArray;
 	}
