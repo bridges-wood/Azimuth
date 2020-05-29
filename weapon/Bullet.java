@@ -1,7 +1,6 @@
 package weapon;
-import java.io.Serializable;
 
-public class Bullet extends Ammunition implements Serializable {
+public class Bullet extends Ammunition {
 
 	/**
 	 * 

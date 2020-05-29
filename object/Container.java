@@ -1,13 +1,12 @@
 package object;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import construction.Map;
 import construction.Utilities;
 
-public class Container extends Object implements Serializable {
+public class Container extends Object {
 
 	/**
 	 * 

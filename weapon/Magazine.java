@@ -1,10 +1,9 @@
 package weapon;
 
-import java.io.Serializable;
 import java.util.Collections;
 import object.Object;
 
-public class Magazine extends Object implements Serializable {
+public class Magazine extends Object {
 	private int rounds;
 	private Ammunition ammunition;
 

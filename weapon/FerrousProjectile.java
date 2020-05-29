@@ -1,8 +1,6 @@
 package weapon;
 
-import java.io.Serializable;
-
-public class FerrousProjectile extends Ammunition implements Serializable {
+public class FerrousProjectile extends Ammunition {
 
 	/**
 	 * 

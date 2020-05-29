@@ -1,12 +1,11 @@
 package construction;
 
-import java.io.Serializable;
 import java.util.List;
 
 import object.Object;
 import weapon.Weapon;
 
-public class Player extends Character implements Serializable {
+public class Player extends Character {
 	/**
 	 * 
 	 */

@@ -1,11 +1,10 @@
 package weapon;
 
-import java.io.Serializable;
 import java.util.Collections;
 
 import object.Object;
 
-public class Ammunition extends Object implements Serializable {// TODO Kinetic(Bullets), Plasma Cells, Power Cells,
+public class Ammunition extends Object {// TODO Kinetic(Bullets), Plasma Cells, Power Cells,
 																// Missiles, Ferrous projectiles.
 	/**
 	 * 

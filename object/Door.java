@@ -1,10 +1,9 @@
 package object;
-import java.io.Serializable;
 import java.util.Collections;
 
 import construction.Room;
 
-public class Door extends Object implements Serializable {
+public class Door extends Object {
 
 	/**
 	 * 

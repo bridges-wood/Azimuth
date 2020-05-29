@@ -356,7 +356,7 @@ public class Map implements Serializable {
 				System.out.println("4. Parts");
 			}
 		}
-		return object;
+		return (T) object;
 	}
 
 	public static List<?> load(String file) {
@@ -449,7 +449,7 @@ public class Map implements Serializable {
 		return new Magazine(name, description, rounds, ammunition);
 	}
 
-	private Ammunition createAmmunition() {
+	private static Ammunition createAmmunition() {
 		System.out.print("Type: ");
 		String type = Utilities.StrInput().toLowerCase();
 		switch (type) {
@@ -459,27 +459,27 @@ public class Map implements Serializable {
 			return (createFerrousProjectile());
 		case ("plasma"):
 			return (createPlasmaCell());
-		}
-		return null;
 	}
+	return null;
+}
 
-	private Bullet createBullet() {
-		System.out.print("Name: ");
-		String name = Utilities.StrInput();
-		System.out.print("Calibre");
-		Float calibre = Float.parseFloat(Utilities.StrInput());
-		return new Bullet(name, calibre);
-	}
+private static Bullet createBullet() {
+	System.out.print("Name: ");
+	String name = Utilities.StrInput();
+	System.out.print("Calibre");
+	Float calibre = Float.parseFloat(Utilities.StrInput());
+	return new Bullet(name, calibre);
+}
 
-	private PlasmaCell createPlasmaCell() {
-		System.out.print("Name: ");
-		String name = Utilities.StrInput();
-		System.out.print("Calibre");
-		Float calibre = Float.parseFloat(Utilities.StrInput());
-		return new PlasmaCell(name, calibre);
-	}
+private static PlasmaCell createPlasmaCell() {
+	System.out.print("Name: ");
+	String name = Utilities.StrInput();
+	System.out.print("Calibre");
+	Float calibre = Float.parseFloat(Utilities.StrInput());
+	return new PlasmaCell(name, calibre);
+}
 
-	private FerrousProjectile createFerrousProjectile() {
+private static FerrousProjectile createFerrousProjectile() {
 		System.out.print("Name: ");
 		String name = Utilities.StrInput();
 		System.out.print("Calibre");

@@ -1,10 +1,10 @@
 package object;
-import java.io.Serializable;
+
 import java.util.Collections;
 
 import construction.Utilities;
 
-public class Key extends Object implements Serializable {
+public class Key extends Object {
 
 	/**
 	 * 

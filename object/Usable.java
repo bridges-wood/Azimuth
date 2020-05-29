@@ -1,10 +1,9 @@
 package object;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Usable extends Object implements Serializable {
+public class Usable extends Object {
 
 	/**
 	 * 

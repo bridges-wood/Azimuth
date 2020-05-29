@@ -1,13 +1,12 @@
 package object;
 
 import java.io.FileNotFoundException;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 
 import construction.Utilities;
 
-public class Terminal extends Object implements Serializable {
+public class Terminal extends Object{
 	/**
 	 * 
 	 */

@@ -1,11 +1,10 @@
 package weapon;
 
-import java.io.Serializable;
 import java.util.List;
 
 import object.Object;
 
-public class Weapon extends Object implements Serializable { // Plasma, Gauss/Railgun, Laser, Melee, Kinetic.
+public class Weapon extends Object { // Plasma, Gauss/Railgun, Laser, Melee, Kinetic.
 	/**
 	 * 
 	 */
